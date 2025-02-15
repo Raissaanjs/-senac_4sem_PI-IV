@@ -1,8 +1,5 @@
 # -senac_4sem_PI-IV
 
-Aqui está a tabela formatada para você copiar e colar:  
-
-
 | Sprint | Como Um                 | Eu quero, eu posso         | Para que                                  | Critério de aceite |
 |--------|-------------------------|----------------------------|-------------------------------------------|--------------------|
 | 1      | Usuário não logado      | Identificar no sistema     | Possa entrar no backoffice               | - Os dados de login devem ser validados no banco de dados.  
@@ -30,5 +27,3 @@ Aqui está a tabela formatada para você copiar e colar:
 | 1      | Administrador           | Habilitar e Desabilitar um usuário | Remover ou conceder acesso a um usuário cadastrado no backoffice | - Na mesma tela de listagem de Usuário, o usuário admin poderá alterar o status dos usuários para ativo (se ele estiver inativado) ou inativar (se ele estiver ativo).  
 |        |                         |                            |                                           | - Sem a necessidade de entrar em outra página para alteração. A alteração deve apenas ser confirmada por tela de mensagem de alerta pedindo se o usuário concorda ou não com a alteração.  
 
-
-Agora você pode copiar e colar onde precisar! 😊
