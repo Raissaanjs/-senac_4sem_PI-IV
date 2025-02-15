@@ -1,5 +1,7 @@
 # -senac_4sem_PI-IV
 
+Sprint 1 - entrega 27/02
+
 | Sprint | Como Um                 | Eu quero, eu posso         | Para que                                  | Critério de aceite |
 |--------|-------------------------|----------------------------|-------------------------------------------|--------------------|
 | 1      | Usuário não logado      | Identificar no sistema     | Possa entrar no backoffice               | - Os dados de login devem ser validados no banco de dados.  
