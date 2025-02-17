@@ -58,8 +58,6 @@ Planilha Desenvolvida para Exemplo pelo Professor.
 #separação da planilha para as equipes de Back-end e Front-end , com base nas responsabilidades de cada um.
 
 
-#Aqui está a separação da planilha para as equipes de **Back-end** e **Front-end**, com base nas responsabilidades de cada um:  
-
 ---
 
 ### **Back-end**  
