@@ -62,6 +62,7 @@
 			<version>8.0.0.CR2</version>
 		</dependency>
 		
+		<!--
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
@@ -71,6 +72,7 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		-->
 	</dependencies>
 
 	<build>

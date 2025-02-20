@@ -1,13 +1,6 @@
 package com.devsoft.rgdi_store.entities;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import com.devsoft.rgdi_store.dto.UserDto;
 
@@ -20,10 +13,8 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_usuario")
-public class UserEntity implements UserDetails{
+public class UserEntity{
 
-	private static final long serialVersionUID = 1L;
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -36,40 +27,36 @@ public class UserEntity implements UserDetails{
 	@Column(nullable = false)
 	private String senha;
 	@Column(nullable = false)
-	private String confirmaSenha;
-	private UserGroup group;
+	private String confirmasenha;
+	private UserGroup grupo;
 	
 	//Construtor para converter Entity para DTO
 	public UserEntity(UserDto userDto) {
-		BeanUtils.copyProperties(userDto, this);		
+		id = userDto.getId();
+		nome = userDto.getNome();
+		cpf = userDto.getCpf() ;
+		email = userDto.getEmail();
+		senha = userDto.getSenha();
+		confirmasenha = userDto.getConfirmasenha();
+		grupo = userDto.getGrupo();
 	}
 	
 	
 	public UserEntity() {
 	}
-		
-	public UserEntity(String nome, String cpf, String email, String senha, String confirmaSenha, UserGroup group) {
-		super();
-		this.nome = nome;
-		this.cpf = cpf;
-		this.email = email;
-		this.senha = senha;
-		this.confirmaSenha = confirmaSenha;
-		this.group = group;
-	}
 
-	public UserEntity(Long id, String nome, String cpf, String email, String senha, String confirmaSenha,
-			UserGroup group) {
+	public UserEntity(Long id, String nome, String cpf, String email, String senha, String confirmasenha,
+			UserGroup grupo) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.cpf = cpf;
 		this.email = email;
 		this.senha = senha;
-		this.confirmaSenha = confirmaSenha;
-		this.group = group;
+		this.confirmasenha = confirmasenha;
+		this.grupo = grupo;
 	}
-
+	
 
 	public Long getId() {
 		return id;
@@ -101,19 +88,21 @@ public class UserEntity implements UserDetails{
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
-	public String getConfirmaSenha() {
-		return confirmaSenha;
-	}
-	public void setConfirmaSenha(String confirmaSenha) {
-		this.confirmaSenha = confirmaSenha;
-	}
-		
-	public UserGroup getGroup() {
-		return group;
+			
+	public String getConfirmasenha() {
+		return confirmasenha;
 	}
 
-	public void setGroup(UserGroup group) {
-		this.group = group;
+	public void setConfirmasenha(String confirmasenha) {
+		this.confirmasenha = confirmasenha;
+	}
+
+	public UserGroup getGrupo() {
+		return grupo;
+	}
+
+	public void setGrupo(UserGroup grupo) {
+		this.grupo = grupo;
 	}
 
 
@@ -134,7 +123,8 @@ public class UserEntity implements UserDetails{
 		return Objects.equals(id, other.id);
 	}
 
-
+	
+/*
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// Se for ADMIN, terá autorização ADMIN e USER
@@ -157,6 +147,6 @@ public class UserEntity implements UserDetails{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+*/	
 
 }

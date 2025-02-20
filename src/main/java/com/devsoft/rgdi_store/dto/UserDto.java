@@ -1,7 +1,5 @@
 package com.devsoft.rgdi_store.dto;
 
-import org.springframework.beans.BeanUtils;
-
 import com.devsoft.rgdi_store.entities.UserEntity;
 import com.devsoft.rgdi_store.entities.UserGroup;
 
@@ -12,38 +10,36 @@ public class UserDto {
 	private String cpf;
 	private String email;
 	private String senha;
-	private String confirmaSenha;
-	private String grupo;
-	private UserGroup group;
+	private String confirmasenha;
+	private UserGroup grupo;
 	
-	public UserGroup getGroup() {
-		return group;
-	}
-
-	public void setGroup(UserGroup group) {
-		this.group = group;
-	}
 
 	//Construtor para converter DTO para Entity
 	public UserDto(UserEntity userEntity) {
-		BeanUtils.copyProperties(userEntity, this);
+		id = userEntity.getId();
+		nome = userEntity.getNome();
+		cpf = userEntity.getCpf();
+		email = userEntity.getEmail();
+		senha = userEntity.getSenha();
+		confirmasenha = userEntity.getConfirmasenha();
+		grupo = userEntity.getGrupo();
 	}
 
 	public UserDto() {
 	}
-
-	public UserDto(Long id, String nome, String cpf, String email, String senha, String confirmaSenha, String grupo) {
+			
+	public UserDto(Long id, String nome, String cpf, String email, String senha, String confirmasenha,
+			UserGroup grupo) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.cpf = cpf;
 		this.email = email;
 		this.senha = senha;
-		this.confirmaSenha = confirmaSenha;
+		this.confirmasenha = confirmasenha;
 		this.grupo = grupo;
 	}
 
-	
 	public Long getId() {
 		return id;
 	}
@@ -83,21 +79,22 @@ public class UserDto {
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
-
-	public String getConfirmaSenha() {
-		return confirmaSenha;
+		
+	public String getConfirmasenha() {
+		return confirmasenha;
 	}
 
-	public void setConfirmaSenha(String confirmaSenha) {
-		this.confirmaSenha = confirmaSenha;
+	public void setConfirmasenha(String confirmasenha) {
+		this.confirmasenha = confirmasenha;
 	}
 
-	public String getGrupo() {
+	public UserGroup getGrupo() {
 		return grupo;
 	}
 
-	public void setGrupo(String grupo) {
+	public void setGrupo(UserGroup grupo) {
 		this.grupo = grupo;
 	}
+
 	
 }

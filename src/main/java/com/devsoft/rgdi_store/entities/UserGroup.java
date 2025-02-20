@@ -5,14 +5,14 @@ public enum UserGroup {
 	ESTOQUISTA("estoquista"),	
     USER("user");
 
-    private String group;
+    private String grupo;
 
-    UserGroup(String group){
-        this.group = group;
+    UserGroup(String grupo){
+        this.grupo = grupo;
     }
 
     public String getGroup(){
-        return group;
+        return grupo;
     }
 
 }
