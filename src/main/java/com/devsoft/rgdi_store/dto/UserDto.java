@@ -95,6 +95,5 @@ public class UserDto {
 	public void setGrupo(UserGroup grupo) {
 		this.grupo = grupo;
 	}
-
 	
 }
