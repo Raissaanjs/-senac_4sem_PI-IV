@@ -4,23 +4,22 @@ import com.devsoft.rgdi_store.entities.UserEntity;
 import com.devsoft.rgdi_store.entities.UserGroup;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 
 public class UserDto {
 
 	private Long id;
-	@NotBlank(message = "Nome requerido") //não aceita: null, vazio, espaço em branco
-	private String nome;
-	@NotBlank(message = "CPF requerido")
-	@Size(min= 11, message = "Informe os 11 números")
-	@Size(max= 11, message = "Informe apenas 11 números")
-	//@Digits(fraction = 0, integer = 11, message = "Apenas números")
-	@Positive(message = "Não é permitido números negativos")
-	private String cpf;
-	@NotBlank(message = "Email requerido")
-	@ValidEmail(message = "Formato aceito: email@email.com") //@ValidEmail (validação personalizada)
-	private String email;
+	
+	@NotBlank(message = "Nome requerido", groups = ValidationGroups.Create.class) // não aceita: null, vazio, espaço em branco
+    private String nome;
+
+    @NotBlank(message = "CPF requerido", groups = { ValidationGroups.Create.class, ValidationGroups.Update.class })
+    @ValidCPF(message = "CPF inválido", groups = { ValidationGroups.Create.class, ValidationGroups.Update.class })
+    private String cpf;
+
+    @NotBlank(message = "Email requerido", groups = ValidationGroups.Create.class)
+    @ValidEmail(message = "Formato aceito: email@email.com", groups = ValidationGroups.Create.class)
+    private String email;
+	
 	//@NotBlank(message = "Senha requerida")
 	private String senha;
 	//@NotBlank(message = "Confirmação de senha requerida")
