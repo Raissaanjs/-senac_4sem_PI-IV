@@ -17,6 +17,7 @@ public class UserService {
 	@Autowired
 	private UserRepository repository;
 	
+	@Transactional(readOnly = true)
 	public List<UserDto> findAll(){
 		List<UserEntity> result = repository.findAll();
 		return result.stream().map(x -> new UserDto(x)).toList();
@@ -27,8 +28,24 @@ public class UserService {
 		Optional<UserEntity> result = repository.findById(id);
 		UserEntity user = result.get();
 		UserDto dto = new UserDto(user);
-		return dto;
-		
+		return dto;		
+	}
+	
+	@Transactional
+	public UserDto insert(UserDto dto) {
+		UserEntity entity = new UserEntity();
+		copyDtoToEntity(dto, entity);
+		entity = repository.save(entity);
+		return new UserDto(entity);
+	}
+	
+	private void copyDtoToEntity(UserDto dto, UserEntity entity) {
+		entity.setNome(dto.getNome());
+		entity.setCpf(dto.getCpf());
+		entity.setEmail(dto.getEmail());
+		entity.setSenha(dto.getSenha());
+		entity.setConfirmasenha(dto.getConfirmasenha());
+		entity.setGrupo(dto.getGrupo());
 	}
 
 }
