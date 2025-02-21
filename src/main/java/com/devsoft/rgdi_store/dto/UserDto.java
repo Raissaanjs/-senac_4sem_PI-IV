@@ -3,24 +3,29 @@ package com.devsoft.rgdi_store.dto;
 import com.devsoft.rgdi_store.entities.UserEntity;
 import com.devsoft.rgdi_store.entities.UserGroup;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 public class UserDto {
 
 	private Long id;
 	@NotBlank(message = "Nome requerido") //não aceita: null, vazio, espaço em branco
 	private String nome;
-	@NotBlank(message = "CPF requerido")	
+	@NotBlank(message = "CPF requerido")
+	@Size(min= 11, message = "Informe os 11 números")
+	@Size(max= 11, message = "Informe apenas 11 números")
+	//@Digits(fraction = 0, integer = 11, message = "Apenas números")
+	@Positive(message = "Não é permitido números negativos")
 	private String cpf;
 	@NotBlank(message = "Email requerido")
-	@Email(message = "Formato aceito: email@email.com")
+	@ValidEmail(message = "Formato aceito: email@email.com") //@ValidEmail (validação personalizada)
 	private String email;
-	@NotBlank(message = "Senha requerida")
+	//@NotBlank(message = "Senha requerida")
 	private String senha;
-	@NotBlank(message = "Confirmação de senha requerida")
+	//@NotBlank(message = "Confirmação de senha requerida")
 	private String confirmasenha;
-	@NotBlank(message = "Grupo requerido")
+	//@NotBlank(message = "Grupo requerido")
 	private UserGroup grupo;
 	
 
@@ -103,6 +108,6 @@ public class UserDto {
 
 	public void setGrupo(UserGroup grupo) {
 		this.grupo = grupo;
-	}
+	}	
 	
 }

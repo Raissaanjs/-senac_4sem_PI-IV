@@ -19,6 +19,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.devsoft.rgdi_store.dto.UserDto;
 import com.devsoft.rgdi_store.services.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping(value = "/usuarios")
 public class UserController {
@@ -39,15 +41,17 @@ public class UserController {
 		return ResponseEntity.ok(dto);
 	}
 	
+	//não esquecer o "@Valid" - necessario para validacao de campos
 	@PostMapping
-	public ResponseEntity<UserDto> insert (@RequestBody UserDto dto){
+	public ResponseEntity<UserDto> insert (@Valid @RequestBody UserDto dto){
 		dto = userService.insert(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/id").buildAndExpand(dto.getId()).toUri();
 		return ResponseEntity.created(uri).body(dto);
 	}
 	
+	//não esquecer o "@Valid" - necessario para validacao de campos
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<UserDto> update(@PathVariable Long id, @RequestBody UserDto dto){
+	public ResponseEntity<UserDto> update(@PathVariable Long id, @Valid @RequestBody UserDto dto){
 		dto = userService.update(id, dto); //salvei e peguei a referência
 		return ResponseEntity.ok(dto);
 		

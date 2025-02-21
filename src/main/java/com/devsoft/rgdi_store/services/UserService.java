@@ -35,7 +35,7 @@ public class UserService {
 	}
 	
 	@Transactional
-	public UserDto insert(UserDto dto) {
+	public UserDto insert(UserDto dto) {		
 		try {
 		UserEntity entity = new UserEntity();
 		
@@ -49,7 +49,7 @@ public class UserService {
 		entity = repository.save(entity);
 		return new UserDto(entity);
 		}catch(DataIntegrityViolationException e) {
-			throw new ResourceNotFoundException("Recurso não encontrado - insert (Verificar email duplicado)");
+			throw new ResourceNotFoundException("Recurso não encontrado - insert [Campo Unique]");
 		}
 	}
 	
