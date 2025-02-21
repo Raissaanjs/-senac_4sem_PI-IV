@@ -1,9 +1,10 @@
 package com.devsoft.rgdi_store.controllers;
 
 import java.net.URI;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,9 +24,11 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+	//lista com paginação
 	@GetMapping
-	public List<UserDto> findAll(){
-		return userService.findAll();
+	public ResponseEntity<Page<UserDto>> findAll( Pageable pageable){
+		Page<UserDto> dto = userService.findAll(pageable);
+		return ResponseEntity.ok(dto);
 	}
 	
 	@GetMapping(value = "/{id}")

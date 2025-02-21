@@ -1,9 +1,10 @@
 package com.devsoft.rgdi_store.services;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,13 +19,13 @@ public class UserService {
 	private UserRepository repository;
 	
 	@Transactional(readOnly = true)
-	public List<UserDto> findAll(){
-		List<UserEntity> result = repository.findAll();
-		return result.stream().map(x -> new UserDto(x)).toList();
+	public Page<UserDto> findAll(Pageable pageable){
+		Page<UserEntity> result = repository.findAll(pageable);
+		return result.map(x -> new UserDto(x));
 	}	
 	
 	@Transactional(readOnly = true)
-	public UserDto findById(Long id) {
+	public UserDto findById(Long id) {		
 		Optional<UserEntity> result = repository.findById(id);
 		UserEntity user = result.get();
 		UserDto dto = new UserDto(user);
