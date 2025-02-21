@@ -18,15 +18,12 @@ public class UserEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(nullable = false)
 	private String nome;
-	@Column(nullable = false)
+	@Column(length=11)
 	private String cpf;
-	@Column(nullable = false, unique = true)
+	@Column(unique = true)
 	private String email;
-	@Column(nullable = false)
 	private String senha;
-	@Column(nullable = false)
 	private String confirmasenha;
 	private UserGroup grupo;
 	
