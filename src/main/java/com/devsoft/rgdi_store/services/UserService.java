@@ -1,14 +1,17 @@
 package com.devsoft.rgdi_store.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.devsoft.rgdi_store.dto.UserDto;
 import com.devsoft.rgdi_store.entities.UserEntity;
 import com.devsoft.rgdi_store.repositories.UserRepository;
+import com.devsoft.rgdi_store.services.exceptions.DatabaseException;
 import com.devsoft.rgdi_store.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -64,4 +67,20 @@ public class UserService {
 		}
 	}
 
+	@Transactional(propagation = Propagation.SUPPORTS) //É acionado se esse método estiver no contexto de outra transação 
+	public void delete(Long id) {		
+		// verifica se o id existe
+		if(!repository.existsById(id)) {			
+			//Se não encontrar lança a excessão
+			throw new ResourceNotFoundException("Recurso não encontrado - delete");
+		}
+		try {
+			repository.deleteById(id);
+		}catch(DataIntegrityViolationException e) {
+			//Caso haja problema no modelo relacional - relacionamentos entre tables
+			throw new DatabaseException("Falha de integridade referencial - delete");
+		}
+	}
+	
+	
 }

@@ -47,7 +47,6 @@ public class UserEntity{
 
 	public UserEntity(Long id, String nome, String cpf, String email, String senha, String confirmasenha,
 			UserGroup grupo) {
-		super();
 		this.id = id;
 		this.nome = nome;
 		this.cpf = cpf;
@@ -56,7 +55,7 @@ public class UserEntity{
 		this.confirmasenha = confirmasenha;
 		this.grupo = grupo;
 	}
-	
+
 
 	public Long getId() {
 		return id;
