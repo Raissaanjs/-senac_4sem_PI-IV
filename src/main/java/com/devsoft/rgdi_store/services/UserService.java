@@ -1,7 +1,5 @@
 package com.devsoft.rgdi_store.services;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.devsoft.rgdi_store.dto.UserDto;
 import com.devsoft.rgdi_store.entities.UserEntity;
 import com.devsoft.rgdi_store.repositories.UserRepository;
+import com.devsoft.rgdi_store.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class UserService {
@@ -26,10 +25,8 @@ public class UserService {
 	
 	@Transactional(readOnly = true)
 	public UserDto findById(Long id) {		
-		Optional<UserEntity> result = repository.findById(id);
-		UserEntity user = result.get();
-		UserDto dto = new UserDto(user);
-		return dto;		
+		UserEntity entity = repository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Recurso não encontrado"));
+		return new UserDto(entity);		
 	}
 	
 	@Transactional
