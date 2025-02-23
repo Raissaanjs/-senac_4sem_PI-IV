@@ -37,20 +37,25 @@ public class UserService {
 	@Transactional
 	public UserDto insert(UserDto dto) {		
 		try {
-		UserEntity entity = new UserEntity();
-		
-		entity.setNome(dto.getNome());
-		entity.setCpf(dto.getCpf());
-		entity.setEmail(dto.getEmail());
-		entity.setSenha(dto.getSenha());
-		entity.setConfirmasenha(dto.getConfirmasenha());
-		entity.setGrupo(dto.getGrupo());
-		
-		entity = repository.save(entity);
+			UserEntity entity = new UserEntity();
+			
+			entity.setNome(dto.getNome());
+			entity.setCpf(dto.getCpf());
+			entity.setEmail(dto.getEmail());
+			entity.setSenha(dto.getSenha());
+			entity.setConfirmasenha(dto.getConfirmasenha());
+			entity.setGrupo(dto.getGrupo());
+			entity.setStatus(true);
+			
+			entity = repository.save(entity);
 		return new UserDto(entity);
 		}catch(DataIntegrityViolationException e) {
 			throw new ResourceNotFoundException("Recurso não encontrado - insert [Campo Unique]");
 		}
+		/*
+		catch(IllegalArgumentException e) {
+			throw new ResourceNotFoundException("Recurso não encontrado - insert [Senhas não conferem]");
+		}*/
 	}
 	
 	@Transactional
@@ -69,6 +74,10 @@ public class UserService {
 		}catch(EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Recurso não encontrado - update");
 		}
+		
+		/*catch(IllegalArgumentException e) {
+			throw new ResourceNotFoundException("Recurso não encontrado - update [Senhas não conferem]");
+		}*/
 	}
 
 	@Transactional(propagation = Propagation.SUPPORTS) //É acionado se esse método estiver no contexto de outra transação 
@@ -84,7 +93,6 @@ public class UserService {
 			//Caso haja problema no modelo relacional - relacionamentos entre tables
 			throw new DatabaseException("Falha de integridade referencial - delete");
 		}
-	}
-	
+	}	
 	
 }

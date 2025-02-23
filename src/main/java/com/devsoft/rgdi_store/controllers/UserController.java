@@ -1,11 +1,14 @@
 package com.devsoft.rgdi_store.controllers;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +23,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.devsoft.rgdi_store.dto.UserDto;
 import com.devsoft.rgdi_store.dto.ValidationGroups;
 import com.devsoft.rgdi_store.services.UserService;
+import com.devsoft.rgdi_store.services.exceptions.FieldValidationException;
 
 import jakarta.validation.groups.Default;
 
@@ -45,8 +49,9 @@ public class UserController {
 	
 	//não esquecer o "@Valid" - necessario para validacao de campos
 	@PostMapping
-    public ResponseEntity<UserDto> insert(@Validated({ ValidationGroups.Create.class, Default.class }) @RequestBody UserDto dto) {
-        dto = userService.insert(dto);
+    public ResponseEntity<UserDto> insert(@Validated({ ValidationGroups.Create.class, Default.class }) @RequestBody UserDto dto) {		
+		validatePass(dto);
+		dto = userService.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
     }
@@ -55,7 +60,8 @@ public class UserController {
 	//@Validated (Criado grupo de validação definido o email não ser usado no "update")
 	@PutMapping(value = "/{id}")
     public ResponseEntity<UserDto> update(@PathVariable Long id, @Validated({ ValidationGroups.Update.class, Default.class }) @RequestBody UserDto dto) {
-        dto = userService.update(id, dto); // Salvei e peguei a referência
+		validatePass(dto);
+		dto = userService.update(id, dto); // Salvei e peguei a referência
         return ResponseEntity.ok(dto);
     }
 	
@@ -65,5 +71,16 @@ public class UserController {
 		return ResponseEntity.noContent().build();
 	}
 	
+	
+	private void validatePass(UserDto dto) {
+        List<FieldError> fieldErrors = new ArrayList<>();
+        
+        if (!dto.getSenha().equals(dto.getConfirmasenha())) {
+            fieldErrors.add(new FieldError("User", "senha/ confirmasenha", "As senhas não coincidem"));
+        }
 
+        if (!fieldErrors.isEmpty()) {
+            throw new FieldValidationException("Erro de validação", fieldErrors);
+        }
+	}
 }
