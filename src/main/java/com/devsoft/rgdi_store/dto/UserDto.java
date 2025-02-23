@@ -26,9 +26,9 @@ public class UserDto {
     @NotBlank(message = "Confirmação de senha requerida", groups = { ValidationGroups.Create.class, ValidationGroups.Update.class })
     private String confirmasenha;
 
-    private UserGroup grupo;
+    private UserGroup grupo = UserGroup.USER; //Define o grupo padrão como USER
 
-    private boolean status;  // Novo atributo
+    private boolean status = true;
 
     // Construtor padrão
     public UserDto() {

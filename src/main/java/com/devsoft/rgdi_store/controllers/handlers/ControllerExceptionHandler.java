@@ -63,19 +63,7 @@ public class ControllerExceptionHandler {
 		return ResponseEntity.status(status).body(err);
 	}
 	
-	/*
-	@ExceptionHandler(IllegalArgumentException.class)
-	public ResponseEntity<CustomError> illegalArgumentException(IllegalArgumentException e, HttpServletRequest request) {
-	    HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;        
-	    ValidationError err = new ValidationError(Instant.now(), status.value(), "Dados inválidos", request.getRequestURI());
-
-	    // Adicione uma mensagem de erro personalizada
-	    err.addError("Senha não confere", e.getMessage());
-
-	    return ResponseEntity.status(status).body(err);
-	}
-	*/
-	
+	//Usado para validar senha
 	@ExceptionHandler(FieldValidationException.class)
 	public ResponseEntity<CustomError> fieldValidationException(FieldValidationException e, HttpServletRequest request) {
 	    HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;        

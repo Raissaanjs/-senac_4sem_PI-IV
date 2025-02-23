@@ -71,7 +71,7 @@ public class UserController {
 		return ResponseEntity.noContent().build();
 	}
 	
-	
+	//Valida a senha
 	private void validatePass(UserDto dto) {
         List<FieldError> fieldErrors = new ArrayList<>();
         

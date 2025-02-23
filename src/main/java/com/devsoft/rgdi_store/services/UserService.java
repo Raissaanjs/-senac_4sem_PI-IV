@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.devsoft.rgdi_store.dto.UserDto;
 import com.devsoft.rgdi_store.entities.UserEntity;
+import com.devsoft.rgdi_store.entities.UserGroup;
 import com.devsoft.rgdi_store.repositories.UserRepository;
 import com.devsoft.rgdi_store.services.exceptions.DatabaseException;
 import com.devsoft.rgdi_store.services.exceptions.ResourceNotFoundException;
@@ -41,10 +42,16 @@ public class UserService {
 			
 			entity.setNome(dto.getNome());
 			entity.setCpf(dto.getCpf());
-			entity.setEmail(dto.getEmail());
+			entity.setEmail(dto.getEmail());			
 			entity.setSenha(dto.getSenha());
 			entity.setConfirmasenha(dto.getConfirmasenha());
-			entity.setGrupo(dto.getGrupo());
+			
+			// Define o grupo como USER se não estiver especificado
+            if (dto.getGrupo() == null) {
+                entity.setGrupo(UserGroup.USER);
+            } else {
+                entity.setGrupo(dto.getGrupo());
+            }
 			entity.setStatus(true);
 			
 			entity = repository.save(entity);
@@ -52,10 +59,6 @@ public class UserService {
 		}catch(DataIntegrityViolationException e) {
 			throw new ResourceNotFoundException("Recurso não encontrado - insert [Campo Unique]");
 		}
-		/*
-		catch(IllegalArgumentException e) {
-			throw new ResourceNotFoundException("Recurso não encontrado - insert [Senhas não conferem]");
-		}*/
 	}
 	
 	@Transactional
@@ -68,16 +71,12 @@ public class UserService {
 			entity.setSenha(dto.getSenha());
 			entity.setConfirmasenha(dto.getConfirmasenha());
 			entity.setGrupo(dto.getGrupo());
-			
+			entity.setStatus(dto.isStatus());
 			entity =repository.save(entity);
 			return new UserDto(entity);
 		}catch(EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Recurso não encontrado - update");
 		}
-		
-		/*catch(IllegalArgumentException e) {
-			throw new ResourceNotFoundException("Recurso não encontrado - update [Senhas não conferem]");
-		}*/
 	}
 
 	@Transactional(propagation = Propagation.SUPPORTS) //É acionado se esse método estiver no contexto de outra transação 
