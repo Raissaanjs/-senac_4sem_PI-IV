@@ -21,7 +21,7 @@ import jakarta.persistence.EntityNotFoundException;
 public class UserService {
 	
 	@Autowired
-	private UserRepository repository;
+	private UserRepository repository;	
 	
 	@Transactional(readOnly = true)
 	public Page<UserDto> findAll(Pageable pageable){
@@ -79,6 +79,20 @@ public class UserService {
 		}
 	}
 
+	@Transactional
+	public UserDto changeStatus(Long id) {
+	    try {
+	        UserEntity entity = repository.getReferenceById(id);
+	        entity.setStatus(!entity.isStatus()); // Alterna o status
+	        entity = repository.save(entity);
+	        return new UserDto(entity);
+	    } catch (EntityNotFoundException e) {
+	        throw new ResourceNotFoundException("Recurso não encontrado - changeStatus");
+	    }
+	}
+	
+	
+	
 	@Transactional(propagation = Propagation.SUPPORTS) //É acionado se esse método estiver no contexto de outra transação 
 	public void delete(Long id) {		
 		// verifica se o id existe

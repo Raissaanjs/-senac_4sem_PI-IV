@@ -9,7 +9,7 @@ public class UserDto {
 
     private Long id;
 
-    @NotBlank(message = "Nome requerido", groups = ValidationGroups.Create.class)
+    @NotBlank(message = "Nome requerido", groups ={ ValidationGroups.Create.class, ValidationGroups.Update.class })
     private String nome;
 
     @NotBlank(message = "CPF requerido", groups = { ValidationGroups.Create.class, ValidationGroups.Update.class })

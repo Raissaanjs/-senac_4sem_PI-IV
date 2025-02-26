@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,7 @@ import com.devsoft.rgdi_store.services.exceptions.FieldValidationException;
 import jakarta.validation.groups.Default;
 
 @RestController
+@CrossOrigin("*") //libera acesso de conexões do frontend
 @RequestMapping(value = "/usuarios")
 public class UserController {
 	
@@ -56,7 +58,7 @@ public class UserController {
         return ResponseEntity.created(uri).body(dto);
     }
 	
-	//não esquecer o "@Valid" - necessario para validacao de campos
+	//não esquecer o "@Validated" - necessario para validacao de campos
 	//@Validated (Criado grupo de validação definido o email não ser usado no "update")
 	@PutMapping(value = "/{id}")
     public ResponseEntity<UserDto> update(@PathVariable Long id, @Validated({ ValidationGroups.Update.class, Default.class }) @RequestBody UserDto dto) {
@@ -64,6 +66,13 @@ public class UserController {
 		dto = userService.update(id, dto); // Salvei e peguei a referência
         return ResponseEntity.ok(dto);
     }
+	
+	//alterna status
+	@PutMapping(value = "/{id}/status")
+	public ResponseEntity<UserDto> changeStatus(@PathVariable Long id) {
+	    UserDto dto = userService.changeStatus(id);
+	    return ResponseEntity.ok(dto);
+	}
 	
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id){
