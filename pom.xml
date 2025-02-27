@@ -39,6 +39,11 @@
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 		<dependency>
+		    <groupId>nz.net.ultraq.thymeleaf</groupId>
+		    <artifactId>thymeleaf-layout-dialect</artifactId>
+		    <version>3.3.0</version> <!--$NO-MVN-MAN-VER$ -->
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
@@ -68,6 +73,26 @@
 		    <version>8.0.1.Final</version>
 		</dependency>
 		
+		<!--Bibliotecas tipo "jars" onde temos opções para css, js, img, icons, ..-->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>webjars-locator-core</artifactId>
+		</dependency>		
+		<dependency>
+	        <groupId>org.webjars</groupId>
+	        <artifactId>bootstrap</artifactId>
+	        <version>5.1.3</version>
+    	</dependency>
+	    <dependency>
+	        <groupId>org.webjars</groupId>
+	        <artifactId>jquery</artifactId>
+	        <version>3.6.0</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.webjars.bower</groupId>
+	        <artifactId>jquery-mask-plugin</artifactId>
+	        <version>1.14.16</version>
+	    </dependency>
 		
 		<!-- Encriptaçãco de senha 
 		<dependency>
