@@ -7,8 +7,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeControler {
 
 	//defino o início da raiz do projeto (que é o contexto)
+	@GetMapping("/")
+	public String login() {
+		return "/login";
+	}
+	
 	@GetMapping("/auth")
 	public String home() {
 		return "/home";
 	}
+	
 }
