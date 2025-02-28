@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"head>
+<body>
+	<nav class="sidebar sidebar-open" th:fragment="nav-sidebar">
+		<ul class="nav nav-pills">
+			<li class="nav-item"><a class="nav-link " href="/auth"> 
+				<i class="fa-solid fa-house"></i> <span>Home</span>
+			</a></li>
+		</ul>
+
+		<ul class="nav nav-pills">
+			<li class="nav-item"><span class="nav-link active" >Usuarios</span></li>
+			<li class="nav-item"><a class="nav-link"
+				href="/usuarios/cadastrar"> <i class="fa-solid fa-plus"></i> <span>Cadastrar</span>
+			</a></li>
+			<li class="nav-item"><a class="nav-link"
+				href="/departamentos/listar"> <i class="fa-solid fa-table-list"></i>
+					<span>Listar </span>
+			</a></li>
+		</ul>
+
+		<ul class="nav nav-pills">
+			<li class="nav-item"><span class="nav-link active" >Cargos</span></li>
+			<li class="nav-item"><a class="nav-link" 
+				href="/cargos/cadastrar"> <i class="fa-solid fa-plus"></i> <span>Cadastrar </span>
+			</a></li>
+			<li class="nav-item"><a class="nav-link" 
+				href="/cargos/listar"> <i
+					<i class="fa-solid fa-table-list"></i> <span>Listar </span>
+			</a></li>
+		</ul>
+
+		<ul class="nav nav-pills">
+			<li class="nav-item"><span class="nav-link active">Produtos</span></li>
+			<li class="nav-item"><a class="nav-link" 
+				href="#"> <i class="fa-solid fa-plus"></i> <span>Cadastrar </span>
+			</a></li>
+			<li class="nav-item"><a class="nav-link" 
+				href="#"> <i class="fa-solid fa-table-list"></i> <span>Listar </span>
+			</a></li>
+		</ul>
+	</nav>
+</body>
+</html>

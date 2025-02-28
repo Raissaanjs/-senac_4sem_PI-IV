@@ -23,7 +23,8 @@ public class UserEntity {
     @Column(unique = true)
     private String email;
     private String senha;
-    private String confirmasenha;
+    private String confirmasenha;    
+    
     private UserGroup grupo;
     private boolean status;  // Novo atributo
 
@@ -34,7 +35,8 @@ public class UserEntity {
         cpf = userDto.getCpf();
         email = userDto.getEmail();
         senha = userDto.getSenha();
-        confirmasenha = userDto.getConfirmasenha();
+        confirmasenha = userDto.getConfirmasenha();        
+        
         grupo = userDto.getGrupo();
         status = userDto.isStatus();
     }

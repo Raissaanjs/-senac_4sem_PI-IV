@@ -8,10 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,8 +27,8 @@ import com.devsoft.rgdi_store.services.exceptions.FieldValidationException;
 
 import jakarta.validation.groups.Default;
 
+@Controller
 @RestController
-@CrossOrigin("*") //libera acesso de conexões do frontend
 @RequestMapping(value = "/usuarios")
 public class UserController {
 	
@@ -72,13 +71,7 @@ public class UserController {
 	public ResponseEntity<UserDto> changeStatus(@PathVariable Long id) {
 	    UserDto dto = userService.changeStatus(id);
 	    return ResponseEntity.ok(dto);
-	}
-	
-	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id){
-		userService.delete(id);
-		return ResponseEntity.noContent().build();
-	}
+	}	
 	
 	//Valida a senha
 	private void validatePass(UserDto dto) {
