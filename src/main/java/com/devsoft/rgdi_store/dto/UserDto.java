@@ -6,7 +6,7 @@ import com.devsoft.rgdi_store.entities.UserGroup;
 import jakarta.validation.constraints.NotBlank;
 
 public class UserDto {
-
+	
     private Long id;
 
     @NotBlank(message = "Nome requerido", groups ={ ValidationGroups.Create.class, ValidationGroups.Update.class })
