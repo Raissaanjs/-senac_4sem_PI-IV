@@ -7,8 +7,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.devsoft.rgdi_store.dto.UserDto;
@@ -28,21 +31,40 @@ import com.devsoft.rgdi_store.services.exceptions.FieldValidationException;
 import jakarta.validation.groups.Default;
 
 @Controller
-@RestController
 @RequestMapping(value = "/usuarios")
 public class UserController {
 	
 	@Autowired
+	private PagedResourcesAssembler<UserDto> pagedResourcesAssembler;
+	
+	@Autowired
 	private UserService userService;
+	
+	@GetMapping("/cadastrar")
+	public String cadastrar(Model model) {
+	    model.addAttribute("dto", new UserDto());
+	    return "/usuario/cadastro";
+	}
+	
+	@GetMapping("/listar")
+	public String listar(Model model, Pageable pageable) {
+	    Page<UserDto> dtoPage = userService.findAll(pageable);
+	    model.addAttribute("usuarios", dtoPage.getContent()); // Adiciona a lista de usuários
+	    model.addAttribute("page", dtoPage); // Adiciona os metadados da página
+	    return "usuario/lista"; // Caminho do arquivo HTML em templates/usuario/listar.html
+	}
+
 	
 	//lista com paginação
 	@GetMapping
-	public ResponseEntity<Page<UserDto>> findAll( Pageable pageable){
-		Page<UserDto> dto = userService.findAll(pageable);
-		return ResponseEntity.ok(dto);
+	public ResponseEntity<PagedModel<EntityModel<UserDto>>> findAll(Pageable pageable) {
+	    Page<UserDto> dtoPage = userService.findAll(pageable);
+	    PagedModel<EntityModel<UserDto>> pagedModel = pagedResourcesAssembler.toModel(dtoPage);
+	    return ResponseEntity.ok(pagedModel);
 	}
+
 	
-	@GetMapping(value = "/{id}")
+	@GetMapping(value = "/detalhes/{id}")
 	public ResponseEntity<UserDto> findById(@PathVariable Long id) {
 		UserDto dto = userService.findById(id);
 		return ResponseEntity.ok(dto);
