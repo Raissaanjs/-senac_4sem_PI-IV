@@ -35,17 +35,17 @@
 	    <aside>
 	        <nav class="sidebar  sidebar-open">
 	            <ul class="nav nav-pills">
-	                <li class="nav-item"><a class="nav-link " href="/"> <i class="fa-solid fa-house"></i></i> <span>Home</span>
+	                <li class="nav-item"><a class="nav-link " href="/"> <i class="fa-solid fa-house"></i> <span>Home</span>
 	                </a></li>
 	            </ul>
 	
 	            <ul class="nav nav-pills">
 	                <li class="nav-item"><span class="nav-link active">Usuários</span></li>
 					<li class="nav-item"><a class="nav-link"
-						href="/usuario/cadastrar"> <i class="fa-solid fa-plus"></i> <span>Cadastrar</span>
+						href="/auth/cadastrar"> <i class="fa-solid fa-plus"></i> <span>Cadastrar</span>
 					</a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="usuario/listar"> <i class="fa-solid fa-table-list"></i>
+						href="/auth/listar"> <i class="fa-solid fa-table-list"></i>
 							<span>Listar </span>
 					</a></li>
 	            </ul>
@@ -58,9 +58,7 @@
 	                <li class="nav-item"><a class="nav-link"
 	                                        href="#"> <i class="fa-solid fa-table-list"></i> <span>Listar </span>
 	                </a></li>
-	            </ul>
-	
-	           
+	            </ul>	
 	        </nav>
 	    </aside>
 	
@@ -71,32 +69,32 @@
 	                    <ul class="navbar-nav">
 	                        <li class="nav-item active">
 	                            <i class="fa-solid fa-caret-right"></i>
-	                            <span>Cadastrar Usuários</span>
+	                            <span>Cadastrar Funcionários</span>
 	                        </li>
 	                    </ul>
 	                </div>
-	                <a class="btn btn-primary btn-md" href="/listar" role="button">
+	                <a class="btn btn-primary btn-md" href="/funcionarios/listar" role="button">
 	                    <span class="fa-solid fa-table-list" title="Cadastro" aria-hidden="true"></span>
-	                    <span>Listar Usuários</span>
+	                    <span>Listar Funcionários</span>
 	                </a>
 	            </nav>
 	        </div>
 	
 	        <div class="container" id="cadastro">
-	            <form th:action="@{/usuario/cadastrar}" th:object="${usuario}" method="POST">
+	            <form action="/funcionarios/salvar" method="POST">
 	                <div class="form-row">
 	                    <div class="form-group col-md-6">
-	                        <label for="nome">Nome</label>
+	                        <label for="nome">Nome do Funcionário</label>
 	                        <input type="text" class="form-control form-input" id="nome" placeholder="Nome Completo"
-	                               autofocus="autofocus" th:field="*{nome}"/>
+	                               autofocus="autofocus" name="nome" value=""/>
 	                        <div class="invalid-feedback">
 	
 	                        </div>
 	                    </div>
-						<div class="form-group col-md-6">
-	                        <label for="cpf">CPF</label>
-	                        <input type="text" class="form-control form-input" id="cpf" placeholder="Digite o CPF"
-	                              th:field="*{cpf}"/>
+	                    <div class="form-group col-md-6">
+	                        <label for="salario">Salário Bruto</label>
+	                        <input type="text" class="form-control form-input" id="salario" data-mask="#.##0,00"
+	                               data-mask-reverse="true" name="salario" value=""/>
 	                        <div class="invalid-feedback">
 	
 	                        </div>
@@ -104,25 +102,15 @@
 	                </div>
 	                <div class="form-row">
 	                    <div class="form-group col-md-6">
-	                        <label for="email">Email</label>
-	                        <input type="email" class="form-control form-input" id="email" placeholder="Digite o email" 
-							th:field="*{email}"/>
+	                        <label for="dataEntrada">Data de Entrada</label>
+	                        <input type="date" class="form-control form-input" id="dataEntrada" name="dataEntrada" value=""/>
 	                        <div class="invalid-feedback">
 	
 	                        </div>
 	                    </div>
-	                    <div class="form-group col-md-3">
-	                        <label for="senha">Senha</label>
-	                        <input type="password" class="form-control form-input" id="senha" placeholder="Digite a senha" 
-														th:field="*{senha}"/>
-	                        <div class="invalid-feedback">
-	
-	                        </div>
-	                    </div>
-						<div class="form-group col-md-3">
-	                        <label for="confirmasenha">Confirma Senha</label>
-	                        <input type="password" class="form-control form-input" id="confirmasenha" placeholder="Confirme a senha"
-							th:field="*{confirmasenha}"/>
+	                    <div class="form-group col-md-6">
+	                        <label for="dataSaida">Data de Saída</label>
+	                        <input type="date" class="form-control form-input" id="dataSaida" name="dataSaida" value=""/>
 	                        <div class="invalid-feedback">
 	
 	                        </div>
@@ -130,13 +118,107 @@
 	                </div>
 	                <div class="form-row">
 	                    <div class="form-group col-md-6">
-	                        <label for="grupo">Grupo</label>
-	                        <select id="grupo" class="form-control form-input" th:field="*{grupo}">
+	                        <label for="cargo">Cargo</label>
+	                        <select id="cargo" class="form-control form-input" name="cargo">
 	                            <option value="">Selecione...</option>
-	                            <option value="ADMIN">Admin</option>
-	                            <option value="ESTOQUISTA">Estoquista</option>
-	                            <option value="USER">User</option>
+	                            <option value="1">Auxiliar Contábil</option>
+	                            <option value="2">Auxiliar Administrativo</option>
+	                            <option value="3">Contador</option>
+	                            <option value="4">Adminitrador</option>
+	                            <option value="5">Programado PHP</option>
+	                            <option value="6">Desenvolvedor Java Jr.</option>
+	                            <option value="7">Desenvolvedor Java Pleno</option>
+	                            <option value="8">Desenvolvedor Java Senior</option>
+	                            <option value="9">Auxiliar de RH</option>
+	                            <option value="10">Coordenador de RH</option>
+	                            <option value="11">Psicologo</option>
 	                        </select>
+	                        <div class="invalid-feedback">
+	
+	                        </div>
+	                    </div>
+	                </div>
+	                <div class="form-row">
+	                    <div class="form-group col-md-6">
+	                        <label for="cidade">Cidade</label>
+	                        <input type="text" class="form-control form-input" id="cidade" name="endereco.cidade" value=""/>
+	                        <div class="invalid-feedback">
+	
+	                        </div>
+	                    </div>
+	                    <div class="form-group col-md-6">
+	                        <label for="logradouro">Logradouro</label>
+	                        <input type="text" class="form-control form-input" id="logradouro" placeholder="logradouro sem número"
+	                               name="endereco.logradouro" value=""/>
+	                        <div class="invalid-feedback">
+	
+	                        </div>
+	                    </div>
+	                </div>
+	                <div class="form-row">
+	                    <div class="form-group col-md-6">
+	                        <label for="numero">Número</label>
+	                        <input type="text" class="form-control form-input" id="numero" name="endereco.numero" value=""/>
+	                        <div class="invalid-feedback">
+	
+	                        </div>
+	                    </div>
+	                    <div class="form-group col-md-6">
+	                        <label for="complemento">Complemento</label>
+	                        <input type="text" class="form-control form-input" id="complemento" placeholder="fundos, casa, AP. 102, .."
+	                               name="endereco.complemento" value=""/>
+	                        <div class="invalid-feedback">
+	
+	                        </div>
+	                    </div>
+	                </div>
+	                <div class="form-row">
+	                    <div class="form-group col-md-6">
+	                        <label for="bairro">Bairro</label>
+	                        <input type="text" class="form-control form-input" id="bairro" name="endereco.bairro" value=""/>
+	                        <div class="invalid-feedback">
+	
+	                        </div>
+	                    </div>
+	                    <div class="form-group col-md-4">
+	                        <label for="uf">UF</label>
+	                        <select id="uf" class="form-control form-input" name="endereco.uf">
+	                            <option value="">Selecione...</option>
+	                            <option value="AC">AC</option>
+	                            <option value="AL">AL</option>
+	                            <option value="AM">AM</option>
+	                            <option value="BA">BA</option>
+	                            <option value="CE">CE</option>
+	                            <option value="DF">DF</option>
+	                            <option value="ES">ES</option>
+	                            <option value="GO">GO</option>
+	                            <option value="MA">MA</option>
+	                            <option value="MT">MT</option>
+	                            <option value="MS">MS</option>
+	                            <option value="MG">MG</option>
+	                            <option value="PA">PA</option>
+	                            <option value="PB">PB</option>
+	                            <option value="PR">PR</option>
+	                            <option value="PE">PE</option>
+	                            <option value="PI">PI</option>
+	                            <option value="RJ">RJ</option>
+	                            <option value="RN">RN</option>
+	                            <option value="RS">RS</option>
+	                            <option value="RO">RO</option>
+	                            <option value="RR">RR</option>
+	                            <option value="SC">SC</option>
+	                            <option value="SP">SP</option>
+	                            <option value="SE">SE</option>
+	                            <option value="TO">TO</option>
+	                        </select>
+	                        <div class="invalid-feedback">
+	
+	                        </div>
+	                    </div>
+	                    <div class="form-group col-md-2">
+	                        <label for="cep">Cep</label>
+	                        <input type="text" class="form-control form-input" id="cep" data-mask="00000-000" name="endereco.cep"
+	                               value=""/>
 	                        <div class="invalid-feedback">
 	
 	                        </div>
@@ -152,7 +234,7 @@
 	
     <footer class="">
         <div class="container">
-            <span class="footer-copy">&copy; 2025 DevSoft. Todos os direitos reservados.</span>
+            <span class="footer-copy">&copy; 2018 MBallem. Todos os direitos reservados.</span>
         </div>
     </footer>	
 
@@ -163,6 +245,18 @@
 <script src="/webjars/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript">
 
+    $(function () {
+        $('[data-toggle="popover"]').popover();
+    });
+    
+	$(document).ready(function(){
+	    $(".navbar-toggle").click(function(){
+	        $(".sidebar").toggleClass("sidebar-open");
+	    })
+	});
+
+</script>
 </body>
 </html>		
