@@ -2,28 +2,31 @@ package com.devsoft.rgdi_store.dto;
 
 import com.devsoft.rgdi_store.entities.UserEntity;
 import com.devsoft.rgdi_store.entities.UserGroup;
+import com.devsoft.rgdi_store.validation.ValidCPF;
+import com.devsoft.rgdi_store.validation.ValidEmail;
+import com.devsoft.rgdi_store.validation.ValidationGroups;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class UserDto {
 	
     private Long id;
 
-    @NotBlank(message = "Nome requerido", groups ={ ValidationGroups.Create.class, ValidationGroups.Update.class })
+    @NotBlank(message = "{nome.NotBlank}", groups ={ ValidationGroups.Create.class, ValidationGroups.Update.class })
+    @Size(min = 3, max = 150, message = "{nome.Size}")
     private String nome;
-
-    @NotBlank(message = "CPF requerido", groups = { ValidationGroups.Create.class, ValidationGroups.Update.class })
-    @ValidCPF(message = "CPF inválido", groups = { ValidationGroups.Create.class, ValidationGroups.Update.class })
+   
+    @ValidCPF(groups = { ValidationGroups.Create.class, ValidationGroups.Update.class })
     private String cpf;
 
-    @NotBlank(message = "Email requerido", groups = ValidationGroups.Create.class)
-    @ValidEmail(message = "Formato aceito: email@email.com", groups = ValidationGroups.Create.class)
+    @ValidEmail(groups = ValidationGroups.Create.class)
     private String email;
 
-    @NotBlank(message = "Senha requerida", groups = { ValidationGroups.Create.class, ValidationGroups.Update.class })
+    @NotBlank(message = "{senha.NotBlank}", groups = { ValidationGroups.Create.class, ValidationGroups.Update.class })
     private String senha;
 
-    @NotBlank(message = "Confirmação de senha requerida", groups = { ValidationGroups.Create.class, ValidationGroups.Update.class })
+    @NotBlank(message = "{confirmasenha.NotBlank}", groups = { ValidationGroups.Create.class, ValidationGroups.Update.class })
     private String confirmasenha;
 
     private UserGroup grupo = UserGroup.USER; //Define o grupo padrão como USER

@@ -94,6 +94,7 @@
 	        <version>1.14.16</version>
 	    </dependency>
 	    
+	    <!--Usado para flexibilizar paginação em JSON-->
 	    <dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-hateoas</artifactId>
