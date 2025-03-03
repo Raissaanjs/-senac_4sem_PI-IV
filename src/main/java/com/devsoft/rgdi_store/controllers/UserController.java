@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.devsoft.rgdi_store.dto.UserDto;
@@ -35,7 +37,7 @@ import com.devsoft.rgdi_store.validation.ValidationGroups;
 import jakarta.validation.groups.Default;
 
 @Controller
-@RequestMapping(value = "/usuarios")
+@RequestMapping("/usuarios")
 public class UserController {
 	
 	@Autowired
@@ -72,7 +74,7 @@ public class UserController {
 	    }
 
 	    // Valida a senha antes de salvar
-	    validatePass(dto);
+	    //validatePass(dto);
 
 	    // Chama o mesmo serviço usado no método insert
 	    userService.insert(dto);
@@ -90,8 +92,16 @@ public class UserController {
 	    return ResponseEntity.ok(pagedModel);
 	}
 
+	//validação para email único
+	@GetMapping("/verificar-email")
+	@ResponseBody
+	public ResponseEntity<Boolean> verificarEmail(@RequestParam String email) {
+	    boolean existe = userService.existePorEmail(email);
+	    return ResponseEntity.ok(existe);
+	}
+
 	
-	@GetMapping(value = "/detalhes/{id}")
+	@GetMapping("/detalhes/{id}")
 	public ResponseEntity<UserDto> findById(@PathVariable Long id) {
 		UserDto dto = userService.findById(id);
 		return ResponseEntity.ok(dto);
@@ -105,6 +115,7 @@ public class UserController {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
     }
+	
 	
 	//não esquecer o "@Validated" - necessario para validacao de campos
 	//@Validated (Criado grupo de validação definido o email não ser usado no "update")
@@ -126,11 +137,12 @@ public class UserController {
 	}
 	
 	//alterna status
-	@PutMapping(value = "/{id}/status")
+	@PutMapping("/{id}/status")
 	public ResponseEntity<UserDto> changeStatus(@PathVariable Long id) {
 	    UserDto dto = userService.changeStatus(id);
 	    return ResponseEntity.ok(dto);
 	}	
+	
 	
 	//Valida a senha
 	private void validatePass(UserDto dto) {

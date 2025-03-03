@@ -21,6 +21,11 @@ public class UserService {
 	@Autowired
 	private UserRepository repository;	
 	
+	//validação para email único
+	public boolean existePorEmail(String email) {
+	    return repository.existsByEmail(email);
+	}
+	
 	@Transactional(readOnly = true)
 	public Page<UserDto> findAll(Pageable pageable){
 		Page<UserEntity> result = repository.findAll(pageable);

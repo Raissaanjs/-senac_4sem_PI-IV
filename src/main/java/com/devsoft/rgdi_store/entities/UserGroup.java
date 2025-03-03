@@ -1,9 +1,9 @@
 package com.devsoft.rgdi_store.entities;
 
 public enum UserGroup {
-	ADMIN("admin"),
-	ESTOQUE("estoquista"),	
-    USER("user");
+	ADMIN("Administrador"),
+	ESTOQ("Estoquista"),	
+    USER("Usuário");
 
     private String grupo;
 
