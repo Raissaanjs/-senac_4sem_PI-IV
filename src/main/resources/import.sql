@@ -1,2 +1,3 @@
-INSERT INTO tb_usuario (nome, cpf, email, senha, confirmasenha, grupo, status) VALUES ('Jose Inacio', '00022233300', 'jinacio@test.com', '12345', '12345', 0, true);
-INSERT INTO tb_usuario (nome, cpf, email, senha, confirmasenha, grupo, status) VALUES ('Jose Maria', '11022233300', 'jmaria@test.com', '14345', '14345', 1, true);
+INSERT INTO tb_usuario (nome, cpf, email, senha, confirmasenha, grupo, status) VALUES ('Miriam Maria', '11022233300', 'miriam@test.com', '12345', '12345', 2, true);
+INSERT INTO tb_usuario (nome, cpf, email, senha, confirmasenha, grupo, status) VALUES ('Jose Inacio', '00022233300', 'jinacio@test.com', '12345', '12345', 1, true);
+INSERT INTO tb_usuario (nome, cpf, email, senha, confirmasenha, grupo, status) VALUES ('Jose Maria', '11022233300', 'jmaria@test.com', '14345', '14345', 0, true);

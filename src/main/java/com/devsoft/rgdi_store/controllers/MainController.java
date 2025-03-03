@@ -10,8 +10,13 @@ public class MainController {
     public String login() {
         return "login"; // Redireciona para o arquivo login.html
     }
-    @GetMapping("/auth")
+    @GetMapping("/home")
     public String home() {
+    	return "redirect:/auth"; // Redireciona para /auth
+    }
+    
+    @GetMapping("/auth")
+    public String home1() {
         return "home"; // Redireciona para o arquivo home.html
     }
 
