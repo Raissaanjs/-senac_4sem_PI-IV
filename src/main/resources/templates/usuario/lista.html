@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>RGDI Store</title>
     <meta charset="UTF-8"/>
@@ -41,10 +41,10 @@
 	            <ul class="nav nav-pills">
 	                <li class="nav-item"><span class="nav-link active">Usuários</span></li>
 					<li class="nav-item"><a class="nav-link"
-						href="/auth/cadastrar"> <i class="fa-solid fa-plus"></i> <span>Cadastrar</span>
+						href="/usuarios/cadastrar"> <i class="fa-solid fa-plus"></i> <span>Cadastrar</span>
 					</a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="/auth/listar"> <i class="fa-solid fa-table-list"></i>
+						href="/usuarios/listar"> <i class="fa-solid fa-table-list"></i>
 							<span>Listar </span>
 					</a></li>
 	            </ul>
@@ -72,7 +72,7 @@
 	                    </li>
 	                </ul>
 	            </div>
-	            <a class="btn btn-primary btn-md" href="/auth/cadastrar" role="button">
+	            <a class="btn btn-primary btn-md" href="/usuarios/cadastrar" role="button">
 	                <span class="fa-solid fa-plus" title="Cadastro" aria-hidden="true"></span>
 	                <span>Novo Usuário</span>
 	            </a>
@@ -95,79 +95,104 @@
 	                </div>
 	            </div>
 	
-	            <div class="table-responsive">
-	                <table class="table table-striped table-hover table-sm">
-	                    <thead>
-	                    <tr>
-	                        <th>#</th>
-	                        <th>Nome</th>
-	                        <th>Email</th>
-	                        <th>Grupo</th>
-	                        <th>Status</th>
-	                        <th>Ação</th>
-	                    </tr>
-	                    </thead>
-	                    <tbody>
-	                    <tr>
-	                        <td>1</td>
-							<td>Jose Inacio</td>
-	                        <td>jinacio@test.com</td>
-	                        <td>ADMIN</td>
-                        	<td>
-								<div class="form-check">
-								  <input class="form-check-input" type="checkbox" value="" id="statusCheckbox" checked onchange="toggleStatus(userId)" />
-								  <label class="form-check-label" for="statusCheckbox" id="statusText">
-								    Ativo
-								  </label>
-								</div>
-							</td>	
-							<td>	                           
-								<a class="btn btn-info btn-sm" href="/usuarios/editar/1" role="button">
-	                                <span class="fa-solid fa-pen-to-square" title="Editar" aria-hidden="true"></span>
-	                            </a>
-	                        </td>
-	                    </tr>
-						<tr>
-	                        <td>2</td>
-							<td>Jose Maria</td>
-	                        <td>jmaria@test.com</td>
-	                        <td>ESTOQUE</td>
-							<td>
-								<div class="form-check">
-								  <input class="form-check-input" type="checkbox" value="" id="statusCheckbox" checked onchange="toggleStatus(userId)" />
-								  <label class="form-check-label" for="statusCheckbox" id="statusText">
-								    Ativo
-								  </label>
-								</div>
-							</td>	
-							<td>	                           
-								<a class="btn btn-info btn-sm" href="/usuarios/editar/2" role="button">
-	                                <span class="fa-solid fa-pen-to-square" title="Editar" aria-hidden="true"></span>
-	                            </a>
-	                        </td>
-	                    </tr>
-						<tr>
-	                        <td>3</td>
-							<td>Cintia de Freitas</td>
-	                        <td>cfreitas@test.com</td>
-	                        <td>USER</td>
-							<td>
-								<div class="form-check">
-								  <input class="form-check-input" type="checkbox" value="" id="statusCheckbox" checked onchange="toggleStatus(userId)" />
-								  <label class="form-check-label" for="statusCheckbox" id="statusText">
-								    Ativo
-								  </label>
-								</div>
-							</td>	
-							<td>	                           
-								<a class="btn btn-info btn-sm" href="/usuarios/editar/3" role="button">
-	                                <span class="fa-solid fa-pen-to-square" title="Editar" aria-hidden="true"></span>
-	                            </a>
-	                        </td>
-	                    </tr>
-	                    </tbody>
-	                </table>
-	            </div>
+	           <div class="table-responsive">
+			    <table class="table table-striped table-hover table-sm">
+			        <thead>
+			            <tr>
+			                <th>#</th>
+			                <th>Nome</th>
+			                <th>Email</th>
+			                <th>Status</th>
+			                <th>Grupo</th>
+			                <th>Ação</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			            <!-- Loop para exibir a lista de usuários -->
+			            <tr th:each="user, iterStat : ${usuarios}">
+			                <td th:text="${iterStat.index + 1}"></td> <!-- Número sequencial -->
+			                <td th:text="${user.nome}"></td> <!-- Nome do usuário -->
+			                <td th:text="${user.email}"></td> <!-- Email do usuário -->			                
+			                <td>
+		                    <div class="form-check">
+							    <!-- Status com checkbox -->
+							    <input class="form-check-input" type="checkbox" 
+							           th:checked="${user.status}" 
+							           th:attr="onchange= 'toggleStatus(this, ' + ${user.id} + ')'" />
+							    <label class="form-check-label">
+							        <span th:text="${user.status ? 'Ativo' : 'Inativo'}"></span>
+							    </label>
+							</div>
+
+
+			                </td>
+			                <td th:text="${user.grupo}"></td> <!-- Grupo do usuário -->
+			                <td>
+							    <button type="button" class="btn btn-info btn-sm" th:onclick="'openEditModal(' + ${user.id} + ')'">
+							        <span class="fa-solid fa-pen-to-square" title="Editar" aria-hidden="true"></span>
+							    </button>
+							</td>
+			            </tr>
+			        </tbody>
+			    </table>
+			</div>
+			
+			<!-- Modal para Editar Usuário -->
+			<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
+			    <div class="modal-dialog" role="document">
+			        <div class="modal-content">
+			            <!-- Cabeçalho do Modal -->
+			            <div class="modal-header">
+			                <h5 class="modal-title" id="editUserModalLabel">Editar Usuário</h5>
+			                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			                    <span aria-hidden="true">&times;</span>
+			                </button>
+			            </div>
+			
+			            <!-- Formulário de Edição -->
+			            <form id="editUserForm">
+			                <input type="hidden" id="userId" name="id" /> <!-- ID do usuário oculto -->
+			                <div class="modal-body">
+			                    <!-- Campo Nome -->
+			                    <div class="form-group">
+			                        <label for="nome">Nome</label>
+			                        <input type="text" class="form-control" id="nome" name="nome" required />
+			                        <span id="nomeError" class="text-danger"></span> <!-- Mensagem de erro -->
+			                    </div>
+			                    
+			                    <!-- Campo CPF -->
+			                    <div class="form-group">
+			                        <label for="cpf">CPF</label>
+			                        <input type="text" class="form-control" id="cpf" name="cpf" required />
+			                        <span id="cpfError" class="text-danger"></span> <!-- Mensagem de erro -->
+			                    </div>
+			
+			                    <!-- Campo Senha -->
+			                    <div class="form-group">
+			                        <label for="senha">Senha</label>
+			                        <input type="password" class="form-control" id="senha" name="senha" required />
+			                        <span id="senhaError" class="text-danger"></span> <!-- Mensagem de erro -->
+			                    </div>
+			
+			                    <!-- Campo Confirmar Senha -->
+			                    <div class="form-group">
+			                        <label for="confirmaSenha">Confirmar Senha</label>
+			                        <input type="password" class="form-control" id="confirmaSenha" name="confirmaSenha" required />
+			                        <span id="confirmaSenhaError" class="text-danger"></span> <!-- Mensagem de erro -->
+			                    </div>
+			                </div>
+			
+			                <!-- Rodapé do Modal -->
+			                <div class="modal-footer">
+			                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+			                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+			                </div>
+			            </form>
+			        </div>
+			    </div>
+			</div>
+						
+
 	        </div>
 	    </section>
 
@@ -182,8 +207,11 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="/webjars/jquery/jquery.min.js"></script>
-<script src="/webjars/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+<!-- jQuery -->
+<script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+<!-- jQuery Mask Plugin -->
+<script src="/webjars/jquery-mask-plugin/1.14.16/jquery.mask.min.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
@@ -198,34 +226,60 @@
 	    })
 	});
 	
-	/* Altera status ao clicar na checkbox*/
-	function confirmToggleStatus(userId) {
-	        const checkbox = document.getElementById('statusCheckbox');
-	        const newStatus = checkbox.checked ? "ativo" : "inativo";
-	        const confirmChange = confirm(`Você realmente deseja mudar o status para ${newStatus}?`);
-	        
-	        if (confirmChange) {
-	            toggleStatus(userId);
-	        } else {
-	            // Reverte a mudança no checkbox se o usuário cancelar
-	            checkbox.checked = !checkbox.checked;
+	/* Altera status ao clicar na checkbox com confirmação */
+	function toggleStatus(checkbox, userId) {
+	    // Exibe o diálogo de confirmação
+	    const userConfirmation = confirm("Tem certeza de que deseja alterar o status?");
+	    
+	    if (!userConfirmation) {
+	        // Reverte o estado do checkbox caso o usuário clique em "Cancelar"
+	        checkbox.checked = !checkbox.checked;
+	        return; // Encerra a função
+	    }
+	
+	    // Caso confirmado, realiza a requisição ao servidor
+	    fetch(`/usuarios/${userId}/status`, {
+	        method: 'PUT',
+	        headers: {
+	            'Content-Type': 'application/json'
 	        }
-	    }
+	    }).then(response => response.json())
+	      .then(data => {
+	          console.log(data);
+	          // Atualiza o estado do checkbox e o texto com base no status retornado
+	          checkbox.checked = data.status; // Garante que o estado seja sincronizado com o servidor
+	          checkbox.nextElementSibling.querySelector('span').innerText = data.status ? "Ativo" : "Inativo"; // Atualiza o texto
+	      })
+	      .catch(error => {
+	          console.error('Error:', error);
+	          // Reverte o estado do checkbox em caso de erro
+	          checkbox.checked = !checkbox.checked;
+	      });
+	}
+		
+	
 
-	    function toggleStatus(userId) {
-	        fetch(`/usuarios/${userId}/status`, {
-	            method: 'PUT',
-	            headers: {
-	                'Content-Type': 'application/json'
-	            }
-	        }).then(response => response.json())
-	          .then(data => {
-	              console.log(data);
-	              document.getElementById('statusCheckbox').checked = data.status; // Atualize o checkbox com o novo status
-	              document.getElementById('statusText').innerText = data.status ? "Ativo" : "Inativo"; // Atualize o texto com base no status
-	          })
-	          .catch(error => console.error('Error:', error));
-	    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+       console.log('Scripts carregados.');
+    });
+
+    function openEditModal(userId) {
+        fetch(`/usuarios/detalhes/${userId}`)
+            .then(response => response.json())
+            .then(user => {
+                document.getElementById('userId').value = user.id;
+                document.getElementById('nome').value = user.nome;
+                document.getElementById('cpf').value = user.cpf;
+                document.getElementById('senha').value = ""; // Não preencher por segurança
+                document.getElementById('confirmaSenha').value = ""; // Não preencher por segurança
+            })
+            .catch(error => console.error('Erro ao carregar dados do usuário:', error));
+
+        $('#editUserModal').modal('show'); // Exibe o modal
+    }
+
+			    
 
 </script>
 </body>
