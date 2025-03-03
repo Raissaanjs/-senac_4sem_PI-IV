@@ -23,10 +23,10 @@ public class UserDto {
     @ValidEmail(groups = ValidationGroups.Create.class)
     private String email;
 
-    @NotBlank(message = "{senha.NotBlank}", groups = { ValidationGroups.Create.class, ValidationGroups.Update.class })
+    @NotBlank(message = "{senha.NotBlank}", groups = ValidationGroups.Create.class)
     private String senha;
 
-    @NotBlank(message = "{confirmasenha.NotBlank}", groups = { ValidationGroups.Create.class, ValidationGroups.Update.class })
+    @NotBlank(message = "{confirmasenha.NotBlank}", groups = ValidationGroups.Create.class)
     private String confirmasenha;
 
     private UserGroup grupo = UserGroup.USER; //Define o grupo padrão como USER

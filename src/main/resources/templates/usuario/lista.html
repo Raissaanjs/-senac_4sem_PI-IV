@@ -62,6 +62,7 @@
 	        </nav>
 	    </aside>
 	
+	
 	    <section class="layout-content">
 			<nav class="navbar navbar-expand-md bg-light">
 	            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
@@ -80,20 +81,20 @@
 	
 	        <div class="container">
 	            <div class="row">
-			    <div class="col">
-			        <div class="d-flex align-items-center" id="collapseNome">
-			            <nav class="navbar navbar-light bg-light">
-			                <form class="d-flex" method="GET" action="/usuarios/buscar/nome">
-			                    <input class="form-control me-2" type="search" placeholder="nome" style="width: 20rem"
-			                    aria-label="Search" name="nome" />
-			                    <button class="btn btn-success w-60" id="collapseNome">
-								    Buscar Nome
-								</button>
-			                </form>
-			            </nav>
-			        </div>
-			    </div>
-			</div>
+				    <div class="col">
+				        <div class="d-flex align-items-center" id="collapseNome">
+				            <nav class="navbar navbar-light bg-light">
+				                <form class="d-flex" method="GET" action="/usuarios/buscar/nome">
+				                    <input class="form-control me-2" type="search" placeholder="nome" style="width: 20rem"
+				                    aria-label="Search" name="nome" />
+				                    <button class="btn btn-success w-60" id="collapseNome">
+									    Buscar Nome
+									</button>
+				                </form>
+				            </nav>
+				        </div>
+				    </div>
+				</div>
 
 	
 	           <div class="table-responsive">
@@ -137,59 +138,51 @@
 			</div>
 			
 			<!-- Modal para Editar Usuário -->
-			<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
+			<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
 			    <div class="modal-dialog" role="document">
 			        <div class="modal-content">
 			            <!-- Cabeçalho do Modal -->
 			            <div class="modal-header">
 			                <h5 class="modal-title" id="editUserModalLabel">Editar Usuário</h5>
-			                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			                    <span aria-hidden="true">&times;</span>
-			                </button>
+			                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			            </div>
 			
 			            <!-- Formulário de Edição -->
 			            <form id="editUserForm">
-			                <input type="hidden" id="userId" name="id" /> <!-- ID do usuário oculto -->
-			                <div class="modal-body">
-			                    <!-- Campo Nome -->
-			                    <div class="form-group">
-			                        <label for="nome">Nome</label>
-			                        <input type="text" class="form-control" id="nome" name="nome" required />
-			                        <span id="nomeError" class="text-danger"></span> <!-- Mensagem de erro -->
-			                    </div>
-			                    
-			                    <!-- Campo CPF -->
-			                    <div class="form-group">
-			                        <label for="cpf">CPF</label>
-			                        <input type="text" class="form-control" id="cpf" name="cpf" required />
-			                        <span id="cpfError" class="text-danger"></span> <!-- Mensagem de erro -->
-			                    </div>
-			
-			                    <!-- Campo Senha -->
-			                    <div class="form-group">
-			                        <label for="senha">Senha</label>
-			                        <input type="password" class="form-control" id="senha" name="senha" required />
-			                        <span id="senhaError" class="text-danger"></span> <!-- Mensagem de erro -->
-			                    </div>
-			
-			                    <!-- Campo Confirmar Senha -->
-			                    <div class="form-group">
-			                        <label for="confirmaSenha">Confirmar Senha</label>
-			                        <input type="password" class="form-control" id="confirmaSenha" name="confirmaSenha" required />
-			                        <span id="confirmaSenhaError" class="text-danger"></span> <!-- Mensagem de erro -->
-			                    </div>
-			                </div>
-			
-			                <!-- Rodapé do Modal -->
-			                <div class="modal-footer">
-			                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-			                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-			                </div>
-			            </form>
+						    <input type="hidden" id="userId" name="id" />
+						    <div class="modal-body">
+						       <div class="form-group">
+								    <label for="nome">Nome</label>
+								    <input type="text" class="form-control" id="nome" name="nome" required />
+								    <span id="nomeError" class="text-danger"></span>
+								</div>
+								<div class="form-group">
+								    <label for="cpf">CPF</label>
+								    <input type="text" class="form-control" id="cpf" name="cpf" required />
+								    <span id="cpfError" class="text-danger"></span>
+								</div>
+								<div class="form-group">
+								    <label for="senha">Senha</label>
+								    <input type="password" class="form-control" id="senha" name="senha" />
+								    <span id="senhaError" class="text-danger"></span>
+								</div>
+								<div class="form-group">
+								    <label for="confirmasenha">Confirmar Senha</label>
+								    <input type="password" class="form-control" id="confirmasenha" name="confirmasenha" />
+								    <span id="confirmaSenhaError" class="text-danger"></span>
+								</div>
+
+						    </div>
+						    <div class="modal-footer">
+						        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+						        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+						    </div>
+						</form>
+
 			        </div>
 			    </div>
 			</div>
+
 	        </div>
 	    </section>
 
@@ -228,7 +221,7 @@
 	/* Altera status ao clicar na checkbox com confirmação */
 	function toggleStatus(checkbox, userId) {
 	    // Exibe o diálogo de confirmação
-	    const userConfirmation = confirm("Tem certeza de que deseja alterar o status?");
+	    const userConfirmation = confirm("Tem certeza de que deseja alterar o Status?");
 	    
 	    if (!userConfirmation) {
 	        // Reverte o estado do checkbox caso o usuário clique em "Cancelar"
@@ -255,30 +248,113 @@
 	          checkbox.checked = !checkbox.checked;
 	      });
 	}
-		
 	
-
-    
-    document.addEventListener('DOMContentLoaded', () => {
-       console.log('Scripts carregados.');
-    });
-
-    function openEditModal(userId) {
-        fetch(`/usuarios/detalhes/${userId}`)
-            .then(response => response.json())
-            .then(user => {
-                document.getElementById('userId').value = user.id;
-                document.getElementById('nome').value = user.nome;
-                document.getElementById('cpf').value = user.cpf;
-                document.getElementById('senha').value = ""; // Não preencher por segurança
-                document.getElementById('confirmaSenha').value = ""; // Não preencher por segurança
-            })
-            .catch(error => console.error('Erro ao carregar dados do usuário:', error));
-
-        $('#editUserModal').modal('show'); // Exibe o modal
-    }
-
-			    
+	// Define a função openEditModal no escopo global
+	window.openEditModal = function (userId) {
+	    console.log("Função chamada com ID:", userId);
+	
+	    // Faz a requisição para obter os detalhes do usuário
+	    fetch(`/usuarios/detalhes/${userId}`)
+	        .then(response => {
+	            console.log("Status da resposta:", response.status); // Verifica o status da resposta
+	            if (!response.ok) {
+	                throw new Error(`Erro ${response.status}: Não foi possível carregar os dados.`);
+	            }
+	            return response.json(); // Converte a resposta em JSON
+	        })
+	        .then(data => {
+	            console.log("Dados recebidos do backend:", data); // Exibe os dados no console para depuração
+	
+	            // Preenche os campos do modal com os dados do usuário
+	            document.getElementById('userId').value = userId; // Atualiza o campo hidden com o ID do usuário
+	            document.getElementById('nome').value = data.nome || ''; // Insere o nome
+	            document.getElementById('cpf').value = data.cpf || ''; // Insere o CPF
+	        })
+	        .catch(error => {
+	            console.error("Erro ao buscar os dados do usuário:", error); // Exibe o erro no console
+	            alert("Não foi possível carregar os dados do usuário. Tente novamente."); // Mostra uma mensagem para o usuário
+	        });
+	
+	    // Exibe o modal
+	    const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
+	    modal.show();
+	};
+	
+	// Adiciona evento ao formulário para salvar alterações
+	document.getElementById('editUserForm').addEventListener('submit', function (event) {
+	    event.preventDefault(); // Impede o comportamento padrão do formulário
+	
+	    // Captura os elementos do formulário
+	    const senhaInput = document.getElementById('senha');
+	    const confirmaSenhaInput = document.getElementById('confirmasenha');
+	    const senhaError = document.getElementById('senhaError'); // Mensagem de erro para senha
+	    const confirmaSenhaError = document.getElementById('confirmaSenhaError'); // Mensagem de erro para confirmação
+	
+	    let valid = true; // Controle de validação
+	
+	    // Validação: As senhas devem corresponder, se fornecidas
+	    if (senhaInput.value || confirmaSenhaInput.value) { // Valida apenas se as senhas forem preenchidas
+	        if (senhaInput.value !== confirmaSenhaInput.value) {
+	            confirmaSenhaError.textContent = "As senhas não coincidem."; // Mensagem de erro
+	            confirmaSenhaError.style.display = 'block';
+	            confirmaSenhaInput.classList.add('is-invalid');
+	            valid = false;
+	        } else {
+	            confirmaSenhaError.style.display = 'none'; // Remove erro se for válido
+	            confirmaSenhaInput.classList.remove('is-invalid');
+	        }
+	    }
+	
+	    // Impede a submissão se houver erros
+	    if (!valid) {
+	        return;
+	    }
+	
+	    // Coleta os dados do formulário
+	    const userId = document.getElementById('userId').value; // ID do usuário
+	    const userData = {
+	        nome: document.getElementById('nome').value,
+	        cpf: document.getElementById('cpf').value,
+	        senha: senhaInput.value, // Nova senha, se fornecida
+	        confirmasenha: confirmaSenhaInput.value // Nova confirmação, se fornecida
+	    };
+	
+	    // Envia os dados para o backend usando método PUT
+	    fetch(`/usuarios/${userId}`, {
+	        method: 'PUT',
+	        headers: {
+	            'Content-Type': 'application/json'
+	        },
+	        body: JSON.stringify(userData) // Converte os dados para JSON
+	    })
+	    .then(response => {
+	        if (response.ok) {
+	            alert("Usuário atualizado com sucesso!");
+	            location.reload(); // Recarrega a página ou atualiza a tabela
+	        } else if (response.status === 400) {
+	            // Trata erros de validação retornados pelo backend
+	            response.json().then(errors => {
+	                console.error("Erros de validação:", errors);
+	                // Exibe os erros abaixo dos campos no formulário
+	                Object.keys(errors).forEach(field => {
+	                    const errorElement = document.getElementById(`${field}Error`);
+	                    if (errorElement) {
+	                        errorElement.textContent = errors[field];
+	                        errorElement.style.display = 'block';
+	                        document.getElementById(field).classList.add('is-invalid');
+	                    }
+	                });
+	            });
+	        } else {
+	            alert("Erro ao salvar os dados. Tente novamente.");
+	        }
+	    })
+	    .catch(error => {
+	        console.error("Erro na requisição:", error);
+	        alert("Erro de comunicação com o servidor.");
+	    });
+	});
+		   
 
 </script>
 </body>

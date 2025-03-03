@@ -1,8 +1,6 @@
 package com.devsoft.rgdi_store.controllers;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -31,7 +29,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.devsoft.rgdi_store.dto.UserDto;
 import com.devsoft.rgdi_store.services.UserService;
-import com.devsoft.rgdi_store.services.exceptions.FieldValidationException;
 import com.devsoft.rgdi_store.validation.ValidationGroups;
 
 import jakarta.validation.groups.Default;
@@ -62,7 +59,8 @@ public class UserController {
 	    Page<UserDto> dtoPage = userService.findAll(pageable);
 	    model.addAttribute("usuarios", dtoPage.getContent()); // Adiciona a lista de usuários
 	    model.addAttribute("page", dtoPage); // Adiciona os metadados da página
-	    return "usuario/lista"; // Caminho do arquivo HTML em templates/usuario/listar.html
+	    model.addAttribute("dto", new UserDto()); // Garante que dto esteja disponível no template
+	    return "usuario/lista"; // Caminho do arquivo HTML em templates/usuario/lista.html
 	}
 
 	@PostMapping("/salvar")
@@ -72,17 +70,12 @@ public class UserController {
 	        model.addAttribute("dto", dto); // Mantém os dados preenchidos no formulário
 	        return "usuario/cadastro"; // Retorna para a página do formulário
 	    }
-
-	    // Valida a senha antes de salvar
-	    //validatePass(dto);
-
 	    // Chama o mesmo serviço usado no método insert
 	    userService.insert(dto);
 
 	    // Redireciona para a página de listagem após salvar
 	    return "redirect:/usuarios/listar";
 	}
-
 	
 	//lista com paginação
 	@GetMapping("/api")
@@ -101,6 +94,15 @@ public class UserController {
 	}
 
 	
+	
+	@GetMapping("/editar/{id}")
+	public String editarUsuario(@PathVariable Long id, Model model) {
+	    UserDto dto = userService.findById(id); // Objeto do usuário para edição
+	    model.addAttribute("dto", dto); // Adiciona ao modelo
+	    return "usuario/lista"; // Retorna o template correto
+	}
+	
+	//para framework de Front
 	@GetMapping("/detalhes/{id}")
 	public ResponseEntity<UserDto> findById(@PathVariable Long id) {
 		UserDto dto = userService.findById(id);
@@ -109,8 +111,7 @@ public class UserController {
 	
 	//não esquecer o "@Valid" - necessario para validacao de campos
 	@PostMapping
-    public ResponseEntity<UserDto> insert(@Validated({ ValidationGroups.Create.class, Default.class }) @RequestBody UserDto dto) {		
-		validatePass(dto);
+    public ResponseEntity<UserDto> insert(@Validated({ ValidationGroups.Create.class, Default.class }) @RequestBody UserDto dto) {	
 		dto = userService.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
@@ -120,7 +121,10 @@ public class UserController {
 	//não esquecer o "@Validated" - necessario para validacao de campos
 	//@Validated (Criado grupo de validação definido o email não ser usado no "update")
 	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@PathVariable Long id, @Validated({ ValidationGroups.Update.class, Default.class }) @RequestBody UserDto dto, BindingResult bindingResult) {
+	public ResponseEntity<?> update(@PathVariable Long id, 
+	                                @Validated({ ValidationGroups.Update.class, Default.class }) 
+	                                @RequestBody UserDto dto, 
+	                                BindingResult bindingResult) {
 	    if (bindingResult.hasErrors()) {
 	        Map<String, String> errors = bindingResult.getFieldErrors()
 	            .stream()
@@ -131,10 +135,25 @@ public class UserController {
 	        return ResponseEntity.badRequest().body(errors);
 	    }
 
-	    validatePass(dto);
+	    // Busca o usuário existente no banco
+	    UserDto existingUser = userService.findById(id);
+
+	    // Caso a senha não seja fornecida, mantém a senha atual
+	    if (dto.getSenha() == null || dto.getSenha().isEmpty()) {
+	        dto.setSenha(existingUser.getSenha());
+	    }
+
+	    // Caso a confirmaSenha não seja fornecida, mantém o confirmaSenha atual
+	    if (dto.getConfirmasenha() == null || dto.getConfirmasenha().isEmpty()) {
+	        dto.setConfirmasenha(existingUser.getConfirmasenha());
+	    }
+
+	    // Atualiza o usuário com os novos dados
 	    dto = userService.update(id, dto);
 	    return ResponseEntity.ok(dto);
 	}
+
+
 	
 	//alterna status
 	@PutMapping("/{id}/status")
@@ -143,17 +162,4 @@ public class UserController {
 	    return ResponseEntity.ok(dto);
 	}	
 	
-	
-	//Valida a senha
-	private void validatePass(UserDto dto) {
-        List<FieldError> fieldErrors = new ArrayList<>();
-        
-        if (!dto.getSenha().equals(dto.getConfirmasenha())) {
-            fieldErrors.add(new FieldError("User", "senha/ confirmasenha", "As senhas não coincidem"));
-        }
-
-        if (!fieldErrors.isEmpty()) {
-            throw new FieldValidationException("Erro de validação", fieldErrors);
-        }
-	}
 }
