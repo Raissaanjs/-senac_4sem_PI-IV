@@ -80,31 +80,32 @@
 	
 	        <div class="container">
 	            <div class="row">
-	                <div class="col">
-	                    <div class="collapse" id="collapseNome">
-	
-	                        <nav class="navbar navbar-light bg-light">
-	                            <form class="form-inline" method="GET" action="/usuarios/buscar/nome">
-	                                <input class="form-control mr-sm-2" type="search" placeholder="nome" aria-label="Search"
-	                                       name="nome" />
-	                                <button class="btn btn-outline-success my-2 my-sm-0">Search</button>
-	                            </form>
-	                        </nav>
-	
-	                    </div>
-	                </div>
-	            </div>
+			    <div class="col">
+			        <div class="d-flex align-items-center" id="collapseNome">
+			            <nav class="navbar navbar-light bg-light">
+			                <form class="d-flex" method="GET" action="/usuarios/buscar/nome">
+			                    <input class="form-control me-2" type="search" placeholder="nome" style="width: 20rem"
+			                    aria-label="Search" name="nome" />
+			                    <button class="btn btn-success w-60" id="collapseNome">
+								    Buscar Nome
+								</button>
+			                </form>
+			            </nav>
+			        </div>
+			    </div>
+			</div>
+
 	
 	           <div class="table-responsive">
 			    <table class="table table-striped table-hover table-sm">
 			        <thead>
 			            <tr>
-			                <th>#</th>
+			                <th style="width: 4rem;">#</th>
 			                <th>Nome</th>
 			                <th>Email</th>
-			                <th>Status</th>
-			                <th>Grupo</th>
-			                <th>Ação</th>
+			                <th style="width: 6.5rem;">Status</th>
+			                <th style="width: 9rem;">Grupo</th>
+			                <th style="width: 4rem;">Ação</th>
 			            </tr>
 			        </thead>
 			        <tbody>
@@ -123,10 +124,8 @@
 							        <span th:text="${user.status ? 'Ativo' : 'Inativo'}"></span>
 							    </label>
 							</div>
-
-
 			                </td>
-			                <td th:text="${user.grupo}"></td> <!-- Grupo do usuário -->
+			                <td th:text="${user.grupo.getGroup()}"></td> <!-- Grupo do usuário -->
 			                <td>
 							    <button type="button" class="btn btn-info btn-sm" th:onclick="'openEditModal(' + ${user.id} + ')'">
 							        <span class="fa-solid fa-pen-to-square" title="Editar" aria-hidden="true"></span>
@@ -191,8 +190,6 @@
 			        </div>
 			    </div>
 			</div>
-						
-
 	        </div>
 	    </section>
 
@@ -211,19 +208,21 @@
 <script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
 <!-- jQuery Mask Plugin -->
 <script src="/webjars/jquery-mask-plugin/1.14.16/jquery.mask.min.js"></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
 <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 
-    $(function () {
-        $('[data-toggle="popover"]').popover();
-    });
-    
-	$(document).ready(function(){
+    document.addEventListener('DOMContentLoaded', () => {
+	    console.log('Scripts carregados.');
+	    
+	    // Inicialize popovers e outros recursos
+	    $('[data-toggle="popover"]').popover();
+	
+	    // Ações para o menu sidebar
 	    $(".navbar-toggle").click(function(){
 	        $(".sidebar").toggleClass("sidebar-open");
-	    })
+	    });
 	});
 	
 	/* Altera status ao clicar na checkbox com confirmação */

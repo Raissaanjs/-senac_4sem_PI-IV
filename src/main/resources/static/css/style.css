@@ -132,3 +132,44 @@ body {
 .footer-edit{
 	height: 80px;
 }
+
+.form-control {
+  display: block;
+  width: 100%; /* Ocupa 100% do contêiner */
+  height: calc(1.5em + .75rem + 2px); /* Define a altura do campo */
+  padding: .375rem .75rem; /* Espaçamento interno (superior/inferior e laterais) */
+  font-size: 1rem; /* Tamanho da fonte */
+  font-weight: 400; /* Peso da fonte (normal) */
+  line-height: 1.5; /* Altura da linha */
+  color: #495057; /* Cor do texto */
+  background-color: #fff; /* Cor de fundo (branco) */
+  background-clip: padding-box; /* Limita o fundo à área de preenchimento */
+  border: 1px solid #ced4da; /* Borda padrão */
+  border-radius: .25rem; /* Arredondamento das bordas */
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out; /* Transições suaves */
+}
+
+.form-control:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #80bdff; /* Cor da borda quando o campo está focado */
+  outline: 0; /* Remove o contorno padrão */
+  box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25); /* Adiciona um efeito ao redor do campo */
+}
+
+.is-invalid {
+  border-color: #dc3545; /* Cor vermelha */
+  padding-right: calc(1.5em + .75rem);
+  background-image: url("data:image/svg+xml,..."); /* Ícone para campo inválido */
+  background-repeat: no-repeat;
+  background-position: right calc(.375rem + .1875rem) center;
+  background-size: calc(.75rem + .375rem) calc(.75rem + .375rem);
+}
+
+.error-message {
+    font-size: 0.875rem;
+    color: #dc3545; /* Vermelho para mensagens de erro */
+    margin-top: 0.25rem;
+}
+
+
