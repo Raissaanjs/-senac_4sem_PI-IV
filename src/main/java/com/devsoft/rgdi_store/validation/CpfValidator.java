@@ -5,22 +5,32 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class CpfValidator implements ConstraintValidator<ValidCPF, String> {
 
-    @Override
-    public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value == null || value.isBlank()) {
-            return false; // CPF nulo ou vazio é inválido
-        }
+	@Override
+	public boolean isValid(String value, ConstraintValidatorContext context) {
+	    if (value == null || value.isBlank()) {
+	        context.disableDefaultConstraintViolation();
+	        context.buildConstraintViolationWithTemplate("CPF não pode ser vazio")
+	               .addConstraintViolation();
+	        return false;
+	    }
 
-        // Remove caracteres não numéricos do CPF
-        String cpf = value.replaceAll("\\D", "");
+	    String cpf = value.replaceAll("\\D", "");
+	    if (cpf.length() != 11 || hasAllDigitsEqual(cpf)) {
+	        context.disableDefaultConstraintViolation();
+	        context.buildConstraintViolationWithTemplate("CPF deve conter 11 dígitos válidos")
+	               .addConstraintViolation();
+	        return false;
+	    }
 
-        // Valida o tamanho do CPF e aplica regras de validação
-        if (cpf.length() != 11 || hasAllDigitsEqual(cpf)) {
-            return false; // CPF precisa ter 11 dígitos e não pode ter todos os dígitos iguais
-        }
+	    if (!isValidCpf(cpf)) {
+	        context.disableDefaultConstraintViolation();
+	        context.buildConstraintViolationWithTemplate("CPF inválido")
+	               .addConstraintViolation();
+	        return false;
+	    }
 
-        return isValidCpf(cpf);
-    }
+	    return true;
+	}
 
     private boolean hasAllDigitsEqual(String cpf) {
         // Verifica se todos os dígitos são iguais
