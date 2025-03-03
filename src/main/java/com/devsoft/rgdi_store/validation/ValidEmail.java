@@ -1,4 +1,4 @@
-package com.devsoft.rgdi_store.dto;
+package com.devsoft.rgdi_store.validation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -12,7 +12,7 @@ import jakarta.validation.Payload;
 @Target({ ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidEmail {
-    String message() default "Email inválido";
+    String message() default "{com.devsoft.rgdi_store.dto.ValidEmail.message}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

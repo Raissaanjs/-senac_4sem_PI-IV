@@ -1,4 +1,4 @@
-package com.devsoft.rgdi_store.dto;
+package com.devsoft.rgdi_store.validation;
 
 import java.time.Instant;
 

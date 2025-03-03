@@ -9,12 +9,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.devsoft.rgdi_store.dto.CustomError;
-import com.devsoft.rgdi_store.dto.ValidationError;
 import com.devsoft.rgdi_store.services.exceptions.DataIntegrityViolationException;
 import com.devsoft.rgdi_store.services.exceptions.DatabaseException;
 import com.devsoft.rgdi_store.services.exceptions.FieldValidationException;
 import com.devsoft.rgdi_store.services.exceptions.ResourceNotFoundException;
+import com.devsoft.rgdi_store.validation.CustomError;
+import com.devsoft.rgdi_store.validation.ValidationError;
 
 import jakarta.servlet.http.HttpServletRequest;
 

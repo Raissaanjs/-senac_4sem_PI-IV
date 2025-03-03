@@ -1,51 +1,60 @@
-package com.devsoft.rgdi_store.dto;
+package com.devsoft.rgdi_store.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import java.util.regex.Pattern;
 
 public class CpfValidator implements ConstraintValidator<ValidCPF, String> {
-    private static final String CPF_PATTERN = "^[0-9]{11}$";
-
-    private Pattern pattern = Pattern.compile(CPF_PATTERN);
 
     @Override
-    public void initialize(ValidCPF constraintAnnotation) {
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        if (value == null || value.isBlank()) {
+            return false; // CPF nulo ou vazio é inválido
+        }
+
+        // Remove caracteres não numéricos do CPF
+        String cpf = value.replaceAll("\\D", "");
+
+        // Valida o tamanho do CPF e aplica regras de validação
+        if (cpf.length() != 11 || hasAllDigitsEqual(cpf)) {
+            return false; // CPF precisa ter 11 dígitos e não pode ter todos os dígitos iguais
+        }
+
+        return isValidCpf(cpf);
     }
 
-    @Override
-    public boolean isValid(String cpf, ConstraintValidatorContext context) {
-        if (cpf == null || !pattern.matcher(cpf).matches()) {
+    private boolean hasAllDigitsEqual(String cpf) {
+        // Verifica se todos os dígitos são iguais
+        return cpf.chars().allMatch(ch -> ch == cpf.charAt(0));
+    }
+
+    private boolean isValidCpf(String cpf) {
+        try {
+            // Cálculo do primeiro dígito verificador
+            int sum1 = 0;
+            for (int i = 0; i < 9; i++) {
+                sum1 += Character.getNumericValue(cpf.charAt(i)) * (10 - i);
+            }
+            int firstVerifier = 11 - (sum1 % 11);
+            if (firstVerifier >= 10) {
+                firstVerifier = 0;
+            }
+
+            // Cálculo do segundo dígito verificador
+            int sum2 = 0;
+            for (int i = 0; i < 10; i++) {
+                sum2 += Character.getNumericValue(cpf.charAt(i)) * (11 - i);
+            }
+            int secondVerifier = 11 - (sum2 % 11);
+            if (secondVerifier >= 10) {
+                secondVerifier = 0;
+            }
+
+            // Verifica se os dígitos verificadores correspondem
+            return firstVerifier == Character.getNumericValue(cpf.charAt(9)) &&
+                   secondVerifier == Character.getNumericValue(cpf.charAt(10));
+        } catch (Exception e) {
+            // Qualquer erro na validação retorna falso
             return false;
         }
-        return isCpfValid(cpf);
-    }
-
-    private boolean isCpfValid(String cpf) {
-        int[] cpfArray = new int[11];
-        for (int i = 0; i < 11; i++) {
-            cpfArray[i] = Character.getNumericValue(cpf.charAt(i));
-        }
-
-        int sum1 = 0;
-        for (int i = 0; i < 9; i++) {
-            sum1 += cpfArray[i] * (10 - i);
-        }
-        int check1 = 11 - (sum1 % 11);
-        if (check1 >= 10) {
-            check1 = 0;
-        }
-
-        int sum2 = 0;
-        for (int i = 0; i < 10; i++) {
-            sum2 += cpfArray[i] * (11 - i);
-        }
-        int check2 = 11 - (sum2 % 11);
-        if (check2 >= 10) {
-            check2 = 0;
-        }
-
-        return cpfArray[9] == check1 && cpfArray[10] == check2;
     }
 }
-
