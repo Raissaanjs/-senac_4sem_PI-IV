@@ -9,8 +9,7 @@ import com.devsoft.rgdi_store.entities.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, Long>{
 	//validação para email único
-	boolean existsByEmail(String email);
-	
+	boolean existsByEmail(String email);	
 	
     // Busca todos os registros com paginação
     Page<UserEntity> findAll(Pageable pageable);

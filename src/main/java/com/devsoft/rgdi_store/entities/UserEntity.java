@@ -2,8 +2,6 @@ package com.devsoft.rgdi_store.entities;
 
 import java.util.Objects;
 
-import com.devsoft.rgdi_store.dto.UserDto;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,18 +25,6 @@ public class UserEntity {
     private boolean status;
     private UserGroup grupo;    
 
-    // Construtor para converter Entity para DTO
-    public UserEntity(UserDto userDto) {
-        id = userDto.getId();
-        nome = userDto.getNome();
-        cpf = userDto.getCpf();
-        email = userDto.getEmail();
-        senha = userDto.getSenha();
-        confirmasenha = userDto.getConfirmasenha();        
-        status = userDto.isStatus();
-        grupo = userDto.getGrupo();
-    }
-
     // Construtor padrão
     public UserEntity() {
     }
@@ -53,9 +39,10 @@ public class UserEntity {
         this.confirmasenha = confirmasenha;
         this.status = status;
         this.grupo = grupo;
-    }
+    } 
+   
 
-    // Getters e Setters
+	// Getters e Setters
     public Long getId() {
         return id;
     }

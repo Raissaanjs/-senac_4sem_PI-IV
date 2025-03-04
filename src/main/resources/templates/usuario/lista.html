@@ -192,20 +192,17 @@
 			                        <input type="password" class="form-control" id="confirmasenha" name="confirmasenha" />
 			                        <span id="confirmaSenhaError" class="text-danger"></span>
 			                    </div>
-			                    <!-- Campo de Seleção para Alterar Grupo -->
+			                    <!-- Campo de Grupo -->
 			                    <div class="form-group">
 			                        <label for="grupo">Grupo</label>
-			                        <select class="form-control" id="grupo" name="grupo" >
-								        <option value="" disabled>Selecione um grupo</option>
-								        <!-- Itera pelos valores do enum UserGroup -->
-								        <option th:each="g : ${grupos}" 
-								                th:value="${g.name()}" 
-								                th:text="${g.group}" 
-								                th:selected="${g.name() == dto.grupo}">
-								        </option>
-								    </select>
-			                        <span id="grupoError" class="text-danger"></span>
-			                    </div>
+			                        <select class="form-control" id="grupo" name="grupo">
+			                            <option value="">Selecione...</option>
+			                            <option value="ADMIN">ADMIN</option>
+			                            <option value="ESTOQ">ESTOQ</option>
+			                            <option value="USER">USER</option>
+			                        </select>
+			                        <div class="invalid-feedback" id="grupoError" style="display: none;"></div>
+			                    </div>			                   
 			                </div>
 			                <div class="modal-footer">
 			                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -285,29 +282,36 @@
 	}
 	
 	// Define a função openEditModal no escopo global
+	// Função para abrir o modal de edição
 	window.openEditModal = function (userId) {
-	    console.log("Função chamada com ID:", userId);
+	    console.log("Abrindo modal para o ID:", userId);
+	
+	    // Salva o userId no campo hidden do formulário
+	    document.getElementById('userId').value = userId;
 	
 	    // Faz a requisição para obter os detalhes do usuário
-	    fetch(`/usuarios/detalhes/${userId}`)
+	    fetch(`/usuarios/detalhes/${userId}`) // Atualiza o endpoint para refletir o ajuste no backend
 	        .then(response => {
-	            console.log("Status da resposta:", response.status); // Verifica o status da resposta
 	            if (!response.ok) {
 	                throw new Error(`Erro ${response.status}: Não foi possível carregar os dados.`);
 	            }
-	            return response.json(); // Converte a resposta em JSON
+	            return response.json();
 	        })
 	        .then(data => {
-	            console.log("Dados recebidos do backend:", data); // Exibe os dados no console para depuração
+	            console.log("Dados carregados do backend:", data);
 	
-	            // Preenche os campos do modal com os dados do usuário
-	            document.getElementById('userId').value = userId; // Atualiza o campo hidden com o ID do usuário
-	            document.getElementById('nome').value = data.nome || ''; // Insere o nome
-	            document.getElementById('cpf').value = data.cpf || ''; // Insere o CPF
+	            // Preenche os campos do modal
+	            document.getElementById('nome').value = data.nome || ''; // Nome
+	            document.getElementById('cpf').value = data.cpf || ''; // CPF
+	            document.getElementById('senha').value = ''; // Limpa a senha
+	            document.getElementById('confirmasenha').value = ''; // Limpa a confirmação
+	
+	            // Preenche o grupo
+	            document.getElementById('grupo').value = data.grupo || ''; // Seleciona o grupo salvo
 	        })
 	        .catch(error => {
-	            console.error("Erro ao buscar os dados do usuário:", error); // Exibe o erro no console
-	            alert("Não foi possível carregar os dados do usuário. Tente novamente."); // Mostra uma mensagem para o usuário
+	            console.error("Erro ao buscar os dados do usuário:", error);
+	            alert("Não foi possível carregar os dados do usuário. Tente novamente.");
 	        });
 	
 	    // Exibe o modal
@@ -319,58 +323,62 @@
 	document.getElementById('editUserForm').addEventListener('submit', function (event) {
 	    event.preventDefault(); // Impede o comportamento padrão do formulário
 	
+	    // Captura o userId a partir do campo hidden
+	    const userId = document.getElementById('userId').value;
+	
 	    // Captura os elementos do formulário
 	    const senhaInput = document.getElementById('senha');
 	    const confirmaSenhaInput = document.getElementById('confirmasenha');
-	    const senhaError = document.getElementById('senhaError'); // Mensagem de erro para senha
-	    const confirmaSenhaError = document.getElementById('confirmaSenhaError'); // Mensagem de erro para confirmação
+	    const senhaError = document.getElementById('senhaError');
+	    const confirmaSenhaError = document.getElementById('confirmaSenhaError');
 	
 	    let valid = true; // Controle de validação
 	
-	    // Validação: As senhas devem corresponder, se fornecidas
-	    if (senhaInput.value || confirmaSenhaInput.value) { // Valida apenas se as senhas forem preenchidas
+	    // Validação: As senhas devem corresponder, se preenchidas
+	    if (senhaInput.value || confirmaSenhaInput.value) {
 	        if (senhaInput.value !== confirmaSenhaInput.value) {
-	            confirmaSenhaError.textContent = "As senhas não coincidem."; // Mensagem de erro
+	            confirmaSenhaError.textContent = "As senhas não coincidem.";
 	            confirmaSenhaError.style.display = 'block';
 	            confirmaSenhaInput.classList.add('is-invalid');
 	            valid = false;
 	        } else {
-	            confirmaSenhaError.style.display = 'none'; // Remove erro se for válido
+	            confirmaSenhaError.textContent = '';
+	            confirmaSenhaError.style.display = 'none';
 	            confirmaSenhaInput.classList.remove('is-invalid');
 	        }
 	    }
 	
-	    // Impede a submissão se houver erros
+	    // Interrompe a submissão se houver erros
 	    if (!valid) {
 	        return;
 	    }
 	
 	    // Coleta os dados do formulário
-	    const userId = document.getElementById('userId').value; // ID do usuário
 	    const userData = {
 	        nome: document.getElementById('nome').value,
 	        cpf: document.getElementById('cpf').value,
-	        senha: senhaInput.value, // Nova senha, se fornecida
-	        confirmasenha: confirmaSenhaInput.value // Nova confirmação, se fornecida
+	        grupo: document.getElementById('grupo').value,
+	        // Envia as senhas apenas se preenchidas
+	        ...(senhaInput.value && { senha: senhaInput.value }),
+	        ...(confirmaSenhaInput.value && { confirmasenha: confirmaSenhaInput.value })
 	    };
 	
 	    // Envia os dados para o backend usando método PUT
-	    fetch(`/usuarios/${userId}`, {
+	    fetch(`/usuarios/modalupdate/${userId}`, {
 	        method: 'PUT',
 	        headers: {
 	            'Content-Type': 'application/json'
 	        },
-	        body: JSON.stringify(userData) // Converte os dados para JSON
+	        body: JSON.stringify(userData)
 	    })
 	    .then(response => {
 	        if (response.ok) {
 	            alert("Usuário atualizado com sucesso!");
-	            location.reload(); // Recarrega a página ou atualiza a tabela
+	            location.reload(); // Recarrega a página para refletir as alterações
 	        } else if (response.status === 400) {
 	            // Trata erros de validação retornados pelo backend
 	            response.json().then(errors => {
 	                console.error("Erros de validação:", errors);
-	                // Exibe os erros abaixo dos campos no formulário
 	                Object.keys(errors).forEach(field => {
 	                    const errorElement = document.getElementById(`${field}Error`);
 	                    if (errorElement) {
@@ -389,7 +397,6 @@
 	        alert("Erro de comunicação com o servidor.");
 	    });
 	});
-		   
 
 </script>
 </body>

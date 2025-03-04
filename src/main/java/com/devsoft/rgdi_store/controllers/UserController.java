@@ -130,15 +130,13 @@ public class UserController {
 	    model.addAttribute("grupos", grupos); // Adiciona a lista de grupos ao modelo
 	    return "usuario/lista"; // Retorna o template
 	}
-
-
 	
 	//para framework de Front
 	@GetMapping("/detalhes/{id}")
 	public ResponseEntity<UserDto> findById(@PathVariable Long id) {
 		UserDto dto = userService.findById(id);
 		return ResponseEntity.ok(dto);
-	}
+	}	
 	
 	//não esquecer o "@Valid" - necessario para validacao de campos
 	@PostMapping
@@ -148,7 +146,32 @@ public class UserController {
         return ResponseEntity.created(uri).body(dto);
     }
 	
+	//exclusivo para o MODAL/edit
+	@PutMapping("/modalupdate/{id}")
+	public ResponseEntity<?> updateModal(
+	        @PathVariable Long id,
+	        @Validated({ ValidationGroups.Update.class, Default.class }) @RequestBody UserDto dto,
+	        BindingResult bindingResult) {
+	    
+	    // Verifica se há erros de validação
+	    if (bindingResult.hasErrors()) {
+	        Map<String, String> errors = bindingResult.getFieldErrors()
+	            .stream()
+	            .collect(Collectors.toMap(
+	                FieldError::getField,
+	                FieldError::getDefaultMessage
+	            ));
+	        return ResponseEntity.badRequest().body(errors);
+	    }
+	    
+	    // Atualiza o usuário com os novos dados
+	    dto = userService.updateModal(id, dto);//retorna o update personalizado
+
+	    return ResponseEntity.ok(dto);
+	}
+
 	
+	//Update geral
 	//não esquecer o "@Validated" - necessario para validacao de campos
 	//@Validated (Criado grupo de validação definido o email não ser usado no "update")
 	@PutMapping("/{id}")
@@ -165,7 +188,7 @@ public class UserController {
 	            ));
 	        return ResponseEntity.badRequest().body(errors);
 	    }
-
+	    /*
 	    // Busca o usuário existente no banco
 	    UserDto existingUser = userService.findById(id);
 
@@ -178,6 +201,7 @@ public class UserController {
 	    if (dto.getConfirmasenha() == null || dto.getConfirmasenha().isEmpty()) {
 	        dto.setConfirmasenha(existingUser.getConfirmasenha());
 	    }
+	    */
 
 	    // Atualiza o usuário com os novos dados
 	    dto = userService.update(id, dto);

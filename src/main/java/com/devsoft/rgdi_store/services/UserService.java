@@ -48,13 +48,12 @@ public class UserService {
 
 	    // Mapeia as entidades para DTOs
 	    return users.map(UserMapper::toPartialDto);
-	}
-
+	}	
 	
 	@Transactional(readOnly = true)
 	public UserDto findById(Long id) {		
 		UserEntity entity = repository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Recurso não encontrado - service/findById [Verifique o id]"));
-		return UserMapper.toDto(entity);	
+		return UserMapper.toDto(entity); //retorna todos os campos do UserDto	
 	}
 	
 	@Transactional
@@ -80,6 +79,19 @@ public class UserService {
         try {
             UserEntity entity = repository.getReferenceById(id);
             UserMapper.updateEntityFromDto(dto, entity); // Atualiza a entidade com os dados do DTO
+            entity = repository.save(entity);
+            return UserMapper.toDto(entity); // Retorna DTO convertido
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Recurso não encontrado - service/update [verifique 'id'/ se está cadastrado]");
+        }
+    }
+	
+	//exclusivo para o modal/edit
+	@Transactional
+    public UserDto updateModal(Long id, UserDto dto) {
+        try {
+            UserEntity entity = repository.getReferenceById(id);
+            UserMapper.updateEntityFromDtoModal(dto, entity); // Atualiza a entidade com os dados do DTO - EXCLUSIVO DO MODAL
             entity = repository.save(entity);
             return UserMapper.toDto(entity); // Retorna DTO convertido
         } catch (EntityNotFoundException e) {

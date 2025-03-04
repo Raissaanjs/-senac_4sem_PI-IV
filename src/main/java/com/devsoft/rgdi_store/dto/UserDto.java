@@ -57,6 +57,16 @@ public class UserDto {
 		this.grupo = grupo;
 	}
 
+    //Construtor exclusivo para o modal/edit
+    public UserDto(Long id, String nome, String cpf, String senha, String confirmasenha, UserGroup grupo) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.cpf = cpf;
+		this.senha = senha;
+		this.confirmasenha = confirmasenha;
+		this.grupo = grupo;
+	}
 	  
 
 	// Getters e Setters
@@ -64,7 +74,11 @@ public class UserDto {
         return id;
     }
 
-    public void setId(Long id) {
+    
+
+	
+
+	public void setId(Long id) {
         this.id = id;
     }
 
