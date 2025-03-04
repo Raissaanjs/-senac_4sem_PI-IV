@@ -23,10 +23,9 @@ public class UserEntity {
     @Column(unique = true)
     private String email;
     private String senha;
-    private String confirmasenha;    
-    
-    private UserGroup grupo;
-    private boolean status;  // Novo atributo
+    private String confirmasenha;
+    private boolean status;
+    private UserGroup grupo;    
 
     // Construtor para converter Entity para DTO
     public UserEntity(UserDto userDto) {
@@ -36,9 +35,8 @@ public class UserEntity {
         email = userDto.getEmail();
         senha = userDto.getSenha();
         confirmasenha = userDto.getConfirmasenha();        
-        
-        grupo = userDto.getGrupo();
         status = userDto.isStatus();
+        grupo = userDto.getGrupo();
     }
 
     // Construtor padrão
@@ -46,15 +44,15 @@ public class UserEntity {
     }
 
     // Construtor com parâmetros
-    public UserEntity(Long id, String nome, String cpf, String email, String senha, String confirmasenha, UserGroup grupo, boolean status) {
+    public UserEntity(Long id, String nome, String cpf, String email, String senha, String confirmasenha, boolean status, UserGroup grupo) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
         this.senha = senha;
         this.confirmasenha = confirmasenha;
-        this.grupo = grupo;
         this.status = status;
+        this.grupo = grupo;
     }
 
     // Getters e Setters
@@ -105,6 +103,14 @@ public class UserEntity {
     public void setConfirmasenha(String confirmasenha) {
         this.confirmasenha = confirmasenha;
     }
+    
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 
     public UserGroup getGrupo() {
         return grupo;
@@ -113,14 +119,7 @@ public class UserEntity {
     public void setGrupo(UserGroup grupo) {
         this.grupo = grupo;
     }
-
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
+    
 
     @Override
     public int hashCode() {

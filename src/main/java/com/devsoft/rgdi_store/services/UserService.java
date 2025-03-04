@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.devsoft.rgdi_store.dto.UserDto;
+import com.devsoft.rgdi_store.dto.UserMapper;
 import com.devsoft.rgdi_store.entities.UserEntity;
 import com.devsoft.rgdi_store.entities.UserGroup;
 import com.devsoft.rgdi_store.repositories.UserRepository;
@@ -22,65 +23,69 @@ public class UserService {
 	private UserRepository repository;	
 	
 	//validação para email único
-	public boolean existePorEmail(String email) {
+	public boolean existsByEmail(String email) {
 	    return repository.existsByEmail(email);
 	}
 	
 	@Transactional(readOnly = true)
-	public Page<UserDto> findAll(Pageable pageable){
-		Page<UserEntity> result = repository.findAll(pageable);
-		return result.map(x -> new UserDto(x));
+	public Page<UserDto> findAll(Pageable pageable) {
+	    Page<UserEntity> result = repository.findAll(pageable);
+	    // Usa o UserMapper para a conversão de UserEntity para UserDto
+	    return result.map(UserMapper::toDto);
 	}	
+	
+	@Transactional(readOnly = true)
+	public Page<UserDto> findByName(String nome, Pageable pageable) {
+	    Page<UserEntity> users;
+
+	    if (nome == null || nome.isEmpty()) {
+	        // Se o nome estiver vazio ou nulo, retorna todos os registros paginados
+	        users = repository.findAll(pageable);
+	    } else {
+	        // Busca por nome com paginação
+	        users = repository.findByNomeContainingIgnoreCase(nome, pageable);
+	    }
+
+	    // Mapeia as entidades para DTOs
+	    return users.map(UserMapper::toPartialDto);
+	}
+
 	
 	@Transactional(readOnly = true)
 	public UserDto findById(Long id) {		
 		UserEntity entity = repository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Recurso não encontrado - service/findById [Verifique o id]"));
-		return new UserDto(entity);		
+		return UserMapper.toDto(entity);	
 	}
 	
 	@Transactional
-	public UserDto insert(UserDto dto) {		
-		try {
-			UserEntity entity = new UserEntity();
-			
-			entity.setNome(dto.getNome());
-			entity.setCpf(dto.getCpf());
-			entity.setEmail(dto.getEmail());			
-			entity.setSenha(dto.getSenha());
-			entity.setConfirmasenha(dto.getConfirmasenha());
-			
-			// Define o grupo como USER se não estiver especificado
-            if (dto.getGrupo() == null) {
-                entity.setGrupo(UserGroup.USER);
-            } else {
-                entity.setGrupo(dto.getGrupo());
+    public UserDto insert(UserDto dto) {
+        try {
+        	// Log para verificar o grupo recebido
+            System.out.println("Grupo recebido no DTO: " + dto.getGrupo());
+            
+            UserEntity entity = UserMapper.toEntity(dto); // Converte DTO para entidade
+            entity.setStatus(true); // Configuração adicional
+            if (entity.getGrupo() == null) {
+                entity.setGrupo(UserGroup.USER); // Define grupo padrão
             }
-			entity.setStatus(true);
-			
-			entity = repository.save(entity);
-		return new UserDto(entity);
-		}catch(DataIntegrityViolationException e) {
-			throw new ResourceNotFoundException("Recurso não encontrado - service/insert [Campo Unique - Possivelmente e-mail duplicado]");
-		}
-	}
+            entity = repository.save(entity); // Salva no banco
+            return UserMapper.toDto(entity); // Retorna DTO convertido
+        } catch (DataIntegrityViolationException e) {
+            throw new ResourceNotFoundException("Recurso não encontrado - service/insert [Campo Unique - Possivelmente e-mail duplicado]");
+        }
+    }
 	
 	@Transactional
-	public UserDto update(Long id, UserDto dto) {
-		try {
-			UserEntity entity = repository.getReferenceById(id);
-			
-			entity.setNome(dto.getNome());
-			entity.setCpf(dto.getCpf());
-			entity.setSenha(dto.getSenha());
-			entity.setConfirmasenha(dto.getConfirmasenha());
-			entity.setGrupo(dto.getGrupo());
-			entity.setStatus(dto.isStatus());
-			entity =repository.save(entity);
-			return new UserDto(entity);
-		}catch(EntityNotFoundException e) {
-			throw new ResourceNotFoundException("Recurso não encontrado - service/update [verifique 'id'/ se está cadastrado]");
-		}
-	}
+    public UserDto update(Long id, UserDto dto) {
+        try {
+            UserEntity entity = repository.getReferenceById(id);
+            UserMapper.updateEntityFromDto(dto, entity); // Atualiza a entidade com os dados do DTO
+            entity = repository.save(entity);
+            return UserMapper.toDto(entity); // Retorna DTO convertido
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Recurso não encontrado - service/update [verifique 'id'/ se está cadastrado]");
+        }
+    }
 
 	@Transactional
 	public UserDto changeStatus(Long id) {
@@ -88,12 +93,11 @@ public class UserService {
 	        UserEntity entity = repository.getReferenceById(id);
 	        entity.setStatus(!entity.isStatus()); // Alterna o status
 	        entity = repository.save(entity);
-	        return new UserDto(entity);
+	        return UserMapper.toDto(entity);
 	    } catch (EntityNotFoundException e) {
 	        throw new ResourceNotFoundException("Recurso não encontrado - service/changeStatus");
 	    }
 	}
-	
-	
+		
 	
 }
