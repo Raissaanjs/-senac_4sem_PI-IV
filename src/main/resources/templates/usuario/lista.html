@@ -86,7 +86,7 @@
 				            <nav class="navbar navbar-light bg-light">
 				                <form class="d-flex" method="GET" action="/usuarios/buscar/nome">
 				                    <input class="form-control me-2" type="search" placeholder="nome" style="width: 20rem"
-				                    aria-label="Search" name="nome" />
+				                    aria-label="Search" name="nome" th:value="${nome}" />
 				                    <button class="btn btn-success w-60" id="collapseNome">
 									    Buscar Nome
 									</button>
@@ -95,8 +95,6 @@
 				        </div>
 				    </div>
 				</div>
-
-	
 	           <div class="table-responsive">
 			    <table class="table table-striped table-hover table-sm">
 			        <thead>
@@ -111,8 +109,12 @@
 			        </thead>
 			        <tbody>
 			            <!-- Loop para exibir a lista de usuários -->
+			            <tr th:if="${usuarios.size() == 0}">
+					        <td colspan="6" class="text-center text-danger">Nenhum usuário encontrado</td>
+					    </tr>
+					    
 			            <tr th:each="user, iterStat : ${usuarios}">
-			                <td th:text="${iterStat.index + 1}"></td> <!-- Número sequencial -->
+			                <td th:text="${user.id}"></td> <!-- Número sequencial -->
 			                <td th:text="${user.nome}"></td> <!-- Nome do usuário -->
 			                <td th:text="${user.email}"></td> <!-- Email do usuário -->			                
 			                <td>
@@ -126,7 +128,7 @@
 							    </label>
 							</div>
 			                </td>
-			                <td th:text="${user.grupo.getGroup()}"></td> <!-- Grupo do usuário -->
+			                <td th:text="${user.grupo != null ? user.grupo.getGroup() : 'Sem grupo'}"></td> <!-- Grupo do usuário com tratamento para nulo -->
 			                <td>
 							    <button type="button" class="btn btn-info btn-sm" th:onclick="'openEditModal(' + ${user.id} + ')'">
 							        <span class="fa-solid fa-pen-to-square" title="Editar" aria-hidden="true"></span>
@@ -134,8 +136,27 @@
 							</td>
 			            </tr>
 			        </tbody>
-			    </table>
+			    </table>			    
 			</div>
+			<div th:if="${page != null}">
+			    <div>
+			        Página <span th:text="${page.number + 1}"></span> de <span th:text="${page.totalPages}"></span>
+			    </div>
+			    <div>
+			        <a th:if="${page.hasPrevious()}"
+			           th:href="@{/usuarios/buscar/nome(nome=${nome}, page=${page.number - 1}, size=${page.size})}">
+			            Anterior
+			        </a>
+			        <a th:if="${page.hasNext()}"
+			           th:href="@{/usuarios/buscar/nome(nome=${nome}, page=${page.number + 1}, size=${page.size})}">
+			            Próximo
+			        </a>
+			    </div>
+			</div>
+			<div th:if="${usuarios.empty}">
+			    <p>Nenhum registro encontrado.</p>
+			</div>
+
 			
 			<!-- Modal para Editar Usuário -->
 			<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
@@ -149,39 +170,53 @@
 			
 			            <!-- Formulário de Edição -->
 			            <form id="editUserForm">
-						    <input type="hidden" id="userId" name="id" />
-						    <div class="modal-body">
-						       <div class="form-group">
-								    <label for="nome">Nome</label>
-								    <input type="text" class="form-control" id="nome" name="nome" required />
-								    <span id="nomeError" class="text-danger"></span>
-								</div>
-								<div class="form-group">
-								    <label for="cpf">CPF</label>
-								    <input type="text" class="form-control" id="cpf" name="cpf" required />
-								    <span id="cpfError" class="text-danger"></span>
-								</div>
-								<div class="form-group">
-								    <label for="senha">Senha</label>
-								    <input type="password" class="form-control" id="senha" name="senha" />
-								    <span id="senhaError" class="text-danger"></span>
-								</div>
-								<div class="form-group">
-								    <label for="confirmasenha">Confirmar Senha</label>
-								    <input type="password" class="form-control" id="confirmasenha" name="confirmasenha" />
-								    <span id="confirmaSenhaError" class="text-danger"></span>
-								</div>
-
-						    </div>
-						    <div class="modal-footer">
-						        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-						        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-						    </div>
-						</form>
-
+			                <input type="hidden" id="userId" name="id" />
+			                <div class="modal-body">
+			                    <div class="form-group">
+			                        <label for="nome">Nome</label>
+			                        <input type="text" class="form-control" id="nome" name="nome" required />
+			                        <span id="nomeError" class="text-danger"></span>
+			                    </div>
+			                    <div class="form-group">
+			                        <label for="cpf">CPF</label>
+			                        <input type="text" class="form-control" id="cpf" name="cpf" required />
+			                        <span id="cpfError" class="text-danger"></span>
+			                    </div>
+			                    <div class="form-group">
+			                        <label for="senha">Senha</label>
+			                        <input type="password" class="form-control" id="senha" name="senha" />
+			                        <span id="senhaError" class="text-danger"></span>
+			                    </div>
+			                    <div class="form-group">
+			                        <label for="confirmasenha">Confirmar Senha</label>
+			                        <input type="password" class="form-control" id="confirmasenha" name="confirmasenha" />
+			                        <span id="confirmaSenhaError" class="text-danger"></span>
+			                    </div>
+			                    <!-- Campo de Seleção para Alterar Grupo -->
+			                    <div class="form-group">
+			                        <label for="grupo">Grupo</label>
+			                        <select class="form-control" id="grupo" name="grupo" >
+								        <option value="" disabled>Selecione um grupo</option>
+								        <!-- Itera pelos valores do enum UserGroup -->
+								        <option th:each="g : ${grupos}" 
+								                th:value="${g.name()}" 
+								                th:text="${g.group}" 
+								                th:selected="${g.name() == dto.grupo}">
+								        </option>
+								    </select>
+			                        <span id="grupoError" class="text-danger"></span>
+			                    </div>
+			                </div>
+			                <div class="modal-footer">
+			                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+			                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+			                </div>
+			            </form>
 			        </div>
 			    </div>
 			</div>
+
+
 
 	        </div>
 	    </section>
