@@ -1,6 +1,8 @@
 package com.devsoft.rgdi_store.repositories;
 
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +18,9 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>{
 
     // Busca por nome contendo o termo (case-insensitive) com paginação
     Page<UserEntity> findByNomeContainingIgnoreCase(String nome, Pageable pageable);
+
+    // Busca por email
+    Optional<UserEntity> findByEmail(String email);
 
 
 }

@@ -43,12 +43,7 @@ public class UserController {
 	private PagedResourcesAssembler<UserDto> pagedResourcesAssembler;
 	
 	@Autowired
-	private UserService userService;
-	
-	@GetMapping("")
-    public String redirectToAuth() {
-        return "redirect:/auth"; // Redireciona para /auth
-    }
+	private UserService userService;	
 	
 	@GetMapping("/cadastrar")
 	public String register(Model model) {
@@ -56,6 +51,17 @@ public class UserController {
 	    return "/usuario/cadastro";
 	}
 	
+	
+	//validação para email único
+	@GetMapping("/verificar-email")
+	@ResponseBody
+	public ResponseEntity<Boolean> checkEmail(@RequestParam String email) {
+	    boolean existe = userService.existsByEmail(email);
+	    return ResponseEntity.ok(existe);
+	}
+	
+	
+	//lista com paginação via Thymeleaf
 	@GetMapping("/listar")
 	public String list(
 	    Model model,
@@ -69,39 +75,23 @@ public class UserController {
 
 	    return "usuario/lista"; // Template Thymeleaf
 	}
-
-
-	@PostMapping("/salvar")
-	public String save(@ModelAttribute("dto") UserDto dto, BindingResult bindingResult, Model model) {
-	    // Verifica se há erros de validação
-	    if (bindingResult.hasErrors()) {
-	        model.addAttribute("dto", dto); // Mantém os dados preenchidos no formulário
-	        return "usuario/cadastro"; // Retorna para a página do formulário
-	    }
-	    // Chama o mesmo serviço usado no método insert
-	    userService.insert(dto);
-
-	    // Redireciona para a página de listagem após salvar
-	    return "redirect:/usuarios/listar";
-	}
 	
-	//lista com paginação
+	//lista com paginação via Postman
 	@GetMapping("/api")
 	public ResponseEntity<PagedModel<EntityModel<UserDto>>> findAll(Pageable pageable) {
 	    Page<UserDto> dtoPage = userService.findAll(pageable);
 	    PagedModel<EntityModel<UserDto>> pagedModel = pagedResourcesAssembler.toModel(dtoPage);
 	    return ResponseEntity.ok(pagedModel);
 	}
+	
+	//para framework de Front
+	@GetMapping("/detalhes/{id}")
+	public ResponseEntity<UserDto> findById(@PathVariable Long id) {
+		UserDto dto = userService.findById(id);
+		return ResponseEntity.ok(dto);
+	}	
 
-	//validação para email único
-	@GetMapping("/verificar-email")
-	@ResponseBody
-	public ResponseEntity<Boolean> checkEmail(@RequestParam String email) {
-	    boolean existe = userService.existsByEmail(email);
-	    return ResponseEntity.ok(existe);
-	}
-
-	@GetMapping("/buscar/nome")
+	@GetMapping("/buscar-nome")
 	public String findByName(
 	    @RequestParam(name = "nome", required = false) String nome,
 	    Model model,
@@ -119,24 +109,28 @@ public class UserController {
 	    model.addAttribute("page", usuarios); // Dados da página
 	    model.addAttribute("nome", nome); // Para manter o termo pesquisado no template
 	    return "usuario/lista";
-	}
-
-	@GetMapping("/editar/{id}")
-	public String editUser(@PathVariable Long id, Model model) {
-	    UserDto dto = userService.findById(id); // Busca o usuário para edição
-	    UserGroup[] grupos = UserGroup.values(); // Obtém todos os valores do enum UserGroup
-
-	    model.addAttribute("dto", dto); // Adiciona o usuário ao modelo
-	    model.addAttribute("grupos", grupos); // Adiciona a lista de grupos ao modelo
-	    return "usuario/lista"; // Retorna o template
-	}
+	}		
 	
-	//para framework de Front
-	@GetMapping("/detalhes/{id}")
-	public ResponseEntity<UserDto> findById(@PathVariable Long id) {
-		UserDto dto = userService.findById(id);
-		return ResponseEntity.ok(dto);
-	}	
+
+	@PostMapping("/salvar")
+	public String save(@ModelAttribute("dto") UserDto dto, BindingResult bindingResult, Model model) {
+	    // Verifica se há erros de validação
+	    if (bindingResult.hasErrors()) {
+	        model.addAttribute("dto", dto); // Mantém os dados preenchidos no formulário
+	        return "usuario/cadastro"; // Retorna para a página do formulário
+	    }
+
+	    // Não é mais necessário formatar o grupo, pois o formulário já envia no padrão correto
+	    if (dto.getGrupo() == null) {
+	        dto.setGrupo(UserGroup.ROLE_USER); // Define grupo padrão caso não selecionado
+	    }
+
+	    // Chama o método insert
+	    userService.insert(dto);
+
+	    // Redireciona para a página de listagem após salvar
+	    return "redirect:/usuarios/listar";
+	}
 	
 	//não esquecer o "@Valid" - necessario para validacao de campos
 	@PostMapping
@@ -146,8 +140,19 @@ public class UserController {
         return ResponseEntity.created(uri).body(dto);
     }
 	
+	
+	@GetMapping("/editar/{id}")
+	public String editUser(@PathVariable Long id, Model model) {
+	    UserDto dto = userService.findById(id); // Busca o usuário para edição
+	    UserGroup[] grupos = UserGroup.values(); // Obtém todos os valores do enum UserGroup
+
+	    model.addAttribute("dto", dto); // Adiciona o usuário ao modelo
+	    model.addAttribute("grupos", grupos); // Adiciona a lista de grupos ao modelo
+	    return "usuario/lista"; // Retorna o template
+	}	
+	
 	//exclusivo para o MODAL/edit
-	@PutMapping("/modalupdate/{id}")
+	@PutMapping("/modal-update/{id}")
 	public ResponseEntity<?> updateModal(
 	        @PathVariable Long id,
 	        @Validated({ ValidationGroups.Update.class, Default.class }) @RequestBody UserDto dto,
@@ -169,7 +174,6 @@ public class UserController {
 
 	    return ResponseEntity.ok(dto);
 	}
-
 	
 	//Update geral
 	//não esquecer o "@Validated" - necessario para validacao de campos
@@ -187,26 +191,13 @@ public class UserController {
 	                FieldError::getDefaultMessage
 	            ));
 	        return ResponseEntity.badRequest().body(errors);
-	    }
-	    /*
-	    // Busca o usuário existente no banco
-	    UserDto existingUser = userService.findById(id);
-
-	    // Caso a senha não seja fornecida, mantém a senha atual
-	    if (dto.getSenha() == null || dto.getSenha().isEmpty()) {
-	        dto.setSenha(existingUser.getSenha());
-	    }
-
-	    // Caso a confirmaSenha não seja fornecida, mantém o confirmaSenha atual
-	    if (dto.getConfirmasenha() == null || dto.getConfirmasenha().isEmpty()) {
-	        dto.setConfirmasenha(existingUser.getConfirmasenha());
-	    }
-	    */
+	    }	   
 
 	    // Atualiza o usuário com os novos dados
 	    dto = userService.update(id, dto);
 	    return ResponseEntity.ok(dto);
 	}
+	
 	
 	//alterna status
 	@PutMapping("/{id}/status")

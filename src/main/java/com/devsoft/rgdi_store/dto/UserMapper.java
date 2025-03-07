@@ -1,6 +1,7 @@
 package com.devsoft.rgdi_store.dto;
 
 import com.devsoft.rgdi_store.entities.UserEntity;
+import com.devsoft.rgdi_store.entities.UserGroup;
 
 public class UserMapper {
 
@@ -15,7 +16,7 @@ public class UserMapper {
             entity.getCpf(),
             entity.getEmail(),
             entity.getSenha(),
-            entity.getConfirmasenha(),
+            null,
             entity.isStatus(),
             entity.getGrupo()
         );
@@ -45,27 +46,37 @@ public class UserMapper {
             entity.getNome(),
             entity.getCpf(),
             entity.getSenha(),
-            entity.getConfirmasenha(),
+            null,
             entity.getGrupo()
         );
     }
 
-    // Converte UserDto para UserEntity
+ // Converte UserDto para UserEntity
     public static UserEntity toEntity(UserDto dto) {
         if (dto == null) {
             return null;
         }
+
         UserEntity entity = new UserEntity();
         entity.setId(dto.getId());
         entity.setNome(dto.getNome());
         entity.setCpf(dto.getCpf());
         entity.setEmail(dto.getEmail());
         entity.setSenha(dto.getSenha());
-        entity.setConfirmasenha(dto.getConfirmasenha());
         entity.setStatus(dto.isStatus());
-        entity.setGrupo(dto.getGrupo()); // Verifique se o grupo está sendo mapeado corretamente        
+
+        // Converte o grupo diretamente para a entidade
+        if (dto.getGrupo() != null) {
+            entity.setGrupo(dto.getGrupo()); // Sem necessidade de ajustes
+        } else {
+            entity.setGrupo(UserGroup.ROLE_USER); // Define grupo padrão
+        }
+
         return entity;
     }
+
+
+
     
     // Atualiza UserEntity com os dados de UserDto
     public static void updateEntityFromDto(UserDto dto, UserEntity entity) {
@@ -86,20 +97,16 @@ public class UserMapper {
         // Atualiza a senha apenas se fornecida no DTO
         if (dto.getSenha() != null && !dto.getSenha().isEmpty()) {
             entity.setSenha(dto.getSenha());
-        }
-
-        // Atualiza o campo de confirmação da senha, se fornecido
-        if (dto.getConfirmasenha() != null && !dto.getConfirmasenha().isEmpty()) {
-            entity.setConfirmasenha(dto.getConfirmasenha());
-        }
+        }        
 
         // Atualiza o status APENAS se ele for diferente do valor atual
         if (dto.isStatus() != entity.isStatus()) {
             entity.setStatus(dto.isStatus());
         }
-
+        
         // Atualiza o grupo apenas se fornecido no DTO
         if (dto.getGrupo() != null) {
+            // Usa diretamente o grupo do DTO
             entity.setGrupo(dto.getGrupo());
         }
     }
@@ -122,16 +129,12 @@ public class UserMapper {
 
         // Atualiza a senha apenas se fornecida no DTO
         if (dto.getSenha() != null && !dto.getSenha().isEmpty()) {
-            entity.setSenha(dto.getSenha());
-        }
-
-        // Atualiza o campo de confirmação da senha, se fornecido
-        if (dto.getConfirmasenha() != null && !dto.getConfirmasenha().isEmpty()) {
-            entity.setConfirmasenha(dto.getConfirmasenha());
-        }
+            entity.setSenha(dto.getSenha());        }
+        
         
         // Atualiza o grupo apenas se fornecido no DTO
         if (dto.getGrupo() != null) {
+            // Usa diretamente o grupo do DTO
             entity.setGrupo(dto.getGrupo());
         }
     }

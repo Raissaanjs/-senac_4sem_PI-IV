@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <title>RGDI Store</title>
+    <title>RGDI Store - Cadastro de Usuários</title>
     <link rel="icon" href="/image/favicon.png"/>
 
     <!-- Bootstrap core CSS -->
@@ -24,7 +24,14 @@
 					<button type="button" class="btn btn-dark navbar-toggle pull-left">
 						<i class="fa-solid fa-bars"></i>
 					</button>				
-					<a class="navbar-brand navbar-toggle pull-left" href="#">Cadastro de Usuários</a>
+					<a class="navbar-brand navbar-toggle pull-left" href="#">Home</a>
+				</div>
+				<div class="navbar-header-right">
+				    <form th:action="@{/logout}" method="post">
+				        <button type="submit" class="btn btn-dark">
+				            <i class="fa-solid fa-right-from-bracket"></i> Logout
+				        </button>
+				    </form>
 				</div>
 			</div>
 		</nav>
@@ -82,19 +89,22 @@
 			
 			<!-- form-group: removida no bootstrap 5xxx. No lugar posso usar: "mb-3". Usar criar meu "css próprio" -->
 	        <div class="container" id="cadastro">
+			    <!--  <form id="userForm" onsubmit="formUser(event)"> -->
 			    <form th:action="@{/usuarios/salvar}" th:object="${dto}" method="POST">
 			        <div class="row">
 					    <div class="mb-3 col-md-5">
 					        <label for="nome">Nome</label>
 					        <input type="text" class="form-control" id="nome" name="nome" required aria-required="true" />
-					        <div class="invalid-feedback" id="nomeError" style="display: none;">
+					        <!-- <div class="invalid-feedback" id="nomeError" style="display: none;"> -->
+					        <div class="invalid-feedback" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}">
 					            
 					        </div>
 					    </div>
 					    <div class="mb-3 col-md-3">
 					        <label for="cpf">CPF</label>
 					        <input type="text" class="form-control" id="cpf" name="cpf" required aria-required="true" />
-					        <div class="invalid-feedback" id="cpfError" style="display: none;">
+					     <!-- <div class="invalid-feedback" id="cpfError" style="display: none;"> -->
+					         <div class="invalid-feedback" th:if="${#fields.hasErrors('cpf')}" th:errors="*{cpf}">
 					            
 					        </div>
 					    </div>
@@ -129,16 +139,16 @@
 					        <label for="grupo">Grupo</label>
 					        <select class="form-control" id="grupo" name="grupo" required aria-required="true">
 					            <option value="">Selecione...</option>
-					            <option value="ADMIN">ADMIN</option>
-					            <option value="ESTOQ">ESTOQ</option>
-					            <option value="USER">USER</option>
+					            <option value="ROLE_ADMIN">Administrador</option>
+					            <option value="ROLE_ESTOQ">Estoquista</option>
+					            <option value="ROLE_USER">Usuário</option>
 					        </select>
 					        <div class="invalid-feedback" id="grupoError" style="display: none;">
 					            
 					        </div>
 					    </div>
 					</div>
-					<button type="submit" class="btn btn-primary">Salvar</button>
+					<button type="submit" class="btn btn-primary" >Salvar</button>
 					<button type="reset" class="btn btn-secondary">Limpar</button>
 			    </form>
 			</div>
@@ -159,178 +169,6 @@
 <script src="/webjars/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript">
 
-    document.addEventListener('DOMContentLoaded', () => {
-	    console.log('Scripts carregados.');
-	    
-	    // Inicialize popovers e outros recursos
-	    $('[data-toggle="popover"]').popover();
-	
-	    // Ações para o menu sidebar
-	    $(".navbar-toggle").click(function(){
-	        $(".sidebar").toggleClass("sidebar-open");
-	    });
-	});
-	
-    
-	function validarCPF(cpf) {
-	    // Remove caracteres não numéricos
-	    cpf = cpf.replace(/[^\d]+/g, '');
-	
-	    // Verifica se o CPF possui 11 dígitos ou é uma sequência repetida
-	    if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) {
-	        return false; // CPF inválido de forma geral
-	    }
-	
-	    // Calcula o 1º dígito verificador
-	    let soma = 0;
-	    for (let i = 0; i < 9; i++) {
-	        soma += parseInt(cpf.charAt(i)) * (10 - i);
-	    }
-	    let resto = soma % 11;
-	    let digito1 = resto < 2 ? 0 : 11 - resto;
-	
-	    // Calcula o 2º dígito verificador
-	    soma = 0;
-	    for (let i = 0; i < 10; i++) {
-	        soma += parseInt(cpf.charAt(i)) * (11 - i);
-	    }
-	    resto = soma % 11;
-	    let digito2 = resto < 2 ? 0 : 11 - resto;
-	
-	    // Verifica os dígitos verificadores
-	    return digito1 === parseInt(cpf.charAt(9)) && digito2 === parseInt(cpf.charAt(10));
-	}
-	
-	document.querySelector('form').addEventListener('submit', function (event) {
-	    let valid = true;
-	
-	    // Nome
-	    const nomeInput = document.getElementById('nome');
-	    const nomeError = document.getElementById('nomeError');
-	    if (nomeInput.value.trim().length < 3) {
-	        nomeError.innerText = "O nome é obrigatório e deve ter pelo menos 3 caracteres";
-	        nomeError.style.display = 'block';
-	        nomeInput.classList.add('is-invalid');
-	        valid = false;
-	    } else {
-	        nomeError.style.display = 'none';
-	        nomeInput.classList.remove('is-invalid');
-	    }
-	
-	    // CPF
-	    const cpfInput = document.getElementById('cpf');
-	    const cpfError = document.getElementById('cpfError');
-	    const cpf = cpfInput.value.trim();
-	
-	    if (cpf === "") {
-	        cpfError.innerText = "O CPF é obrigatório";
-	        cpfError.style.display = 'block';
-	        cpfInput.classList.add('is-invalid');
-	        valid = false;
-	    } else if (cpf.length < 11) {
-	        cpfError.innerText = "Deve conter exatamente 11 dígitos";
-	        cpfError.style.display = 'block';
-	        cpfInput.classList.add('is-invalid');
-	        valid = false;
-	    } else if (!validarCPF(cpf)) {
-	        cpfError.innerText = "CPF inválido.";
-	        cpfError.style.display = 'block';
-	        cpfInput.classList.add('is-invalid');
-	        valid = false;
-	    } else {
-	        cpfError.style.display = 'none';
-	        cpfInput.classList.remove('is-invalid');
-	    }
-	
-	    // Senha
-	    const senhaInput = document.getElementById('senha');
-	    const senhaError = document.getElementById('senhaError');
-	    if (!senhaInput.value) {
-	    	senhaError.innerText = "Senha obrigatória";
-	        senhaError.style.display = 'block';
-	        senhaInput.classList.add('is-invalid');
-	        valid = false;
-	    } else {
-	        senhaError.style.display = 'none';
-	        senhaInput.classList.remove('is-invalid');
-	    }
-	
-	    // Confirma Senha
-	    const confirmSenhaInput = document.getElementById('confirmasenha');
-	    const confirmSenhaError = document.getElementById('confirmSenhaError');
-	    if (confirmSenhaInput.value !== senhaInput.value) {
-	        confirmSenhaError.innerText = "As senhas não coincidem";
-	        confirmSenhaError.style.display = 'block';
-	        confirmSenhaInput.classList.add('is-invalid');
-	        valid = false;
-	    } else {
-	        confirmSenhaError.style.display = 'none';
-	        confirmSenhaInput.classList.remove('is-invalid');
-	    }
-	
-	    // Grupo
-	    const grupoInput = document.getElementById('grupo');
-	    const grupoError = document.getElementById('grupoError');
-	    if (!grupoInput.value) {
-	    	grupoError.innerText = "Escolha um grupo";
-	        grupoError.style.display = 'block';
-	        grupoInput.classList.add('is-invalid');
-	        valid = false;
-	    } else {
-	        grupoError.style.display = 'none';
-	        grupoInput.classList.remove('is-invalid');
-	    }
-	
-	    // Impede o envio do formulário se houver erros
-	    if (!valid) {
-	        event.preventDefault();
-	    }
-	});
-	
-	// Validação do email ao sair do campo (blur)
-	document.getElementById('email').addEventListener('blur', function () {
-	    const emailInput = document.getElementById('email');
-	    const emailError = document.getElementById('emailError');
-	    const email = emailInput.value.trim();
-	
-	    if (email === "") {
-	        emailError.innerText = "O email é obrigatório";
-	        emailError.style.display = 'block';
-	        emailInput.classList.add('is-invalid');
-	        return;
-	    }
-	
-	    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-	    if (!emailPattern.test(email)) {
-	        emailError.innerText = "Insira um email válido (exemplo: email@email.com)";
-	        emailError.style.display = 'block';
-	        emailInput.classList.add('is-invalid');
-	        return;
-	    }
-	
-	    // Chamada ao servidor para verificar e-mail
-	    fetch(`/usuarios/verificar-email?email=${encodeURIComponent(email)}`)
-	        .then(response => response.json())
-	        .then(existe => {
-	            if (existe) {
-	                emailError.innerText = "Este email já está cadastrado";
-	                emailError.style.display = 'block';
-	                emailInput.classList.add('is-invalid');
-	            } else {
-	                emailError.style.display = 'none';
-	                emailInput.classList.remove('is-invalid');
-	            }
-	        })
-	        .catch(error => {
-	            console.error('Erro ao verificar o email:', error);
-	        });
-	});
-		
-		
-
-		
-</script>
 </body>
 </html>		

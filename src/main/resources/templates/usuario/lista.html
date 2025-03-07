@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>RGDI Store</title>
+<head>    
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
+    <title>RGDI Store - Lista de Usuários</title>
+    <link rel="icon" href="/image/favicon.png"/>
 
     <!-- Bootstrap core CSS -->
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
@@ -25,6 +26,13 @@
 					</button>
 					<a class="navbar-brand navbar-toggle pull-left" href="#">Lista de Usuários</a>
 				</div>
+				<div class="navbar-header-right">
+				    <form th:action="@{/logout}" method="post">
+				        <button type="submit" class="btn btn-dark">
+				            <i class="fa-solid fa-right-from-bracket"></i> Logout
+				        </button>
+				    </form>
+				</div>
 			</div>
 		</nav>
 	</header>
@@ -34,7 +42,7 @@
 	    <aside>
 	        <nav class="sidebar  sidebar-open">
 	            <ul class="nav nav-pills">
-	                <li class="nav-item"><a class="nav-link " href="/auth"> <i class="fa-solid fa-house"></i> <span>Home</span>
+	                <li class="nav-item"><a class="nav-link " href="/auth-redirect"> <i class="fa-solid fa-house"></i> <span>Home</span>
 	                </a></li>
 	            </ul>
 	
@@ -84,7 +92,7 @@
 				    <div class="col">
 				        <div class="d-flex align-items-center" id="collapseNome">
 				            <nav class="navbar navbar-light bg-light">
-				                <form class="d-flex" method="GET" action="/usuarios/buscar/nome">
+				                <form class="d-flex" method="GET" action="/usuarios/buscar-nome">
 				                    <input class="form-control me-2" type="search" placeholder="nome" style="width: 20rem"
 				                    aria-label="Search" name="nome" th:value="${nome}" />
 				                    <button class="btn btn-success w-60" id="collapseNome">
@@ -128,7 +136,7 @@
 							    </label>
 							</div>
 			                </td>
-			                <td th:text="${user.grupo != null ? user.grupo.getGroup() : 'Sem grupo'}"></td> <!-- Grupo do usuário com tratamento para nulo -->
+			                <td th:text="${user.grupo != null ? user.grupo.getDescricao() : 'Sem grupo'}">
 			                <td>
 							    <button type="button" class="btn btn-info btn-sm" th:onclick="'openEditModal(' + ${user.id} + ')'">
 							        <span class="fa-solid fa-pen-to-square" title="Editar" aria-hidden="true"></span>
@@ -197,9 +205,9 @@
 			                        <label for="grupo">Grupo</label>
 			                        <select class="form-control" id="grupo" name="grupo">
 			                            <option value="">Selecione...</option>
-			                            <option value="ADMIN">ADMIN</option>
-			                            <option value="ESTOQ">ESTOQ</option>
-			                            <option value="USER">USER</option>
+			                            <option value="ROLE_ADMIN">Administrador</option>
+							            <option value="ROLE_ESTOQ">Estoquista</option>
+							            <option value="ROLE_USER">Usuário</option>
 			                        </select>
 			                        <div class="invalid-feedback" id="grupoError" style="display: none;"></div>
 			                    </div>			                   
@@ -232,7 +240,7 @@
 <!-- jQuery -->
 <script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
 <!-- jQuery Mask Plugin -->
-<script src="/webjars/jquery-mask-plugin/1.14.16/jquery.mask.min.js"></script>
+<script src="/webjars/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
 <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
@@ -364,7 +372,7 @@
 	    };
 	
 	    // Envia os dados para o backend usando método PUT
-	    fetch(`/usuarios/modalupdate/${userId}`, {
+	    fetch(`/usuarios/modal-update/${userId}`, {
 	        method: 'PUT',
 	        headers: {
 	            'Content-Type': 'application/json'

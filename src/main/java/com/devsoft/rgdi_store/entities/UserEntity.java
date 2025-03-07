@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,8 +23,8 @@ public class UserEntity {
     @Column(unique = true)
     private String email;
     private String senha;
-    private String confirmasenha;
     private boolean status;
+    @Enumerated(EnumType.STRING) // Armazena o nome do enum (e.g., "ADMIN", "ESTOQ")
     private UserGroup grupo;    
 
     // Construtor padrão
@@ -30,13 +32,12 @@ public class UserEntity {
     }
 
     // Construtor com parâmetros
-    public UserEntity(Long id, String nome, String cpf, String email, String senha, String confirmasenha, boolean status, UserGroup grupo) {
+    public UserEntity(Long id, String nome, String cpf, String email, String senha, boolean status, UserGroup grupo) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
         this.senha = senha;
-        this.confirmasenha = confirmasenha;
         this.status = status;
         this.grupo = grupo;
     } 
@@ -81,14 +82,6 @@ public class UserEntity {
 
     public void setSenha(String senha) {
         this.senha = senha;
-    }
-
-    public String getConfirmasenha() {
-        return confirmasenha;
-    }
-
-    public void setConfirmasenha(String confirmasenha) {
-        this.confirmasenha = confirmasenha;
     }
     
     public boolean isStatus() {

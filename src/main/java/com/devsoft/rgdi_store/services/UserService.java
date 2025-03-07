@@ -7,12 +7,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.devsoft.rgdi_store.authentication.PasswordUtils;
 import com.devsoft.rgdi_store.dto.UserDto;
 import com.devsoft.rgdi_store.dto.UserMapper;
 import com.devsoft.rgdi_store.entities.UserEntity;
-import com.devsoft.rgdi_store.entities.UserGroup;
 import com.devsoft.rgdi_store.repositories.UserRepository;
+import com.devsoft.rgdi_store.services.exceptions.EmailAlreadyExists;
+import com.devsoft.rgdi_store.services.exceptions.InvalidCpfException;
+import com.devsoft.rgdi_store.services.exceptions.PasswordConfirmationException;
 import com.devsoft.rgdi_store.services.exceptions.ResourceNotFoundException;
+import com.devsoft.rgdi_store.validation.CpfValidator;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -22,10 +26,13 @@ public class UserService {
 	@Autowired
 	private UserRepository repository;	
 	
+	@Autowired
+	private PasswordUtils passwordUtils;
+	
 	//validação para email único
 	public boolean existsByEmail(String email) {
 	    return repository.existsByEmail(email);
-	}
+	}	
 	
 	@Transactional(readOnly = true)
 	public Page<UserDto> findAll(Pageable pageable) {
@@ -56,30 +63,66 @@ public class UserService {
 		return UserMapper.toDto(entity); //retorna todos os campos do UserDto	
 	}
 	
+	
 	@Transactional
-    public UserDto insert(UserDto dto) {
-        try {
-        	// Log para verificar o grupo recebido
-            System.out.println("Grupo recebido no DTO: " + dto.getGrupo());
-            
-            UserEntity entity = UserMapper.toEntity(dto); // Converte DTO para entidade
-            entity.setStatus(true); // Configuração adicional
-            if (entity.getGrupo() == null) {
-                entity.setGrupo(UserGroup.USER); // Define grupo padrão
-            }
-            entity = repository.save(entity); // Salva no banco
-            return UserMapper.toDto(entity); // Retorna DTO convertido
-        } catch (DataIntegrityViolationException e) {
-            throw new ResourceNotFoundException("Recurso não encontrado - service/insert [Campo Unique - Possivelmente e-mail duplicado]");
-        }
-    }
+	public UserDto insert(UserDto dto) {
+		// Valida o CPF antes de continuar
+	    if (!CpfValidator.isValidCPF(dto.getCpf())) {
+	        throw new InvalidCpfException("O CPF informado é inválido.");
+	    }
+		
+		// Validação de regra de negócio antes de entrar no try-catch
+	    if (repository.findByEmail(dto.getEmail()).isPresent()) {
+	        throw new EmailAlreadyExists("O e-mail " + dto.getEmail() + " já está cadastrado no sistema.");
+	    }
+	    
+	    // Verifica se a senha e a confirmação coincidem
+	    if (!dto.getSenha().equals(dto.getConfirmasenha())) {
+	    	throw new PasswordConfirmationException("As senhas não coincidem.");
+	    }	    
+	    
+
+	    try {
+	        // Log para verificar envio de senha
+	        System.out.println("Senha enviada: " + dto.getSenha());
+
+	        // Converte DTO para entidade
+	        UserEntity entity = UserMapper.toEntity(dto);
+
+	        // Validação de senha nula ou vazia
+	        if (dto.getSenha() == null || dto.getSenha().isEmpty()) {
+	            throw new IllegalArgumentException("Senha não foi enviada corretamente para o método insert.");
+	        }
+
+	        // Adiciona a criptografia à senha
+	        entity.setSenha(passwordUtils.encrypt(dto.getSenha()));
+
+	        // Define o Status como ativo
+	        entity.setStatus(true);
+
+	        // Salva no banco
+	        entity = repository.save(entity);
+
+	        // Retorna DTO convertido
+	        return UserMapper.toDto(entity);
+	    } catch (DataIntegrityViolationException e) {
+	        throw new ResourceNotFoundException("Erro de integridade referencial - verifique relacionamentos no banco.");
+	    }
+	}
 	
 	@Transactional
     public UserDto update(Long id, UserDto dto) {
         try {
             UserEntity entity = repository.getReferenceById(id);
             UserMapper.updateEntityFromDto(dto, entity); // Atualiza a entidade com os dados do DTO
+            
+            // Criptografa a senha caso tenha sido fornecida
+            if (dto.getSenha() != null && !dto.getSenha().isEmpty()) {
+            	entity.setSenha(passwordUtils.encrypt(dto.getSenha())); // Criptografa a senha
+            }
+            
             entity = repository.save(entity);
+            
             return UserMapper.toDto(entity); // Retorna DTO convertido
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Recurso não encontrado - service/update [verifique 'id'/ se está cadastrado]");
@@ -92,13 +135,21 @@ public class UserService {
         try {
             UserEntity entity = repository.getReferenceById(id);
             UserMapper.updateEntityFromDtoModal(dto, entity); // Atualiza a entidade com os dados do DTO - EXCLUSIVO DO MODAL
+            
+            // Criptografa a senha caso tenha sido fornecida
+            if (dto.getSenha() != null && !dto.getSenha().isEmpty()) {
+            	entity.setSenha(passwordUtils.encrypt(dto.getSenha())); // Criptografa a senha
+            }
+            
             entity = repository.save(entity);
+            
             return UserMapper.toDto(entity); // Retorna DTO convertido
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Recurso não encontrado - service/update [verifique 'id'/ se está cadastrado]");
         }
     }
 
+	
 	@Transactional
 	public UserDto changeStatus(Long id) {
 	    try {
@@ -110,6 +161,8 @@ public class UserService {
 	        throw new ResourceNotFoundException("Recurso não encontrado - service/changeStatus");
 	    }
 	}
-		
+	
+	
+
 	
 }
