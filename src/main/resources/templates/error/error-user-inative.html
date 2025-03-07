@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+<head>    
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">    
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
-    <title>Acesso Negado</title>
+    <title>Erro de Login</title>
     <link rel="icon" href="/image/error.ico"/>
 </head>
 <body class="d-flex align-items-center py-4 h-100">
 	<main class="m-auto">
-	    <div class="container">
-	        <h2>Acesso Negado</h2>
-	        <p>Você não tem permissão para acessar esta página.</p>
-	        <a href="/login" class="btn btn-primary btn-lg">Voltar para o login</a>
+		<div class="container">
+		    <h2>Acesso Negado</h2>
+		    <p>Seu Status está como inativo.</p>
+		    <p>Solicite ao Administrador a alteração do seu Status</p>
+		    <a href="/login" class="btn btn-primary btn-lg">Voltar para o login</a>
 	    </div>
     </main>
 </body>
