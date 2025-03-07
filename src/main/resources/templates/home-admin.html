@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="pt" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>RGDI Store - Seja Bem Vindo</title>
+	<title>RGDI Store - Home Admin</title>
 	<meta charset="UTF-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -26,6 +26,14 @@
 					</button>
 					<a class="navbar-brand " href="#">Home</a>
 				</div>
+				<div class="navbar-header-right">
+				    <form th:action="@{/logout}" method="post">
+				        <button type="submit" class="btn btn-dark">
+				            <i class="fa-solid fa-right-from-bracket"></i> Logout
+				        </button>
+				    </form>
+				</div>
+
 			</div>
 		</nav>
 	</header>
@@ -35,7 +43,7 @@
 		<aside>
 			<nav class="sidebar sidebar-open">
 				<ul class="nav nav-pills">
-					<li class="nav-item"><a class="nav-link " href="/auth"> 
+					<li class="nav-item"><a class="nav-link " href="/auth-redirect"> 
 						<i class="fa-solid fa-house"></i> <span>Home</span>
 					</a></li>
 				</ul>
@@ -76,11 +84,6 @@
 			</div>
 		</nav>
 		
-		<div class="container">
-			<div id="list-home" class="row">
-				<div>Home</div>
-			</div>
-		</div>
 		
 	</section>
 	
