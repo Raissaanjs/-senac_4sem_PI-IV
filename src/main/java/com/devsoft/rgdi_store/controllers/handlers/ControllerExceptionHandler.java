@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.devsoft.rgdi_store.services.exceptions.DataIntegrityViolationException;
 import com.devsoft.rgdi_store.services.exceptions.DatabaseException;
+import com.devsoft.rgdi_store.services.exceptions.EmailAlreadyExists;
 import com.devsoft.rgdi_store.services.exceptions.FieldValidationException;
+import com.devsoft.rgdi_store.services.exceptions.InvalidCpfException;
+import com.devsoft.rgdi_store.services.exceptions.PasswordConfirmationException;
 import com.devsoft.rgdi_store.services.exceptions.ResourceNotFoundException;
 import com.devsoft.rgdi_store.validation.CustomError;
 import com.devsoft.rgdi_store.validation.ValidationError;
@@ -40,7 +43,56 @@ public class ControllerExceptionHandler {
 		return ResponseEntity.status(status).body(err);
 	}
 	
-	//trata exceção de Unique
+	//Trata excessão de CPF
+	@ExceptionHandler(InvalidCpfException.class)
+	public ResponseEntity<CustomError> handleInvalidCpf(InvalidCpfException ex, HttpServletRequest request) {
+	    HttpStatus status = HttpStatus.BAD_REQUEST;
+
+	    CustomError error = new CustomError(
+	        Instant.now(),
+	        status.value(),
+	        ex.getMessage(),
+	        request.getRequestURI()
+	    );
+
+	    return ResponseEntity.status(status).body(error);
+	}
+	
+	//Trata excessão de email duplicado
+	@ExceptionHandler(EmailAlreadyExists.class)
+	public ResponseEntity<CustomError> handleEmailAlreadyExists(EmailAlreadyExists e, HttpServletRequest request) {
+	    HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+
+	    // Cria o erro customizado com informações gerais
+	    CustomError err = new CustomError(
+	        Instant.now(),
+	        status.value(),
+	        "Erro de validação",
+	        request.getRequestURI()
+	    );
+
+	    // Adiciona o erro específico do campo "email"
+	    err.addFieldError("email", e.getMessage());
+
+	    return ResponseEntity.status(status).body(err);
+	}
+	
+	//Trata excessão de confirmação de senha
+	@ExceptionHandler(PasswordConfirmationException.class)
+    public ResponseEntity<CustomError> handlePasswordConfirmation(PasswordConfirmationException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        // Cria o erro customizado
+        CustomError error = new CustomError(
+            Instant.now(),
+            status.value(),
+            ex.getMessage(),
+            request.getRequestURI()
+        );
+
+        return ResponseEntity.status(status).body(error);
+    }
+	
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	public ResponseEntity<CustomError> DataIntegrityViolation(DataIntegrityViolationException e, HttpServletRequest request) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -63,7 +115,7 @@ public class ControllerExceptionHandler {
 		return ResponseEntity.status(status).body(err);
 	}
 	
-	//Usado para validar senha
+	
 	@ExceptionHandler(FieldValidationException.class)
 	public ResponseEntity<CustomError> fieldValidationException(FieldValidationException e, HttpServletRequest request) {
 	    HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;        

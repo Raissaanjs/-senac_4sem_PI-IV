@@ -1,17 +1,10 @@
-package com.devsoft.rgdi_store.validation;
+package com.devsoft.rgdi_store.services.exceptions;
 
-import jakarta.validation.Constraint;
-import jakarta.validation.Payload;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+public class InvalidCpfException extends RuntimeException {
+   
+	private static final long serialVersionUID = 1L;
 
-@Target({ ElementType.FIELD, ElementType.METHOD })
-@Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = CpfValidator.class)
-public @interface ValidCPF {
-    String message() default "{com.devsoft.rgdi_store.dto.ValidCPF.message}";
-    Class<?>[] groups() default {};
-    Class<? extends Payload>[] payload() default {};
+	public InvalidCpfException(String message) {
+        super(message);
+    }
 }
