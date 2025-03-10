@@ -66,8 +66,7 @@ public class UserController {
 	    model.addAttribute("dto", new UserDto());
 	    return "/usuario/cadastro";
 	}
-	
-	
+		
 	//validação para email único
 	@GetMapping("/verificar-email")
 	@ResponseBody
@@ -128,7 +127,7 @@ public class UserController {
 	    return "usuario/lista"; // Template Thymeleaf
 	}
 
-	//lista com paginação via Postman
+	//lista com paginação - para framework de Front/ Postman
 	@GetMapping("/api")
 	public ResponseEntity<PagedModel<EntityModel<UserDto>>> findAll(Pageable pageable) {
 	    Page<UserDto> dtoPage = userService.findAll(pageable);
@@ -136,14 +135,12 @@ public class UserController {
 	    return ResponseEntity.ok(pagedModel);
 	}
 	
-	//para framework de Front
+	//Busca por id - para framework de Front/ Postman
 	@GetMapping("/detalhes/{id}")
 	public ResponseEntity<UserDto> findById(@PathVariable Long id) {
 		UserDto dto = userService.findById(id);
 		return ResponseEntity.ok(dto);
-	}	
-
-			
+	}		
 	
 
 	@PostMapping("/salvar")
@@ -199,7 +196,7 @@ public class UserController {
 	    return "usuario/lista"; // Retorna o template
 	}	
 	
-	//exclusivo para o MODAL/edit
+	//Update - exclusivo para o MODAL/edit
 	@PutMapping("/modal-update/{id}")
 	public ResponseEntity<?> updateModal(
 	        @PathVariable Long id,

@@ -53,7 +53,7 @@ public class UserMapper {
         );
     }
 
- // Converte UserDto para UserEntity
+    // Converte UserDto para UserEntity
     public static UserEntity toEntity(UserDto dto) {
         if (dto == null) {
             return null;
@@ -77,9 +77,7 @@ public class UserMapper {
         return entity;
     }
 
-
-
-    
+    //FAZER VALIDAÇÃO
     // Atualiza UserEntity com os dados de UserDto
     public static void updateEntityFromDto(UserDto dto, UserEntity entity) {
         if (dto == null || entity == null) {

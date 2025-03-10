@@ -32,6 +32,7 @@ public class UserService {
 	    return repository.existsByEmail(email);
 	}	
 	
+	//Mostra todos os registros
 	@Transactional(readOnly = true)
 	public Page<UserDto> findAll(Pageable pageable) {
 		if (pageable == null) {
@@ -42,6 +43,7 @@ public class UserService {
 	    return result.map(UserMapper::toDto);
 	}	
 
+	//Busca por nome com paginação
 	@Transactional(readOnly = true)
 	public Page<UserDto> findByName(String nome, Pageable pageable) {
 	    // Define a página padrão caso 'pageable' seja nulo
@@ -63,14 +65,14 @@ public class UserService {
 	    return result.map(UserMapper::toDto);
 	}
 
-	
+	// Busca por id
 	@Transactional(readOnly = true)
 	public UserDto findById(Long id) {		
 		UserEntity entity = repository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Recurso não encontrado - service/findById [Verifique o id]"));
 		return UserMapper.toDto(entity); //retorna todos os campos do UserDto	
 	}
 	
-	
+	//Save
 	@Transactional
 	public UserDto insert(UserDto dto) {
 		UserValidationSaveService.validateUser(dto, repository);		
@@ -96,6 +98,7 @@ public class UserService {
 	    }
 	}
 	
+	//Atualização full
 	@Transactional
     public UserDto update(Long id, UserDto dto) {
         try {
@@ -115,7 +118,7 @@ public class UserService {
         }
     }
 	
-	//exclusivo para o modal/edit
+	//Atualização - exclusivo para o modal/edit
 	@Transactional
     public UserDto updateModal(Long id, UserDto dto) {
         try {
@@ -135,7 +138,7 @@ public class UserService {
         }
     }
 
-	
+	//Altera o status
 	@Transactional
 	public UserDto changeStatus(Long id) {
 	    try {
@@ -146,9 +149,5 @@ public class UserService {
 	    } catch (EntityNotFoundException e) {
 	        throw new ResourceNotFoundException("Recurso não encontrado - service/changeStatus");
 	    }
-	}
-	
-	
-
-	
+	}	
 }
