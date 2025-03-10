@@ -12,7 +12,6 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -30,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 
 
@@ -91,13 +91,12 @@ public class UserController {
 	    return "usuarios";
 	}
 
-	//Para caixa busca por nome
 	@GetMapping("/buscar-nome")
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 	public String buscarPorNomeOuTodos(
 	    @RequestParam(value = "nome", required = false, defaultValue = "") String nome,
 	    @PageableDefault(page = 0, size = 5, sort = "id") Pageable pageable,
-	    Model model
+	    Model model,
+	    Authentication authentication
 	) {
 	    // Busca por nome ou retorna todos os usuários com paginação
 	    Page<UserDto> usuarios = (nome == null || nome.trim().isEmpty()) 
@@ -107,13 +106,21 @@ public class UserController {
 	    // Adiciona os dados ao modelo
 	    model.addAttribute("usuarios", usuarios.getContent());
 	    model.addAttribute("page", usuarios);
-	    model.addAttribute("nome", nome); // Para preservar o termo de busca no formulário
+	    model.addAttribute("nome", nome); // Preserva o termo de busca no formulário
+
+	    // Adiciona o papel do usuário autenticado ao modelo
+	    boolean isAdmin = authentication.getAuthorities().stream()
+	                        .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
+	    model.addAttribute("isAdmin", isAdmin);
 
 	    return "usuario/lista";
 	}
 
+
+
 	//Lista geral - Menu  
 	@GetMapping("/listar")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String list(
 	    Model model,
 	    @PageableDefault(page = 0, size = 5, sort = "id") Pageable pageable
@@ -127,7 +134,7 @@ public class UserController {
 	    return "usuario/lista"; // Template Thymeleaf
 	}
 
-	//lista com paginação - para framework de Front/ Postman
+	//Lista com paginação - para framework de Front/ Postman
 	@GetMapping("/api")
 	public ResponseEntity<PagedModel<EntityModel<UserDto>>> findAll(Pageable pageable) {
 	    Page<UserDto> dtoPage = userService.findAll(pageable);
@@ -140,9 +147,9 @@ public class UserController {
 	public ResponseEntity<UserDto> findById(@PathVariable Long id) {
 		UserDto dto = userService.findById(id);
 		return ResponseEntity.ok(dto);
-	}		
+	}			
 	
-
+	//Salvar
 	@PostMapping("/salvar")
 	public String save(@ModelAttribute("dto") UserDto dto, BindingResult result, Model model) {
 	    // Adiciona validações personalizadas
@@ -244,7 +251,7 @@ public class UserController {
 	}
 	
 	
-	//alterna status
+	//Alterna status
 	@PutMapping("/{id}/status")
 	public ResponseEntity<UserDto> changeStatus(@PathVariable Long id) {
 	    UserDto dto = userService.changeStatus(id);

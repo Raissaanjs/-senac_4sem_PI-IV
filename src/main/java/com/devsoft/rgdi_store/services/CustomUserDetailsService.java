@@ -30,6 +30,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> authorities = List.of(
             new SimpleGrantedAuthority(usuario.getGrupo().name()) // Usa o nome do enum, como ROLE_ADMIN
         );
+        System.out.println("CustomUserDetailsService - Autoridades carregadas: " + authorities);
+
 
         return new CustomUserDetails(
             usuario.getEmail(),

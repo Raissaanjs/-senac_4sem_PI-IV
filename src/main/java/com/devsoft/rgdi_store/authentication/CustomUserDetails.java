@@ -24,6 +24,8 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Logar as autoridades carregadas para depuração
+        authorities.forEach(auth -> System.out.println("CustomUserDetails - Autoridade carregada: " + auth.getAuthority()));
         return authorities;
     }
 
