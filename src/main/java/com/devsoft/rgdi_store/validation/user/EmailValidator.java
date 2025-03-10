@@ -1,19 +1,18 @@
-package com.devsoft.rgdi_store.validation;
+package com.devsoft.rgdi_store.validation.user;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.regex.Pattern;
 
-import jakarta.validation.Constraint;
-import jakarta.validation.Payload;
+public class EmailValidator {
 
-@Constraint(validatedBy = CustomEmailValidator.class)
-@Target({ ElementType.METHOD, ElementType.FIELD })
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ValidEmail {
-    String message() default "{com.devsoft.rgdi_store.dto.ValidEmail.message}";
-    Class<?>[] groups() default {};
-    Class<? extends Payload>[] payload() default {};
+    private static final String EMAIL_PATTERN =
+        "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+    private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+    
+    public static boolean isValidEmail(String email) {
+        if (email == null || email.isEmpty()) {
+            return false; // E-mail nulo ou vazio é inválido
+        }
+        return pattern.matcher(email).matches(); // Verifica o padrão
+    }   
 }
 

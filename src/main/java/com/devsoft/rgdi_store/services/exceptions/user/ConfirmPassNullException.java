@@ -1,10 +1,10 @@
-package com.devsoft.rgdi_store.services.exceptions;
+package com.devsoft.rgdi_store.services.exceptions.user;
 
-public class PasswordConfirmationException extends RuntimeException {
+public class ConfirmPassNullException extends RuntimeException {
    
 	private static final long serialVersionUID = 1L;
 
-	public PasswordConfirmationException(String message) {
+	public ConfirmPassNullException(String message) {
         super(message);
     }
 }

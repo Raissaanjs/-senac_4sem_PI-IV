@@ -1,4 +1,4 @@
-package com.devsoft.rgdi_store.validation;
+package com.devsoft.rgdi_store.validation.user;
 
 public class FieldMessage {
 	private String fieldname;
