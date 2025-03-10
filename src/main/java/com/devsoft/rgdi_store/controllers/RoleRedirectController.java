@@ -27,7 +27,7 @@ public class RoleRedirectController {
 
                     switch (grupo) {
                         case ROLE_ADMIN:
-                            return "redirect:/auth-redirect"; // Painel do administrador
+                            return "redirect:/usuarios/listar"; // Painel do administrador
                         case ROLE_ESTOQ:
                             return "redirect:/inventory-path"; // Estoque
                         case ROLE_USER:

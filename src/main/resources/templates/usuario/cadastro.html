@@ -27,6 +27,9 @@
 					<a class="navbar-brand navbar-toggle pull-left" href="#">Home</a>
 				</div>
 				<div class="navbar-header-right">
+					<span th:if="${loggedInUser != null}" 
+				          th:text="|Bem-vindo, ${loggedInUser.nome} ${loggedInUser.grupo.descricao|">
+				    </span>
 				    <form th:action="@{/logout}" method="post">
 				        <button type="submit" class="btn btn-dark">
 				            <i class="fa-solid fa-right-from-bracket"></i> Logout
@@ -94,17 +97,18 @@
 			        <div class="row">
 					    <div class="mb-3 col-md-5">
 					        <label for="nome">Nome</label>
-					        <input type="text" class="form-control" id="nome" name="nome" required aria-required="true" />
-					        <!-- <div class="invalid-feedback" id="nomeError" style="display: none;"> -->
-					        <div class="invalid-feedback" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}">
+					        <input type="text" class="form-control" id="nome" name="nome"
+					        th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid'" th:value="*{nome}" />
+					        <div class="invalid-feedback" th:if="${#fields.hasErrors('nome')}" th:text="${#fields.errors('nome')}">
 					            
 					        </div>
 					    </div>
 					    <div class="mb-3 col-md-3">
 					        <label for="cpf">CPF</label>
-					        <input type="text" class="form-control" id="cpf" name="cpf" required aria-required="true" />
+					        <input type="text" class="form-control" id="cpf" name="cpf" required aria-required="true" 
+					        th:classappend="${#fields.hasErrors('cpf')} ? 'is-invalid'" th:value="*{cpf}"/>
 					     <!-- <div class="invalid-feedback" id="cpfError" style="display: none;"> -->
-					         <div class="invalid-feedback" th:if="${#fields.hasErrors('cpf')}" th:errors="*{cpf}">
+					         <div class="invalid-feedback" th:if="${#fields.hasErrors('cpf')}" th:text="${#fields.errors('cpf')}">
 					            
 					        </div>
 					    </div>
@@ -112,8 +116,9 @@
 					<div class="row">
 					    <div class="mb-3 col-md-6">
 					        <label for="email">Email</label>
-					        <input type="email" class="form-control" id="email" name="email" required aria-required="true" />
-					        <div class="invalid-feedback" id="emailError" style="display: none;">
+					        <input type="email" class="form-control" id="email" name="email" required aria-required="true" 
+					        th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''" th:value="*{email}"/>
+					        <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:text="${#fields.errors('email')}">
 					            
 					        </div>
 					    </div>
@@ -121,14 +126,15 @@
 					<div class="row">
 					    <div class="mb-3 col-md-3">
 					        <label for="senha">Senha</label>
-					        <input type="password" class="form-control" id="senha" name="senha" required aria-required="true" />
-					        <div class="invalid-feedback" id="senhaError" style="display: none;">
+					        <input type="password" class="form-control" id="senha" name="senha" required aria-required="true" 
+					        th:classappend="${#fields.hasErrors('senha')} ? 'is-invalid' : ''" th:value="*{senha}"/>
+					        <div class="invalid-feedback" th:if="${#fields.hasErrors('senha')}" th:text="${#fields.errors('senha')}">
 					            
 					        </div>
 					    </div>
 					    <div class="mb-3 col-md-3">
 					        <label for="confirmasenha">Confirma Senha</label>
-					        <input type="password" class="form-control" id="confirmasenha" name="confirmasenha" required aria-required="true" />
+					        <input type="password" class="form-control" id="confirmasenha" name="confirmasenha" required aria-required="true" />					        
 					        <div class="invalid-feedback" id="confirmSenhaError" style="display: none;">
 					            
 					        </div>

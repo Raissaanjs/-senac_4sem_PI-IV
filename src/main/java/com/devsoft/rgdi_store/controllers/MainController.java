@@ -30,6 +30,11 @@ public class MainController {
         return "login"; // Exibe a página de login (login.html)
     }
     
+    @GetMapping("/front-adm")
+    public String frontAdm() {
+        return "frontadm"; // Exibe a página seleção (frontadm.html)
+    }
+    
     @GetMapping("/auth")
     public String urlAuth() {
         return "login"; // Exibe a página de login (login.html)

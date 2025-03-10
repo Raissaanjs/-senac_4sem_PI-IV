@@ -26,7 +26,7 @@
 					</button>
 					<a class="navbar-brand navbar-toggle pull-left" href="#">Lista de Usuários</a>
 				</div>
-				<div class="navbar-header-right">
+				<div class="navbar-header-right">   					 
 				    <form th:action="@{/logout}" method="post">
 				        <button type="submit" class="btn btn-dark">
 				            <i class="fa-solid fa-right-from-bracket"></i> Logout
@@ -104,6 +104,8 @@
 				    </div>
 				</div>
 	           <div class="table-responsive">
+	           <!-- ID do usuário logado -->
+				<!--  <div id="logged-user" data-user-id="[[${loggedInUserId}]]"></div> -->
 			    <table class="table table-striped table-hover table-sm">
 			        <thead>
 			            <tr>
@@ -152,11 +154,11 @@
 			    </div>
 			    <div>
 			        <a th:if="${page.hasPrevious()}"
-			           th:href="@{/usuarios/buscar/nome(nome=${nome}, page=${page.number - 1}, size=${page.size})}">
+			           th:href="@{/usuarios/buscar-nome(nome=${nome}, page=${page.number - 1}, size=${page.size})}">
 			            Anterior
 			        </a>
 			        <a th:if="${page.hasNext()}"
-			           th:href="@{/usuarios/buscar/nome(nome=${nome}, page=${page.number + 1}, size=${page.size})}">
+			           th:href="@{/usuarios/buscar-nome(nome=${nome}, page=${page.number + 1}, size=${page.size})}">
 			            Próximo
 			        </a>
 			    </div>
@@ -183,22 +185,22 @@
 			                    <div class="form-group">
 			                        <label for="nome">Nome</label>
 			                        <input type="text" class="form-control" id="nome" name="nome" required />
-			                        <span id="nomeError" class="text-danger"></span>
+			                        <div class="invalid-feedback" id="nomeError" style="display: none;"></div>
 			                    </div>
 			                    <div class="form-group">
 			                        <label for="cpf">CPF</label>
 			                        <input type="text" class="form-control" id="cpf" name="cpf" required />
-			                        <span id="cpfError" class="text-danger"></span>
+			                        <div class="invalid-feedback" id="cpfError" style="display: none;"></div>
 			                    </div>
 			                    <div class="form-group">
 			                        <label for="senha">Senha</label>
 			                        <input type="password" class="form-control" id="senha" name="senha" />
-			                        <span id="senhaError" class="text-danger"></span>
+			                       <div class="invalid-feedback" id="senhaError" style="display: none;"></div>
 			                    </div>
 			                    <div class="form-group">
 			                        <label for="confirmasenha">Confirmar Senha</label>
 			                        <input type="password" class="form-control" id="confirmasenha" name="confirmasenha" />
-			                        <span id="confirmaSenhaError" class="text-danger"></span>
+			                        <div class="invalid-feedback" id="confirmasenhaError" style="display: none;"></div>
 			                    </div>
 			                    <!-- Campo de Grupo -->
 			                    <div class="form-group">
@@ -256,7 +258,10 @@
 	    $(".navbar-toggle").click(function(){
 	        $(".sidebar").toggleClass("sidebar-open");
 	    });
-	});
+	});	
+		
+	
+
 	
 	/* Altera status ao clicar na checkbox com confirmação */
 	function toggleStatus(checkbox, userId) {
@@ -289,6 +294,7 @@
 	      });
 	}
 	
+	
 	// Define a função openEditModal no escopo global
 	// Função para abrir o modal de edição
 	window.openEditModal = function (userId) {
@@ -298,7 +304,7 @@
 	    document.getElementById('userId').value = userId;
 	
 	    // Faz a requisição para obter os detalhes do usuário
-	    fetch(`/usuarios/detalhes/${userId}`) // Atualiza o endpoint para refletir o ajuste no backend
+	    fetch(`/usuarios/detalhes/${userId}`)
 	        .then(response => {
 	            if (!response.ok) {
 	                throw new Error(`Erro ${response.status}: Não foi possível carregar os dados.`);
@@ -308,14 +314,12 @@
 	        .then(data => {
 	            console.log("Dados carregados do backend:", data);
 	
-	            // Preenche os campos do modal
-	            document.getElementById('nome').value = data.nome || ''; // Nome
-	            document.getElementById('cpf').value = data.cpf || ''; // CPF
-	            document.getElementById('senha').value = ''; // Limpa a senha
-	            document.getElementById('confirmasenha').value = ''; // Limpa a confirmação
-	
-	            // Preenche o grupo
-	            document.getElementById('grupo').value = data.grupo || ''; // Seleciona o grupo salvo
+	            // Preenche os campos do modal com os dados recebidos
+	            document.getElementById('nome').value = data.nome || '';
+	            document.getElementById('cpf').value = data.cpf || '';
+	            document.getElementById('senha').value = ''; // Limpa o campo senha
+	            document.getElementById('confirmasenha').value = ''; // Limpa o campo confirmar senha
+	            document.getElementById('grupo').value = data.grupo || '';
 	        })
 	        .catch(error => {
 	            console.error("Erro ao buscar os dados do usuário:", error);
@@ -329,49 +333,25 @@
 	
 	// Adiciona evento ao formulário para salvar alterações
 	document.getElementById('editUserForm').addEventListener('submit', function (event) {
-	    event.preventDefault(); // Impede o comportamento padrão do formulário
+	    event.preventDefault(); // Evita o comportamento padrão do formulário
+	
+	    // Resetar mensagens de erro e estados inválidos
+	    document.querySelectorAll('.invalid-feedback').forEach(el => el.style.display = 'none');
+	    document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
 	
 	    // Captura o userId a partir do campo hidden
 	    const userId = document.getElementById('userId').value;
 	
-	    // Captura os elementos do formulário
-	    const senhaInput = document.getElementById('senha');
-	    const confirmaSenhaInput = document.getElementById('confirmasenha');
-	    const senhaError = document.getElementById('senhaError');
-	    const confirmaSenhaError = document.getElementById('confirmaSenhaError');
-	
-	    let valid = true; // Controle de validação
-	
-	    // Validação: As senhas devem corresponder, se preenchidas
-	    if (senhaInput.value || confirmaSenhaInput.value) {
-	        if (senhaInput.value !== confirmaSenhaInput.value) {
-	            confirmaSenhaError.textContent = "As senhas não coincidem.";
-	            confirmaSenhaError.style.display = 'block';
-	            confirmaSenhaInput.classList.add('is-invalid');
-	            valid = false;
-	        } else {
-	            confirmaSenhaError.textContent = '';
-	            confirmaSenhaError.style.display = 'none';
-	            confirmaSenhaInput.classList.remove('is-invalid');
-	        }
-	    }
-	
-	    // Interrompe a submissão se houver erros
-	    if (!valid) {
-	        return;
-	    }
-	
 	    // Coleta os dados do formulário
 	    const userData = {
-	        nome: document.getElementById('nome').value,
-	        cpf: document.getElementById('cpf').value,
+	        nome: document.getElementById('nome').value.trim(),
+	        cpf: document.getElementById('cpf').value.trim(),
 	        grupo: document.getElementById('grupo').value,
-	        // Envia as senhas apenas se preenchidas
-	        ...(senhaInput.value && { senha: senhaInput.value }),
-	        ...(confirmaSenhaInput.value && { confirmasenha: confirmaSenhaInput.value })
+	        ...(document.getElementById('senha').value && { senha: document.getElementById('senha').value }),
+	        ...(document.getElementById('confirmasenha').value && { confirmasenha: document.getElementById('confirmasenha').value })
 	    };
 	
-	    // Envia os dados para o backend usando método PUT
+	    // Envia os dados para o backend usando PUT
 	    fetch(`/usuarios/modal-update/${userId}`, {
 	        method: 'PUT',
 	        headers: {
@@ -382,30 +362,31 @@
 	    .then(response => {
 	        if (response.ok) {
 	            alert("Usuário atualizado com sucesso!");
-	            location.reload(); // Recarrega a página para refletir as alterações
+	            location.reload(); // Atualiza a página
 	        } else if (response.status === 400) {
-	            // Trata erros de validação retornados pelo backend
+	            // Lida com erros retornados pelo backend
 	            response.json().then(errors => {
-	                console.error("Erros de validação:", errors);
+	                console.error("Erros retornados pelo backend:", errors);
 	                Object.keys(errors).forEach(field => {
 	                    const errorElement = document.getElementById(`${field}Error`);
 	                    if (errorElement) {
-	                        errorElement.textContent = errors[field];
-	                        errorElement.style.display = 'block';
-	                        document.getElementById(field).classList.add('is-invalid');
+	                        errorElement.textContent = errors[field]; // Insere apenas a mensagem do erro
+	                        errorElement.style.display = 'block'; // Exibe o erro
+	                        const inputField = document.getElementById(field);
+	                        if (inputField) inputField.classList.add('is-invalid'); // Marca o campo como inválido
 	                    }
 	                });
 	            });
 	        } else {
+	            // Mensagem genérica para outros erros
 	            alert("Erro ao salvar os dados. Tente novamente.");
 	        }
 	    })
 	    .catch(error => {
-	        console.error("Erro na requisição:", error);
+	        console.error("Erro de comunicação com o servidor:", error);
 	        alert("Erro de comunicação com o servidor.");
 	    });
 	});
-
 </script>
 </body>
-</html>		
+</html>

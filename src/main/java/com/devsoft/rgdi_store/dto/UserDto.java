@@ -1,33 +1,17 @@
 package com.devsoft.rgdi_store.dto;
 
 import com.devsoft.rgdi_store.entities.UserGroup;
-import com.devsoft.rgdi_store.validation.ValidEmail;
-import com.devsoft.rgdi_store.validation.ValidationGroups;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 public class UserDto {
     
-    private Long id;
-
-    //@NotBlank(message = "{nome.NotBlank}", groups = {ValidationGroups.Create.class, ValidationGroups.Update.class})
-    @Size(min = 3, max = 150, message = "{nome.Size}", groups = {ValidationGroups.Create.class, ValidationGroups.Update.class})
-    private String nome;
-       
-    @NotBlank(message = "{cpf.NotBlank}", groups = ValidationGroups.Create.class)
+    private Long id;    
+    private String nome;    
     private String cpf;
-
-    @ValidEmail(groups = ValidationGroups.Create.class)
-    @NotBlank(message = "{email.NotBlank}", groups = ValidationGroups.Create.class)
-    private String email;
-
-    @NotBlank(message = "{senha.NotBlank}", groups = ValidationGroups.Create.class)
+    private String email;    
     private String senha;
 
     // Campo transitório (não será persistido)
-    @NotBlank(message = "{confirmasenha.NotBlank}", groups = ValidationGroups.Create.class)
     private transient String confirmasenha; //"transient" disponível no DTO apenas para validações temporárias
-
     private boolean status = true;
     private UserGroup grupo; // usando Enum
 

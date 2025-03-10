@@ -2,6 +2,8 @@ package com.devsoft.rgdi_store.dto;
 
 import com.devsoft.rgdi_store.entities.UserEntity;
 import com.devsoft.rgdi_store.entities.UserGroup;
+import com.devsoft.rgdi_store.repositories.UserRepository;
+import com.devsoft.rgdi_store.validation.user.UserValidationEditService;
 
 public class UserMapper {
 
@@ -112,29 +114,28 @@ public class UserMapper {
     }
     
     // Atualiza UserEntity com os dados de UserDto - Exclusivo MODAL
-    public static void updateEntityFromDtoModal(UserDto dto, UserEntity entity) {
+    public static void updateEntityFromDtoModal(UserDto dto, UserEntity entity, UserRepository repository) {
         if (dto == null || entity == null) {
             return; // Caso o dto ou entidade sejam null, simplesmente retorna
         }
 
-        // Atualiza o nome se fornecido no DTO
+        // Valida e atualiza o nome
         if (dto.getNome() != null && !dto.getNome().isEmpty()) {
-            entity.setNome(dto.getNome());
+            UserValidationEditService.validateAndUpdateName(dto.getNome(), entity);;
         }
 
-        // Atualiza o CPF se fornecido no DTO
+        // Valida e atualiza o CPF
         if (dto.getCpf() != null && !dto.getCpf().isEmpty()) {
-            entity.setCpf(dto.getCpf());
+            UserValidationEditService.validateAndUpdateCpf(dto.getCpf(), entity);
         }
 
-        // Atualiza a senha apenas se fornecida no DTO
+        // Valida e atualiza a senha (incluindo confirmação)
         if (dto.getSenha() != null && !dto.getSenha().isEmpty()) {
-            entity.setSenha(dto.getSenha());        }
-        
-        
-        // Atualiza o grupo apenas se fornecido no DTO
+            UserValidationEditService.validateAndUpdatePassword(dto.getSenha(), dto.getConfirmasenha(), entity);
+        }
+
+        // Atualiza o grupo diretamente (não precisa de validação complexa aqui, caso não haja)
         if (dto.getGrupo() != null) {
-            // Usa diretamente o grupo do DTO
             entity.setGrupo(dto.getGrupo());
         }
     }
