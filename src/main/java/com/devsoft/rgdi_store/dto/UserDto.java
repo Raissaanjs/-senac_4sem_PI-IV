@@ -2,9 +2,14 @@ package com.devsoft.rgdi_store.dto;
 
 import com.devsoft.rgdi_store.entities.UserGroup;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class UserDto {
     
-    private Long id;    
+    private Long id;
+    @NotBlank(message = "Informe um nome - Dto.")
+    @Size(min = 3, max = 120, message = "O nome deve ter entre {min} e {max} caratcteres - Dto.")
     private String nome;    
     private String cpf;
     private String email;    

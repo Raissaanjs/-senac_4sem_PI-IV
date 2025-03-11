@@ -63,10 +63,10 @@
 	            <ul class="nav nav-pills">
 	                <li class="nav-item"><span class="nav-link active">Produtos</span></li>
 	                <li class="nav-item"><a class="nav-link"
-	                                        href="#"> <i class="fa-solid fa-plus"></i> <span>Cadastrar </span>
+	                                        href="/produtos/cadastrar"> <i class="fa-solid fa-plus"></i> <span>Cadastrar </span>
 	                </a></li>
 	                <li class="nav-item"><a class="nav-link"
-	                                        href="#"> <i class="fa-solid fa-table-list"></i> <span>Listar </span>
+	                                        href="/produtos/listar"> <i class="fa-solid fa-table-list"></i> <span>Listar </span>
 	                </a></li>
 	            </ul>	
 	        </nav>
@@ -93,22 +93,21 @@
 			<!-- form-group: removida no bootstrap 5xxx. No lugar posso usar: "mb-3". Usar criar meu "css próprio" -->
 	        <div class="container" id="cadastro">
 			    <!--  <form id="userForm" onsubmit="formUser(event)"> -->
-			    <form th:action="@{/usuarios/salvar}" th:object="${dto}" method="POST">
+			    <form th:action="@{/usuarios/salvar}" th:object="${dto}" method="POST">			    	
 			        <div class="row">
 					    <div class="mb-3 col-md-5">
 					        <label for="nome">Nome</label>
 					        <input type="text" class="form-control" id="nome" name="nome"
 					        th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid'" th:value="*{nome}" />
-					        <div class="invalid-feedback" th:if="${#fields.hasErrors('nome')}" th:text="${#fields.errors('nome')}">
-					            
+					       <!--   <div class="invalid-feedback" th:if="${#fields.hasErrors('nome')}" th:text="${#fields.errors('nome')}"> -->
+					              <div class="invalid-feedback" th:text="${#fields.errors('nome')}"> 
 					        </div>
 					    </div>
 					    <div class="mb-3 col-md-3">
 					        <label for="cpf">CPF</label>
 					        <input type="text" class="form-control" id="cpf" name="cpf" required aria-required="true" 
 					        th:classappend="${#fields.hasErrors('cpf')} ? 'is-invalid'" th:value="*{cpf}"/>
-					     <!-- <div class="invalid-feedback" id="cpfError" style="display: none;"> -->
-					         <div class="invalid-feedback" th:if="${#fields.hasErrors('cpf')}" th:text="${#fields.errors('cpf')}">
+					        <div class="invalid-feedback" th:text="${#fields.errors('cpf')}">
 					            
 					        </div>
 					    </div>
@@ -118,7 +117,7 @@
 					        <label for="email">Email</label>
 					        <input type="email" class="form-control" id="email" name="email" required aria-required="true" 
 					        th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''" th:value="*{email}"/>
-					        <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:text="${#fields.errors('email')}">
+					        <div class="invalid-feedback" th:text="${#fields.errors('email')}">
 					            
 					        </div>
 					    </div>
@@ -128,7 +127,7 @@
 					        <label for="senha">Senha</label>
 					        <input type="password" class="form-control" id="senha" name="senha" required aria-required="true" 
 					        th:classappend="${#fields.hasErrors('senha')} ? 'is-invalid' : ''" th:value="*{senha}"/>
-					        <div class="invalid-feedback" th:if="${#fields.hasErrors('senha')}" th:text="${#fields.errors('senha')}">
+					        <div class="invalid-feedback" th:text="${#fields.errors('senha')}">
 					            
 					        </div>
 					    </div>
@@ -147,7 +146,7 @@
 					            <option value="">Selecione...</option>
 					            <option value="ROLE_ADMIN">Administrador</option>
 					            <option value="ROLE_ESTOQ">Estoquista</option>
-					            <option value="ROLE_USER">Usuário</option>
+					       <!-- <option value="ROLE_USER">Usuário</option> -->
 					        </select>
 					        <div class="invalid-feedback" id="grupoError" style="display: none;">
 					            

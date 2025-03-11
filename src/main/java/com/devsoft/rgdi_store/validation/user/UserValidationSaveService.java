@@ -22,7 +22,7 @@ public class UserValidationSaveService {
     // Validação do nome
     private static void validateName(String nome) {
         if (!NameValidation.isValidName(nome)) {
-            throw new NameValidationException("Nome inválido. Deve conter entre 3 e 150 caracteres.");
+            throw new NameValidationException("Nome inválido. Deve conter entre 3 e 120 caracteres.");
         }
     }
 
