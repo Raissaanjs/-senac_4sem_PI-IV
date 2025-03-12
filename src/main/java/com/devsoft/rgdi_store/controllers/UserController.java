@@ -64,7 +64,7 @@ public class UserController {
 	@GetMapping("/cadastrar")
 	public String register(Model model) {
 	    model.addAttribute("dto", new UserDto());
-	    return "/usuario/cadastro";
+	    return "/usuario/caduser";
 	}
 		
 	//validação para email único
@@ -113,7 +113,7 @@ public class UserController {
 	                        .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
 	    model.addAttribute("isAdmin", isAdmin);
 
-	    return "usuario/lista";
+	    return "usuario/listuser";
 	}
 
 
@@ -131,7 +131,7 @@ public class UserController {
 	    model.addAttribute("usuarios", dtoPage.getContent());
 	    model.addAttribute("page", dtoPage); // Metadados da página (como total de páginas e número atual)
 
-	    return "usuario/lista"; // Template Thymeleaf
+	    return "usuario/listuser"; // Template Thymeleaf
 	}
 
 	//Lista com paginação - para framework de Front/ Postman
@@ -168,7 +168,7 @@ public class UserController {
 	    // Verifica se há erros de validação. Se houver manda para o Front
 	    if (result.hasErrors()) {
 	        model.addAttribute("dto", dto); // Mantém os dados preenchidos no formulário
-	        return "usuario/cadastro"; // Retorna para a página do formulário
+	        return "usuario/caduser"; // Retorna para a página do formulário
 	    }
 
 	    // Define grupo padrão caso não tenha sido selecionado
@@ -200,7 +200,7 @@ public class UserController {
 
 	    model.addAttribute("dto", dto); // Adiciona o usuário ao modelo
 	    model.addAttribute("grupos", grupos); // Adiciona a lista de grupos ao modelo
-	    return "usuario/lista"; // Retorna o template
+	    return "usuario/listuser"; // Retorna o template
 	}	
 	
 	//Update - exclusivo para o MODAL/edit

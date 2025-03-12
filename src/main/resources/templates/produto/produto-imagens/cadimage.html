@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Criar Nova Imagem de Produto</title>
+</head>
+<body>
+    <h1>Criar Nova Imagem de Produto</h1>
+    <!-- Modal -->
+<div class="modal fade" id="addImageModal" tabindex="-1" aria-labelledby="addImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addImageModalLabel">Adicionar Imagem</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="imageForm" th:action="@{/uploadImage}" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="imageFile" class="form-label">Selecionar Imagem</label>
+                        <input type="file" class="form-control" id="imageFile" name="imageFile" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar Imagem</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

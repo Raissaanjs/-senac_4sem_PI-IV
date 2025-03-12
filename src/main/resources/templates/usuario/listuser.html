@@ -24,8 +24,10 @@
 					<button type="button" class="btn btn-dark navbar-toggle pull-left">
 						<i class="fa-solid fa-bars"></i>
 					</button>
-					<a class="navbar-brand navbar-toggle pull-left" href="#">Lista de Usuários</a>
+					<a class="navbar-brand" href="#">LOGO</a>
+
 				</div>
+				
 				<div class="navbar-header-right">   					 
 				    <form th:action="@{/logout}" method="post">
 				        <button type="submit" class="btn btn-dark">
@@ -41,11 +43,6 @@
 	
 	    <aside>
 	        <nav class="sidebar  sidebar-open">
-	            <ul class="nav nav-pills">
-	                <li class="nav-item"><a class="nav-link " href="/auth-redirect"> <i class="fa-solid fa-house"></i> <span>Home</span>
-	                </a></li>
-	            </ul>
-	
 	            <ul class="nav nav-pills">
 	                <li class="nav-item"><span class="nav-link active">Usuários</span></li>
 					<li class="nav-item"><a class="nav-link"
@@ -114,7 +111,7 @@
 			                <th>Email</th>
 			                <th style="width: 6.5rem;">Status</th>
 			                <th style="width: 9rem;">Grupo</th>
-			                <th style="width: 4rem;">Ação</th>
+			                <th style="width: 9rem;">Ação</th>
 			            </tr>
 			        </thead>
 			        <tbody>
@@ -126,23 +123,23 @@
 			            <tr th:each="user, iterStat : ${usuarios}">
 			                <td th:text="${user.id}"></td> <!-- Número sequencial -->
 			                <td th:text="${user.nome}"></td> <!-- Nome do usuário -->
-			                <td th:text="${user.email}"></td> <!-- Email do usuário -->			                
-			                <td>
-		                    <div class="form-check">
-							    <!-- Status com checkbox -->
-							    <input class="form-check-input" type="checkbox" 
-							           th:checked="${user.status}" 
-							           th:attr="onchange= 'toggleStatus(this, ' + ${user.id} + ')'" />
-							    <label class="form-check-label">
-							        <span th:text="${user.status ? 'Ativo' : 'Inativo'}"></span>
-							    </label>
-							</div>
-			                </td>
+			                <td th:text="${user.email}"></td> <!-- Email do usuário -->	
+			                <td id="user-status-cell-${user.id}">
+							    <span th:text="${user.status ? 'Ativo' : 'Inativo'}"></span>
+							</td>	
 			                <td th:text="${user.grupo != null ? user.grupo.getDescricao() : 'Sem grupo'}">
-			                <td>
+			                <td class="align-inline">
 							    <button type="button" class="btn btn-info btn-sm" th:onclick="'openEditModal(' + ${user.id} + ')'">
 							        <span class="fa-solid fa-pen-to-square" title="Editar" aria-hidden="true"></span>
 							    </button>
+							    <div class="form-check">
+						            <input class="form-check-input" type="checkbox" 
+						                   th:checked="${user.status}" 
+						                   th:attr="onchange= 'toggleStatus(this, ' + ${user.id} + ')'" />
+						            <label class="form-check-label">
+						                <span>Ativo</span> <!-- Texto fixo ao lado do checkbox -->
+						            </label>
+						        </div>
 							</td>
 			            </tr>
 			        </tbody>
@@ -261,38 +258,42 @@
 	});	
 		
 	
-
-	
-	/* Altera status ao clicar na checkbox com confirmação */
-	function toggleStatus(checkbox, userId) {
-	    // Exibe o diálogo de confirmação
-	    const userConfirmation = confirm("Tem certeza de que deseja alterar o Status?");
-	    
-	    if (!userConfirmation) {
-	        // Reverte o estado do checkbox caso o usuário clique em "Cancelar"
-	        checkbox.checked = !checkbox.checked;
-	        return; // Encerra a função
-	    }
-	
-	    // Caso confirmado, realiza a requisição ao servidor
-	    fetch(`/usuarios/${userId}/status`, {
-	        method: 'PUT',
-	        headers: {
-	            'Content-Type': 'application/json'
+	async function toggleStatus(checkbox, userId) {
+	    try {
+	        const userConfirmation = confirm("Tem certeza de que deseja alterar o Status?");
+	        if (!userConfirmation) {
+	            checkbox.checked = !checkbox.checked;
+	            return;
 	        }
-	    }).then(response => response.json())
-	      .then(data => {
-	          console.log(data);
-	          // Atualiza o estado do checkbox e o texto com base no status retornado
-	          checkbox.checked = data.status; // Garante que o estado seja sincronizado com o servidor
-	          checkbox.nextElementSibling.querySelector('span').innerText = data.status ? "Ativo" : "Inativo"; // Atualiza o texto
-	      })
-	      .catch(error => {
-	          console.error('Error:', error);
-	          // Reverte o estado do checkbox em caso de erro
-	          checkbox.checked = !checkbox.checked;
-	      });
+	
+	        const response = await fetch(`/usuarios/${userId}/status`, {
+	            method: 'PUT',
+	            headers: {
+	                'Content-Type': 'application/json'
+	            }
+	        });
+	
+	        if (!response.ok) throw new Error('Erro ao atualizar o status');
+	
+	        const data = await response.json();
+	        console.log("Estado atualizado no servidor:", data);
+	
+	        checkbox.checked = data.status;
+	
+	        const statusCell = document.querySelector(`#user-status-cell-${userId}`);
+	        if (statusCell) {
+	            statusCell.innerText = data.status ? "Ativo" : "Inativo";
+	        }
+	
+	        // Força o navegador a recarregar a página
+	        location.reload();
+	    } catch (error) {
+	        console.error('Erro ao atualizar status:', error);
+	        checkbox.checked = !checkbox.checked;
+	        alert("Ocorreu um erro ao tentar atualizar o status. Por favor, tente novamente.");
+	    }
 	}
+
 	
 	
 	// Define a função openEditModal no escopo global

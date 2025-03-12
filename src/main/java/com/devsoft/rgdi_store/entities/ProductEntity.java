@@ -1,5 +1,6 @@
 package com.devsoft.rgdi_store.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,8 +29,8 @@ public class ProductEntity {
     private int avaliacao;
     private boolean status;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<ProductImageEntity> imagens;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductImageEntity> imagens = new ArrayList<>();
 
     // Construtor padrão
     public ProductEntity() {

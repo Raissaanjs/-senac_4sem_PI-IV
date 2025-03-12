@@ -13,24 +13,16 @@ data-bs-theme="dark" class="h-100">
   </head>
   <body class="d-flex align-items-center py-4 h-100">
 		<main class="m-auto">		
-		<div class="form-adm ">
-		<h2>Front</h2>			
+		<div class="form-adm">
+		<h2>Escolha uma opção:</h2>			
 		
 		<div>
-		    <form th:action="@{/usuarios/listar}" method="get">
-		        <input type="hidden" name="param" value="listar-user">
-		        <button type="submit" class="btn btn-primary btn-lg" sec:authorize="hasRole('ROLE_ADMIN')">
-		            Listar Usuários
-		        </button>
-		    </form>
-		</div>
-
-
-		<div>
-		<form th:action="@{/inventory-path}" method="get">
-		    <input type="hidden" name="param" value="listar-produtos">
-		    <button type="submit" class="btn btn-primary btn-lg">Listar Produtos</button>
-		</form>
+		<a class="btn btn-dark btn-lg d-block mb-2" sec:authorize="hasRole('ROLE_ADMIN')" href="/usuarios/listar">
+		<i class="fa-solid fa-table-list"></i> <span>Listar Usuários (ADMIN)</span></a>
+		<a class="btn btn-dark btn-lg d-block mb-2" href="/produtos/listar">
+		<i class="fa-solid fa-table-list"></i> <span>Listar Produtos</span></a>
+		<a href="/logout" class="btn btn-danger btn-lg d-block">
+		<i class="fa-solid fa-right-from-bracket"></i> <span>Sair</span></a>
 		</div>
 		</div>
 

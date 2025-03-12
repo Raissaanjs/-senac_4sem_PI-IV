@@ -12,22 +12,27 @@ public class ProductDto {
     private int avaliacao;
     private boolean status;
     private List<ProductImageDto> imagens;
+    private List<String> imageUrls;
     
     public ProductDto() {}
-
+    
     public ProductDto(Long id, String nome, double preco, int quantidade, String descricao, int avaliacao,
-                      boolean status, List<ProductImageDto> imagens) {
-        this.id = id;
-        this.nome = nome;
-        this.preco = preco;
-        this.quantidade = quantidade;
-        this.descricao = descricao;
-        this.avaliacao = avaliacao;
-        this.status = status;
-        this.imagens = imagens;
-    }
+			boolean status, List<ProductImageDto> imagens, List<String> imageUrls) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.preco = preco;
+		this.quantidade = quantidade;
+		this.descricao = descricao;
+		this.avaliacao = avaliacao;
+		this.status = status;
+		this.imagens = imagens;
+		this.imageUrls = imageUrls;
+	}
 
-    // Getters e Setters
+
+
+	// Getters e Setters
     public Long getId() {
         return id;
     }
@@ -91,4 +96,14 @@ public class ProductDto {
     public void setImagens(List<ProductImageDto> imagens) {
         this.imagens = imagens;
     }
+
+	public List<String> getImageUrls() {
+		return imageUrls;
+	}
+
+	public void setImageUrls(List<String> imageUrls) {
+		this.imageUrls = imageUrls;
+	}
+    
+    
 }

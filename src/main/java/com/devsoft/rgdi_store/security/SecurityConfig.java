@@ -31,13 +31,16 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 	    http.securityMatcher("/**") // Aplica a segurança para todas as rotas
 	        .authorizeHttpRequests(auth -> auth
-	            .requestMatchers("/", "/login", "/css/**", "/js/**", "/webjars/**", "/favicon.ico",
+	            .requestMatchers("/", "/login", "/css/**", "/js/**", "/webjars/**",
 	                             "/image/**", "/error-login", "/error-user-inat", "/access-denied", "/error-no-perm", "/error-no-auth",
 	                             "/auth").permitAll()
 	            .requestMatchers("/auth-redirect", "/usuarios/**", "/h2-console/**").hasAuthority("ROLE_ADMIN")
 	            .requestMatchers("/produtos/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers("/inventory-path").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers("/front-adm").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
+	            .requestMatchers("/product-images/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
+	            .requestMatchers("/uploadImages/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
+	            .requestMatchers("/product-images/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .anyRequest().authenticated() // Qualquer outra rota requer autenticação
 	        )
 	        .httpBasic(Customizer.withDefaults()) // Habilita autenticação básica, útil para Postman

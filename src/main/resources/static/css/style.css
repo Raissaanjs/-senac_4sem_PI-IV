@@ -176,4 +176,12 @@ a.navbar-brand.navbar-brand-custom{
     margin-top: 0.25rem;
 }
 
+.align-inline {
+    display: flex; /*coloca os itens em linha*/
+    align-items: center;
+    gap: 10px; /*espaçamento entre os elementos*/
+}
 
+.updated {
+    animation: none; /* Simplesmente para forçar o DOM a perceber a mudança */
+}
