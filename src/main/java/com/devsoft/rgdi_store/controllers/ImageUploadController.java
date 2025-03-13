@@ -36,9 +36,9 @@ public class ImageUploadController {
         }
     }
 
-    @PostMapping("/uploadImages")
+    @PostMapping("/uploadImage")
     @ResponseBody
-    public List<String> uploadImages(@RequestParam("imageFiles") MultipartFile[] files) {
+    public List<String> uploadImages(@RequestParam("imageFile") MultipartFile[] files) {
         List<String> imageUrls = new ArrayList<>();
         for (MultipartFile file : files) {
             if (file.isEmpty()) {

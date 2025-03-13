@@ -1,26 +1,39 @@
 package com.devsoft.rgdi_store.controllers;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Optional;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.devsoft.rgdi_store.config.UploadConfig;
 import com.devsoft.rgdi_store.dto.ProductDto;
+import com.devsoft.rgdi_store.dto.ProductMapper;
 import com.devsoft.rgdi_store.entities.ProductEntity;
 import com.devsoft.rgdi_store.entities.ProductImageEntity;
 import com.devsoft.rgdi_store.services.ProductService;
@@ -38,12 +51,63 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    // Método para listar todos os produtos
-    @GetMapping("/listar")
-    public String listProducts(Model model) {
-        model.addAttribute("produtos", productService.findAll());
-        return "produto/listproduct"; // Nome da página Thymeleaf
-    }
+    //Lista geral - Menu  
+  	@GetMapping("/listar")
+  	public String list(
+  	    Model model,
+  	    @PageableDefault(page = 0, size = 5, sort = "id") Pageable pageable
+  	) {
+  	    Page<ProductDto> dtoPage = productService.findAll(pageable);
+
+  	    // Adiciona os resultados da página ao modelo do Thymeleaf
+  	    model.addAttribute("produtos", dtoPage.getContent());
+  	    model.addAttribute("page", dtoPage); // Metadados da página (como total de páginas e número atual)
+
+  	    return "produto/listproduct"; // Template Thymeleaf
+  	}
+  	
+  //Busca por id - para framework de Front/ Postman
+  	@GetMapping("/detalhes/{id}")
+  	public ResponseEntity<ProductDto> findById(@PathVariable Long id) {
+  		ProductDto dto = productService.findById(id);
+  		return ResponseEntity.ok(dto);
+  	}
+  	
+  	@GetMapping("/buscar-nome")
+	public String buscarPorNomeOuTodos(
+	    @RequestParam(value = "nome", required = false, defaultValue = "") String nome,
+	    @PageableDefault(page = 0, size = 5, sort = "id") Pageable pageable,
+	    Model model,
+	    Authentication authentication
+	) {
+	    // Busca por nome ou retorna todos os usuários com paginação
+	    Page<ProductDto> produtos = (nome == null || nome.trim().isEmpty()) 
+	                                ? productService.findAll(pageable) 
+	                                : productService.findByName(nome, pageable);
+
+	    // Adiciona os dados ao modelo
+	    model.addAttribute("produtos", produtos.getContent());
+	    model.addAttribute("page", produtos);
+	    model.addAttribute("nome", nome); // Preserva o termo de busca no formulário
+
+	    // Adiciona o papel do usuário autenticado ao modelo
+	    boolean isAdmin = authentication.getAuthorities().stream()
+	                        .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
+	    model.addAttribute("isAdmin", isAdmin);
+
+	    return "produto/listproduct";
+	}
+  	
+  	@GetMapping("/editar/{id}")
+	public String editUser(@PathVariable Long id, Model model) {
+	    ProductDto dto = productService.findById(id); 
+
+	    model.addAttribute("dto", dto); // Adiciona o p ao modelo
+	    
+	    return "usuario/listuser"; // Retorna o template
+	}
+  	
+  	
 
     // Método para exibir o formulário de criação de produto
     @GetMapping("/cadastrar")
@@ -53,17 +117,11 @@ public class ProductController {
     }
 
     // Método para salvar um novo produto
-    @PostMapping("/produtos/salvar")
+    @PostMapping("/salvar")
     public String salvarProduto(@ModelAttribute ProductDto productDto, @RequestParam("imageFiles") MultipartFile[] files, RedirectAttributes redirectAttributes) {
-        ProductEntity productEntity = new ProductEntity();
-        // Copiar propriedades de productDto para productEntity
-        productEntity.setNome(productDto.getNome());
-        productEntity.setPreco(productDto.getPreco());
-        productEntity.setQuantidade(productDto.getQuantidade());
-        productEntity.setDescricao(productDto.getDescricao());
-        productEntity.setAvaliacao(productDto.getAvaliacao());
-        productEntity.setStatus(productDto.isStatus());
-
+    	// Converte ProductDto para ProductEntity usando o ProductMapper
+        ProductEntity productEntity = ProductMapper.toEntity(productDto);
+        
         // Adicionar imagens ao produto
         for (MultipartFile file : files) {
             if (!file.isEmpty()) {
@@ -87,28 +145,47 @@ public class ProductController {
         }
 
         // Salvar produto no banco de dados
-        productService.save(productEntity);
+        productService.insert(productDto);
 
         redirectAttributes.addFlashAttribute("message", "Produto salvo com sucesso!");
         return "redirect:/produtos/listar";
     }
+	  
+	@PostMapping
+	 public ResponseEntity<ProductDto> insert(@RequestBody ProductDto dto) {	
+		dto =  productService.insert(dto);
+	      URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
+	      return ResponseEntity.created(uri).body(dto);
+	}	
+	 
+	//Update
+	@PutMapping("/update/{id}")
+	public ResponseEntity<?> update(
+	        @PathVariable Long id,
+	        @RequestBody ProductDto dto,
+	        BindingResult result) {
+	    
+	    // Verifica se há erros de validação
+	    if (result.hasErrors()) {
+	        Map<String, String> errors = result.getFieldErrors()
+	            .stream()
+	            .collect(Collectors.toMap(
+	                FieldError::getField,
+	                FieldError::getDefaultMessage
+	            ));
+	        return ResponseEntity.badRequest().body(errors);
+	    }
+	    
+	    // Atualiza o usuário com os novos dados
+	    dto = productService.update(id, dto);//retorna o update personalizado
 
-    // Método para exibir o formulário de edição de produto
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable("id") Long id, Model model) {
-        Optional<ProductEntity> product = productService.findById(id);
-        if (product.isPresent()) {
-            model.addAttribute("product", product.get());
-            return "produto/cadproduct"; // Nome da página Thymeleaf
-        } else {
-        	return "redirect:/produtos/listar";
-        }
-    }
-
-    // Método para deletar um produto
-    @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable("id") Long id) {
-        productService.deleteById(id);
-        return "redirect:/produtos/listar";
-    }
+	    return ResponseEntity.ok(dto);
+	}
+    
+    //Alterna status
+  	@PutMapping("/{id}/status")
+  	public ResponseEntity<ProductDto> changeStatus(@PathVariable Long id) {
+  	    ProductDto dto = productService.changeStatus(id);
+  	    return ResponseEntity.ok(dto);
+  	}	
 }

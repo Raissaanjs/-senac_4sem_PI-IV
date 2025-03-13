@@ -25,7 +25,6 @@
 						<i class="fa-solid fa-bars"></i>
 					</button>
 					<a class="navbar-brand" href="#">LOGO</a>
-
 				</div>
 				
 				<div class="navbar-header-right">   					 
@@ -163,19 +162,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
     
-    <script>    
-	    document.addEventListener('DOMContentLoaded', () => {
-		    console.log('Scripts carregados.');
-		    
-		    // Inicialize popovers e outros recursos
-		    $('[data-toggle="popover"]').popover();
-		
-		    // Ações para o menu sidebar
-		    $(".navbar-toggle").click(function(){
-		        $(".sidebar").toggleClass("sidebar-open");
-		    });
-		});
-			
+    <script>
 	    document.getElementById('imageForm').addEventListener('submit', function(event) {
 	        event.preventDefault();
 	        var formData = new FormData(this);
