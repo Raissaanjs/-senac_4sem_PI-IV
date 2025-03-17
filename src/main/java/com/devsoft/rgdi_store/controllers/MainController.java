@@ -27,7 +27,7 @@ public class MainController {
    
     @GetMapping("/")
     public String urlBase() {
-        return "login"; // Exibe a página de login (login.html)
+        return "index"; // Exibe a página de login (login.html)
     }
     
     @GetMapping("/front-adm")
@@ -53,6 +53,11 @@ public class MainController {
     @GetMapping("/login")
     public String loginPage() {
         return "login"; // Exibe a página de login (login.html)
+    }
+    
+    @GetMapping("/upload-image")
+    public String formUploadTest() { //APROVADO
+        return "upload-file";
     }
         
     @PostMapping("/auth/login")
