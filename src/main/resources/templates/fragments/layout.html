@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt" xmlns="http://www.w3.org/1999/xhtml" 
 	xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" > <!-- auxilia e página com contéudo dinâmico-->
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{fragments/layout}"> <!-- auxilia e página com contéudo dinâmico-->
 <head>
 	<title>Projeto PI</title>
 	<meta charset="UTF-8" />
@@ -19,13 +20,13 @@
 	<link href="/css/style.css" rel="stylesheet" />
 </head>
 <body>
-	<header th:replace="~{fragment/header :: cabecalho}">
+	<header layout:fragment="cabecalho">
 		<div>header</div>
 	</header>
 	
 	<div class="layout-main">
 		<aside>
-			<nav th:replace="~{fragment/sidebar :: nav-sidebar}">
+			<nav layout:fragment="nav-side">
 				<span>Menu</span>
 			</nav>
 		</aside>
@@ -34,7 +35,7 @@
 		</section>
 	</div>
 	
-	<footer th:replace="~{fragment/footer :: rodape}">
+	<footer layout:fragment="rodape">
 		<div>footer</div>
 	</footer>
 	

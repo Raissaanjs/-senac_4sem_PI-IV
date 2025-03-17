@@ -116,7 +116,7 @@
 		                    <tr th:if="${produtos.size() == 0}">
 		                        <td colspan="6" class="text-center text-danger">Nenhum produto encontrado</td>
 		                    </tr>
-		                    <tr th:each="user, iterStat : ${produtos}">
+		                    <tr th:each="prod, iterStat : ${produtos}">
 		                        <td th:text="${prod.id}"></td>
 		                        <td th:text="${prod.nome}"></td>
 		                        <td th:text="${prod.quantidade}"></td>

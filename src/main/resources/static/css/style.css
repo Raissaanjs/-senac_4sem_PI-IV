@@ -185,3 +185,7 @@ a.navbar-brand.navbar-brand-custom{
 .updated {
     animation: none; /* Simplesmente para forçar o DOM a perceber a mudança */
 }
+
+.m3, .button-itens-prod{
+	align-content: end;
+}
