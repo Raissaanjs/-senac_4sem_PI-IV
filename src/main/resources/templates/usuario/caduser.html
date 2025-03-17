@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt" xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net/thymeleaf/layout">
 <head>    
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -40,7 +41,12 @@
 	
 	<div class="layout-main">	
 	    <aside>
-	        <nav class="sidebar  sidebar-open">	            
+	        <nav class="sidebar  sidebar-open">	
+	        	<ul class="nav nav-pills">
+					<li class="nav-item"><a class="nav-link " href="#"> 
+					<i class="fa-solid fa-house"></i> <span>Home</span>
+					</a></li>
+				</ul>            
 	            <ul class="nav nav-pills">
 	                <li class="nav-item"><span class="nav-link active">Usuários</span></li>
 					<li class="nav-item"><a class="nav-link"
