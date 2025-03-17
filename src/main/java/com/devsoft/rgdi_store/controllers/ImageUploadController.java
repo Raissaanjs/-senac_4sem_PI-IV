@@ -1,60 +1,52 @@
 package com.devsoft.rgdi_store.controllers;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.devsoft.rgdi_store.config.UploadConfig;
-
-import jakarta.annotation.PostConstruct;
 
 @Controller
 public class ImageUploadController {
-
-    private final UploadConfig uploadConfig;
+    private final Path uploadConfig;
 
     public ImageUploadController(UploadConfig uploadConfig) {
-        this.uploadConfig = uploadConfig;
+        this.uploadConfig = Paths.get(uploadConfig.getUploadDir())
+                .toAbsolutePath().normalize();
+    }    
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+      String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+
+      try {
+        Path targetLocation = uploadConfig.resolve(fileName);
+        file.transferTo(targetLocation);        
+        
+        return ResponseEntity.ok("File uploaded successfully");
+      } catch (IOException ex) {
+        ex.printStackTrace();
+        return ResponseEntity.badRequest().body("File upload failed.");
+      }
     }
 
-    @PostConstruct
-    public void init() {
-        File uploadDirFile = new File(uploadConfig.getUploadDir());
-        if (!uploadDirFile.exists()) {
-            uploadDirFile.mkdirs();
-        }
-    }
+    @GetMapping("/list")
+    public ResponseEntity<List<String>> listFiles() throws IOException {
+      List<String> fileNames = Files.list(uploadConfig)
+          .map(Path::getFileName)
+          .map(Path::toString)
+          .collect(Collectors.toList());
 
-    @PostMapping("/uploadImage")
-    @ResponseBody
-    public List<String> uploadImages(@RequestParam("imageFile") MultipartFile[] files) {
-        List<String> imageUrls = new ArrayList<>();
-        for (MultipartFile file : files) {
-            if (file.isEmpty()) {
-                continue; // Pula arquivos vazios
-            }
-
-            try {
-                // Salvar o arquivo na pasta de uploads
-                Path path = Paths.get(uploadConfig.getUploadDir(), file.getOriginalFilename());
-                Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-                imageUrls.add("/uploads/" + file.getOriginalFilename());
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return imageUrls;
+      return ResponseEntity.ok(fileNames);
     }
 }
