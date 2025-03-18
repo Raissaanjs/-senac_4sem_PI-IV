@@ -1,8 +1,6 @@
 package com.devsoft.rgdi_store.dto;
 
-import java.util.List;
-
-public class ProductDto {
+public class ProdutoDto {
 	
 	private Long id;    
 	private String nome;
@@ -11,13 +9,11 @@ public class ProductDto {
     private String descricao;    
     private int avaliacao;
     private boolean status;
-    private List<ProductImageDto> imagens;
-    private List<String> imageUrls;
     
-    public ProductDto() {}
+    public ProdutoDto() {}
     
-    public ProductDto(Long id, String nome, double preco, int quantidade, String descricao, int avaliacao,
-			boolean status, List<ProductImageDto> imagens, List<String> imageUrls) {
+    public ProdutoDto(Long id, String nome, double preco, int quantidade, String descricao, int avaliacao,
+			boolean status) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -26,8 +22,6 @@ public class ProductDto {
 		this.descricao = descricao;
 		this.avaliacao = avaliacao;
 		this.status = status;
-		this.imagens = imagens;
-		this.imageUrls = imageUrls;
 	}
 
 
@@ -88,22 +82,6 @@ public class ProductDto {
     public void setStatus(boolean status) {
         this.status = status;
     }
-
-    public List<ProductImageDto> getImagens() {
-        return imagens;
-    }
-
-    public void setImagens(List<ProductImageDto> imagens) {
-        this.imagens = imagens;
-    }
-
-	public List<String> getImageUrls() {
-		return imageUrls;
-	}
-
-	public void setImageUrls(List<String> imageUrls) {
-		this.imageUrls = imageUrls;
-	}
     
     
 }

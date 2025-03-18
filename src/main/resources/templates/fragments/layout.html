@@ -1,64 +1,306 @@
 <!DOCTYPE html>
-<html lang="pt" xmlns="http://www.w3.org/1999/xhtml" 
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
-	layout:decorate="~{fragments/layout}"> <!-- auxilia e página com contéudo dinâmico-->
-<head>
-	<title>Projeto PI</title>
-	<meta charset="UTF-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-	<meta name="description" content="" />
-	<meta name="author" content="" />
-	<link rel="icon" href="/image/favicon.png" />
+<html lang="pt" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net/thymeleaf/layout">
+<head>    
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>RGDI Store - Cadastro de Produtos</title>
+    <link rel="icon" href="/image/favicon.png"/>
 
-	<!-- Bootstrap core CSS -->
-	<link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet" />	
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
-		
-	<!-- Custom styles for this template -->
-	<link href="/css/style.css" rel="stylesheet" />
+    <!-- Bootstrap core CSS -->
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  
+    <!-- Custom styles for this template -->
+    <link href="/css/style.css" rel="stylesheet"/>
 </head>
 <body>
-	<header layout:fragment="cabecalho">
-		<div>header</div>
+    <header>
+		<nav class="navbar navbar-inverse navbar navbar-dark bg-dark fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="btn btn-dark navbar-toggle pull-left">
+						<i class="fa-solid fa-bars"></i>
+					</button>
+					<a class="navbar-brand" href="#">LOGO</a>
+
+				</div>
+				
+				<div class="navbar-header-right">   					 
+				    <form th:action="@{/logout}" method="post">
+				        <button type="submit" class="btn btn-dark">
+				            <i class="fa-solid fa-right-from-bracket"></i> Logout
+				        </button>
+				    </form>
+				</div>
+			</div>
+		</nav>
 	</header>
-	
-	<div class="layout-main">
-		<aside>
-			<nav layout:fragment="nav-side">
-				<span>Menu</span>
-			</nav>
-		</aside>
-		<section layout:fragment="corpo">
-			<div>Conteúdo principal das páginas</div>
+    
+    <div class="layout-main">    
+        <aside>
+            <nav class="sidebar  sidebar-open">
+            	<ul class="nav nav-pills">
+					<li class="nav-item"><a class="nav-link " href="/admin"> 
+					<i class="fa-solid fa-house"></i> <span>Home</span>
+					</a></li>
+				</ul>               
+                <ul class="nav nav-pills">
+                    <li class="nav-item"><span class="nav-link active">Usuários (ADMIN)</span></li>
+                    <li class="nav-item"><a class="nav-link"
+                        href="/usuarios/cadastrar"> <i class="fa-solid fa-plus"></i> <span>Cadastrar</span>
+                    </a></li>
+                    <li class="nav-item"><a class="nav-link"
+                        href="/usuarios/listar"> <i class="fa-solid fa-table-list"></i>
+                            <span>Listar </span>
+                    </a></li>
+                </ul>
+    
+                <ul class="nav nav-pills">
+                    <li class="nav-item"><span class="nav-link active">Produtos</span></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            href="/produtos/cadastrar"> <i class="fa-solid fa-plus"></i> <span>Cadastrar </span>
+                    </a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            href="/produtos/listar"> <i class="fa-solid fa-table-list"></i> <span>Listar </span>
+                    </a></li>
+                </ul>    
+            </nav>
+        </aside>
+    
+        <section class="layout-content" layout:fragment="corpo">
+	    	<h5>Home</h5>
 		</section>
-	</div>
-	
-	<footer layout:fragment="rodape">
-		<div>footer</div>
-	</footer>
-	
-	<!-- Bootstrap core JavaScript
-	    ================================================== -->
-		<!-- Placed at the end of the document so the pages load faster -->
-		<script src="/webjars/jquery/jquery.min.js"></script>
-		<script src="/webjars/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
-		<script	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-		<script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
-		<script type="text/javascript">
+    
+    </div>
+    
+    <footer class="footer-edit">
+        <div class="container">
+            <span class="footer-copy">&copy; 2025 DevSoft. Todos os direitos reservados.</span>
+        </div>
+    </footer>
+   
+	    
+    <!-- Bootstrap core JavaScript -->
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+    
+    <script>
+	    document.addEventListener('DOMContentLoaded', () => {
+		    console.log('Scripts carregados.');
 		    
-			$(function() {
-				$('[data-toggle="popover"]').popover();
-			});
-			
-			$(document).ready(function(){
-			    $(".navbar-toggle").click(function(){
-			        $(".sidebar").toggleClass("sidebar-open");
-			    })
-			});
+		    // Inicialize popovers e outros recursos
+		    $('[data-toggle="popover"]').popover();
+		
+		    // Ações para o menu sidebar
+		    $(".navbar-toggle").click(function(){
+		        $(".sidebar").toggleClass("sidebar-open");
+		    });
+		});
+		
+		/*
+		// inserir imagem do produto	
+	    function submitForm() {
+	        var form = new FormData();
+	        var fileInput = document.getElementById('imageFile');
+	        
+	        if (fileInput.files.length > 0) {
+	            form.append('file', fileInput.files[0]);
+	            
+	            fetch('/upload', {
+	                method: 'POST',
+	                body: form
+	            })
+	            .then(response => response.text())
+	            .then(data => {
+	                console.log('Success:', data);
+	                alert('File uploaded successfully');
+	                fileInput.value = ''; // Limpa o campo de arquivo
+	            })
+	            .catch(error => {
+	                console.error('Error:', error);
+	                alert('File upload failed');
+	            });
+	        } else {
+	            alert('Please select a file to upload');
+	        }
+	    }
+	    */
+	    
+	    // Altera status do Usuario
+	    async function toggleStatus(checkbox, userId) {
+	    try {
+	        const userConfirmation = confirm("Tem certeza de que deseja alterar o Status?");
+	        if (!userConfirmation) {
+	            checkbox.checked = !checkbox.checked;
+	            return;
+	        }
+	
+	        const response = await fetch(`/usuarios/${userId}/status`, {
+	            method: 'PUT',
+	            headers: {
+	                'Content-Type': 'application/json'
+	            }
+	        });
+	
+	        if (!response.ok) throw new Error('Erro ao atualizar o status');
+	
+	        const data = await response.json();
+	        console.log("Estado atualizado no servidor:", data);
+	
+	        checkbox.checked = data.status;
+	
+	        const statusCell = document.querySelector(`#user-status-cell-${userId}`);
+	        if (statusCell) {
+	            statusCell.innerText = data.status ? "Ativo" : "Inativo";
+	        }
+	
+	        // Força o navegador a recarregar a página
+	        location.reload();
+	    } catch (error) {
+	        console.error('Erro ao atualizar status:', error);
+	        checkbox.checked = !checkbox.checked;
+	        alert("Ocorreu um erro ao tentar atualizar o status. Por favor, tente novamente.");
+	    }
+	}
 
-		</script>
+	
+	// Modal listuser
+	// Função para abrir o modal de edição
+	window.openEditModal = function (userId) {
+	    console.log("Abrindo modal para o ID:", userId);
+	
+	    // Salva o userId no campo hidden do formulário
+	    document.getElementById('userId').value = userId;
+	
+	    // Faz a requisição para obter os detalhes do usuário
+	    fetch(`/usuarios/detalhes/${userId}`)
+	        .then(response => {
+	            if (!response.ok) {
+	                throw new Error(`Erro ${response.status}: Não foi possível carregar os dados.`);
+	            }
+	            return response.json();
+	        })
+	        .then(data => {
+	            console.log("Dados carregados do backend:", data);
+	
+	            // Preenche os campos do modal com os dados recebidos
+	            document.getElementById('nome').value = data.nome || '';
+	            document.getElementById('cpf').value = data.cpf || '';
+	            document.getElementById('senha').value = ''; // Limpa o campo senha
+	            document.getElementById('confirmasenha').value = ''; // Limpa o campo confirmar senha
+	            document.getElementById('grupo').value = data.grupo || '';
+	        })
+	        .catch(error => {
+	            console.error("Erro ao buscar os dados do usuário:", error);
+	            alert("Não foi possível carregar os dados do usuário. Tente novamente.");
+	        });
+	
+	    // Exibe o modal
+	    const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
+	    modal.show();
+	};
+	
+	// Adiciona evento ao formulário para salvar alterações
+	document.getElementById('editUserForm').addEventListener('submit', function (event) {
+	    event.preventDefault(); // Evita o comportamento padrão do formulário
+	
+	    // Resetar mensagens de erro e estados inválidos
+	    document.querySelectorAll('.invalid-feedback').forEach(el => el.style.display = 'none');
+	    document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+	
+	    // Captura o userId a partir do campo hidden
+	    const userId = document.getElementById('userId').value;
+	
+	    // Coleta os dados do formulário
+	    const userData = {
+	        nome: document.getElementById('nome').value.trim(),
+	        cpf: document.getElementById('cpf').value.trim(),
+	        grupo: document.getElementById('grupo').value,
+	        ...(document.getElementById('senha').value && { senha: document.getElementById('senha').value }),
+	        ...(document.getElementById('confirmasenha').value && { confirmasenha: document.getElementById('confirmasenha').value })
+	    };
+	
+	    // Envia os dados para o backend usando PUT
+	    fetch(`/usuarios/modal-update/${userId}`, {
+	        method: 'PUT',
+	        headers: {
+	            'Content-Type': 'application/json'
+	        },
+	        body: JSON.stringify(userData)
+	    })
+	    .then(response => {
+	        if (response.ok) {
+	            alert("Usuário atualizado com sucesso!");
+	            location.reload(); // Atualiza a página
+	        } else if (response.status === 400) {
+	            // Lida com erros retornados pelo backend
+	            response.json().then(errors => {
+	                console.error("Erros retornados pelo backend:", errors);
+	                Object.keys(errors).forEach(field => {
+	                    const errorElement = document.getElementById(`${field}Error`);
+	                    if (errorElement) {
+	                        errorElement.textContent = errors[field]; // Insere apenas a mensagem do erro
+	                        errorElement.style.display = 'block'; // Exibe o erro
+	                        const inputField = document.getElementById(field);
+	                        if (inputField) inputField.classList.add('is-invalid'); // Marca o campo como inválido
+	                    }
+	                });
+	            });
+	        } else {
+	            // Mensagem genérica para outros erros
+	            alert("Erro ao salvar os dados. Tente novamente.");
+	        }
+	    })
+	    .catch(error => {
+	        console.error("Erro de comunicação com o servidor:", error);
+	        alert("Erro de comunicação com o servidor.");
+	    });
+	});
+	
+	
+	//Altera status do Produto
+	async function toggleStatus(checkbox, prodId) {
+        try {
+            const userConfirmation = confirm("Tem certeza de que deseja alterar o Status?");
+            if (!userConfirmation) {
+                checkbox.checked = !checkbox.checked;
+                return;
+            }
+
+            const response = await fetch(`/produtos/${prodId}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) throw new Error('Erro ao atualizar o status');
+
+            const data = await response.json();
+            console.log("Estado atualizado no servidor:", data);
+
+            checkbox.checked = data.status;
+
+            const statusCell = document.querySelector(`#prod-status-cell-${prodId}`);
+            if (statusCell) {
+                statusCell.innerText = data.status ? "Ativo" : "Inativo";
+            }
+
+            location.reload();
+        } catch (error) {
+            console.error('Erro ao atualizar status:', error);
+            checkbox.checked = !checkbox.checked;
+            alert("Ocorreu um erro ao tentar atualizar o status. Por favor, tente novamente.");
+        }
+    }
+
+
+	</script>
 </body>
-
 </html>

@@ -1,24 +1,21 @@
 package com.devsoft.rgdi_store.entities;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_produto")
-public class ProductEntity {
+public class ProdutoEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String nome;    
     private double preco;
@@ -27,19 +24,16 @@ public class ProductEntity {
     @Column(columnDefinition = "TEXT")
     private String descricao;    
     private int avaliacao;
-    private boolean status;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductImageEntity> imagens = new ArrayList<>();
-
+    private boolean status;    
+    
     // Construtor padrão
-    public ProductEntity() {
+    public ProdutoEntity() {
     	this.status = true; // Define o status como true por padrão
     }
 
     // Construtor com parâmetros
-    public ProductEntity(Long id, String nome, double preco, int quantidade, String descricao, int avaliacao,
-			boolean status, List<ProductImageEntity> imagens) {
+    public ProdutoEntity(Long id, String nome, double preco, int quantidade, String descricao, int avaliacao,
+			boolean status) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -48,7 +42,6 @@ public class ProductEntity {
 		this.descricao = descricao;
 		this.avaliacao = avaliacao;
 		this.status = status;
-		this.imagens = imagens;
 	}
 
     
@@ -108,15 +101,6 @@ public class ProductEntity {
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
-
-	public List<ProductImageEntity> getImagens() {
-		return imagens;
-	}
-
-	public void setImagens(List<ProductImageEntity> imagens) {
-		this.imagens = imagens;
-	}
-
 	
 	@Override
 	public int hashCode() {
@@ -131,7 +115,7 @@ public class ProductEntity {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ProductEntity other = (ProductEntity) obj;
+		ProdutoEntity other = (ProdutoEntity) obj;
 		return Objects.equals(id, other.id);
 	}
 }

@@ -1,41 +1,47 @@
 package com.devsoft.rgdi_store.dto;
 
-public class ProductImageDto {
+import com.devsoft.rgdi_store.entities.ProdutoEntity;
+
+public class ProdutoImagensDto {
 
     private Long id;
-    private String url;
-    private Long productId;
+    private String nome;
+    private ProdutoEntity produto;
+    
 
-    public ProductImageDto() {}
+    public ProdutoImagensDto() {}  
 
-    public ProductImageDto(Long id, String url, Long productId) {
-        this.id = id;
-        this.url = url;
-        this.productId = productId;
-    }
+    public ProdutoImagensDto(Long id, String nome, ProdutoEntity produto) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.produto = produto;
+	}
 
     // Getters e Setters
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getUrl() {
-        return url;
-    }
+	public String getNome() {
+		return nome;
+	}
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 
-    public Long getProductId() {
-        return productId;
-    }
+	public ProdutoEntity getProduto() {
+		return produto;
+	}
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
+	public void setProduto(ProdutoEntity produto) {
+		this.produto = produto;
+	}
+	
+   
 }
