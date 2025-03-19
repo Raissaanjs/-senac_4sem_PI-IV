@@ -37,9 +37,9 @@
 				</div>
 				<div class="row">
 					<div class="mb-3 col-md-2">
-						<label for="preco">Preço</label> <input type="number"
-							class="form-control" id="preco" th:field="*{preco}" step="0.01"
-							required aria-required="true" />
+						<label for="preco">Preço</label> <input type="text"
+							class="form-control" id="preco" data-mask="#####0.00"
+	                               data-mask-reverse="true" th:field="*{preco}"	required aria-required="true" />
 						<div class="invalid-feedback"></div>
 					</div>
 					<div class="mb-3 col-md-2">
@@ -63,11 +63,8 @@
 						<div class="invalid-feedback"></div>
 					</div>
 				</div>				
-				<div class="row">
-					<div class="mb-3 col-md-2">
-						<button type="submit" class="btn btn-primary">Salvar</button>
-					</div>
-				</div>
+				<button type="submit" class="btn btn-primary" >Salvar</button>
+				<button type="reset" class="btn btn-secondary">Limpar</button>
 			</form>
 		</div>
 	</section>

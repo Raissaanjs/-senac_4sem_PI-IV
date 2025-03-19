@@ -51,12 +51,21 @@ public class ProdutoController {
   	    return "produto/listproduct"; // Template Thymeleaf
   	}
   	
-  //Busca por id - para framework de Front/ Postman
+  	
+  	//Busca por id - para framework de Front/ Postman
   	@GetMapping("/detalhes/{id}")
   	public ResponseEntity<ProdutoDto> findById(@PathVariable Long id) {
   		ProdutoDto dto = produtoService.findById(id);
   		return ResponseEntity.ok(dto);
   	}
+  	
+  	// Botão Visualizar - Listar produtos
+  	@GetMapping("/produtoview/{id}")
+  	 public String getProduto(@PathVariable Long id, Model model) {
+        ProdutoDto produto = produtoService.findById(id);
+        model.addAttribute("produto", produto);
+        return "produto";
+    }
   	
   	@GetMapping("/buscar-nome")
 	public String buscarPorNomeOuTodos(
@@ -75,11 +84,13 @@ public class ProdutoController {
 	    return "produto/listproduct";
 	}
   	
+  	
+  	
   	@GetMapping("/editar/{id}")
 	public String editUser(@PathVariable Long id, Model model) {
 	    ProdutoDto dto = produtoService.findById(id); 
 
-	    model.addAttribute("dto", dto); // Adiciona o p ao modelo
+	    model.addAttribute("dto", dto); // Adiciona ao modelo
 	    
 	    return "usuario/listuser"; // Retorna o template
 	} 	
@@ -90,6 +101,12 @@ public class ProdutoController {
     public String showCreateForm(Model model) {
         model.addAttribute("product", new ProdutoEntity());
         return "produto/cadproduct"; // Nome da página Thymeleaf
+    }
+    
+    // Método para exibir o formulário de criação de produto
+    @GetMapping("/alterarProd")
+    public String showEditForm(Model model) {
+        return "produto/cadproductedit"; // Nome da página Thymeleaf
     }
 
     
