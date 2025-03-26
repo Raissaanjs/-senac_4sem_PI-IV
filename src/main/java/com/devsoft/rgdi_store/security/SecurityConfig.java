@@ -9,9 +9,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
 import com.devsoft.rgdi_store.controllers.handlers.CustomAuthenticationFailureHandler;
-
 import com.devsoft.rgdi_store.controllers.handlers.CustomNoAuthenticatedHandler;
 
 @Configuration
@@ -26,21 +24,21 @@ public class SecurityConfig {
         this.customNoAuthenticatedHandler = usuarioInativoHandler;
         this.customFailureHandler = customFailureHandler;
     }
+    
 	   
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 	    http.securityMatcher("/**") // Aplica a segurança para todas as rotas
 	        .authorizeHttpRequests(auth -> auth
-	        	.requestMatchers("/carrinho/**", "/upload/**", "/uploads/**", "/upload-image", "/upload-file", "/css/**", "/js/**").permitAll()
-	            .requestMatchers("/", "/login", "/webjars/**",
-	                             "/image/**", "/error-login", "/error-user-inat", "/access-denied",
+        	.requestMatchers("/", "/produto-imagens/imagem-principal/**", "/produtos/detalhes/**","/produto-imagens/detalhes/**","/carrinho/**", "/upload/**", "/uploads/**", "/css/**", "/js/**").permitAll()
+	            .requestMatchers("/login", "/webjars/**", "/image/**", "/error-login", "/error-user-inat", "/access-denied",
 	                             "/error-no-perm", "/error-no-auth", "/auth", "/api/files",
-	                             "/upload/**", "/download/**", "/list").permitAll()
+	                             "/uploads/**", "/list").permitAll()
 	            .requestMatchers("/usuarios/**", "/h2-console/**").hasAuthority("ROLE_ADMIN")
 	            .requestMatchers("/produtos/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers("/admin").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers("/front-adm").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
-	            .requestMatchers("/product-images/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
+	            .requestMatchers("/produto-imagens/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers("/uploadImage/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .anyRequest().authenticated() // Qualquer outra rota requer autenticação
 	        )

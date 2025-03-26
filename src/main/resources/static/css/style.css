@@ -189,3 +189,13 @@ a.navbar-brand.navbar-brand-custom{
 .m3, .button-itens-prod{
 	align-content: end;
 }
+
+.btn, .btn-primary, .btn-md, .btn-top{
+	margin-top: 0.5rem;
+	margin-right: 0.5rem;
+}
+
+.star {
+	font-size: 1.1em;
+    color: gold;
+    }
