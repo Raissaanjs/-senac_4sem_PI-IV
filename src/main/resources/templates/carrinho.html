@@ -1,65 +1,83 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Bem Vindo a RGDI Store</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Bootstrap icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="css/styles-loja.css" rel="stylesheet" />
-    </head>
-    <body>
-        <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href="#!">Start Bootstrap</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#!">All Products</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                                <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <form class="d-flex">
-                        <button class="btn btn-outline-dark" type="submit">
-                            <i class="bi-cart-fill me-1"></i>
-                            Cart
-                            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </nav>
-        <!-- Header-->
-        
+<html lang="pt" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net/thymeleaf/layout"
+	layout:decorate="~{fragments/layoutcarrinho}">
+<head>
+  <title>RGDI Store Loja - Carrinho de compras</title>
+  
+  <!-- https://bootsnipp.com/snippets/2eKOz - botão para aumentar ou diminuir quantidade-->
+</head>
+    <body>        
         <!-- Section-->
-        <section class="py-5">
-            <div class="container px-4 px-lg-5 mt-5">
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                   
-                </div>
-            </div>
-        </section>
-        <!-- Footer-->
-        <footer class="py-5 bg-dark">
-            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; RGDI Store</p></div>
-        </footer>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
+        <section class="py-5" layout:fragment="corpo">
+	        <div class="container px-4 px-lg-5 mt-5">
+			        <div class="col-sm-12 col-md-offset-1">
+			            <table class="table table-hover">
+			                <thead>
+			                    <tr>
+			                        <th>Produto</th>
+			                        <th>Quantidade</th>
+			                        <th class="text-center">Unitário</th>
+			                        <th class="text-center">Total</th>
+			                        <th> </th>
+			                    </tr>
+			                </thead>
+			                <tbody>
+			                    <tr>
+			                        <td class="col-sm-8 col-md-6">
+			                        <div class="media">
+			                            <a class="thumbnail pull-left" href="#"> <img class="media-object" src="http://icons.iconarchive.com/icons/custom-icon-design/flatastic-2/72/product-icon.png" style="width: 72px; height: 72px;"> </a>
+			                            <div class="media-body">
+			                                <h4 class="media-heading"><a href="#" >Nome</a></h4>
+			                                <h5 class="media-heading"><a href="#">Avaliação</a></h5>
+			                            </div>
+			                        </div></td>
+			                        <td class="col-sm-1 col-md-1" style="text-align: center">
+			                        <input type="email" class="form-control" id="exampleInputEmail1" value="3">
+			                        </td>
+			                        <td class="col-sm-1 col-md-1 text-center" ><strong>$4.87</strong></td>
+			                        <td class="col-sm-1 col-md-1 text-center"><strong>$14.61</strong></td>
+			                        <td class="col-sm-1 col-md-1">
+			                        <button type="button" class="btn btn-danger">
+			                            <span class="glyphicon glyphicon-remove"></span> Remove
+			                        </button></td>
+			                    </tr>			                    
+			                    <tr>
+			                        <td>   </td>
+			                        <td>   </td>
+			                        <td>   </td>
+			                        <td><h5>Subtotal</h5></td>
+			                        <td class="text-right"><h5><strong>$24.59</strong></h5></td>
+			                    </tr>
+			                    <tr>
+			                        <td>   </td>
+			                        <td>   </td>
+			                        <td>   </td>
+			                        <td><h5>Frete</h5></td>
+			                        <td class="text-right"><h5><strong>$0,00</strong></h5></td>
+			                    </tr>
+			                    <tr>
+			                        <td>   </td>
+			                        <td>   </td>
+			                        <td>   </td>
+			                        <td><h3>Total</h3></td>
+			                        <td class="text-right"><h3><strong>$31.53</strong></h3></td>
+			                    </tr>
+			                    <tr>
+			                        <td>   </td>
+			                        <td colspan="2">
+			                        <a type="button" class="btn btn-default" href="/">
+			                            <span class="glyphicon glyphicon-shopping-cart"></span> Continue Comprando
+			                        </a></td>
+			                        <td colspan="2">
+			                        <button type="button" class="btn btn-success w-100">
+									    Finalizar Compra <span class="glyphicon glyphicon-play"></span>
+									</button>
+			                    </tr>
+			                </tbody>
+			            </table>
+			        </div>
+			    </div>
+	    </section>
     </body>
 </html>
