@@ -1,5 +1,8 @@
 package com.devsoft.rgdi_store.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -21,7 +24,11 @@ public class ProdutoService {
     @Autowired
     private ProdutoRepository repository;
     
-    //Mostra todos os registros
+    public List<ProdutoEntity> findAllIndex() {
+        return repository.findAll(); // Aqui usamos o método findAll do repositório
+    }
+    
+    //Mostra todos os registros - com paginação
   	@Transactional(readOnly = true)
   	public Page<ProdutoDto> findAll(Pageable pageable) {
   		if (pageable == null) {
@@ -30,6 +37,16 @@ public class ProdutoService {
   	    Page<ProdutoEntity> result = repository.findAll(pageable);
   	    // Usa o UserMapper para a conversão de UserEntity para UserDto
   	    return result.map(ProdutoMapper::toDto);
+  	}
+  	
+  	//Mostra todos os registros
+  	@Transactional(readOnly = true)
+  	public List<ProdutoDto> buscarTodos() {
+  	    List<ProdutoEntity> result = repository.findAll();
+  	    // Usa o ProdutoMapper para a conversão de ProdutoEntity para ProdutoDto
+  	    return result.stream()
+  	                 .map(ProdutoMapper::toDto)
+  	                 .collect(Collectors.toList());
   	}
 
   	//Busca por nome com paginação
@@ -107,6 +124,8 @@ public class ProdutoService {
   	    } catch (EntityNotFoundException e) {
   	        throw new ResourceNotFoundException("Recurso não encontrado - service/changeStatus");
   	    }
-  	}	
+  	}
+
+  	
 }
 

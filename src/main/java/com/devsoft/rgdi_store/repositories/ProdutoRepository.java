@@ -15,4 +15,5 @@ public interface ProdutoRepository extends JpaRepository<ProdutoEntity, Long> {
     
     // Busca por nome contendo o termo (case-insensitive) com paginação
     Page<ProdutoEntity> findByNomeContainingIgnoreCase(String nome, Pageable pageable);
+
 }

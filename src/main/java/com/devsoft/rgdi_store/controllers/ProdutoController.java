@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,20 +22,24 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.devsoft.rgdi_store.dto.ProdutoDto;
 import com.devsoft.rgdi_store.entities.ProdutoEntity;
+import com.devsoft.rgdi_store.entities.ProdutoImagens;
+import com.devsoft.rgdi_store.repositories.ProdutoImagensRepository;
 import com.devsoft.rgdi_store.services.ProdutoService;
 
 @Controller
 @RequestMapping("/produtos")
-public class ProdutoController {
-	
-	
+public class ProdutoController {	
 	
     @Autowired
     private ProdutoService produtoService;
+    
+    @Autowired
+    private ProdutoImagensRepository produtoImagensRepository;
 
     //Lista geral - Menu  
   	@GetMapping("/listar")
@@ -49,15 +54,14 @@ public class ProdutoController {
   	    model.addAttribute("page", dtoPage); // Metadados da página (como total de páginas e número atual)
 
   	    return "produto/listproduct"; // Template Thymeleaf
-  	}
-  	
+  	}  	
   	
   	//Busca por id - para framework de Front/ Postman
   	@GetMapping("/detalhes/{id}")
   	public ResponseEntity<ProdutoDto> findById(@PathVariable Long id) {
   		ProdutoDto dto = produtoService.findById(id);
   		return ResponseEntity.ok(dto);
-  	}
+  	}  	
   	
   	// Botão Visualizar - Listar produtos
   	@GetMapping("/produtoview/{id}")
@@ -82,41 +86,22 @@ public class ProdutoController {
 	    model.addAttribute("page", produtos);
 	    model.addAttribute("nome", nome); // Preserva o termo de busca no formulário	   
 	    return "produto/listproduct";
-	}
-  	
-  	
-  	
-  	@GetMapping("/editar/{id}")
-	public String editUser(@PathVariable Long id, Model model) {
-	    ProdutoDto dto = produtoService.findById(id); 
-
-	    model.addAttribute("dto", dto); // Adiciona ao modelo
-	    
-	    return "usuario/listuser"; // Retorna o template
-	} 	
-  	
+	}  	
 
     // Método para exibir o formulário de criação de produto
     @GetMapping("/cadastrar")
     public String showCreateForm(Model model) {
         model.addAttribute("product", new ProdutoEntity());
         return "produto/cadproduct"; // Nome da página Thymeleaf
-    }
-    
-    // Método para exibir o formulário de criação de produto
-    @GetMapping("/alterarProd")
-    public String showEditForm(Model model) {
-        return "produto/cadproductedit"; // Nome da página Thymeleaf
-    }
-
+    }  
+   
     
     // Método para salvar um novo produto
     @PostMapping("/salvar")
     public String salvarProduto(@ModelAttribute ProdutoDto produtoDto, RedirectAttributes redirectAttributes) {
         // Salvar produto no banco de dados
-        produtoService.insert(produtoDto);       
-
-        //redirectAttributes.addFlashAttribute("message", "Produto salvo com sucesso!");
+        produtoService.insert(produtoDto);
+        
         return "redirect:/produtos/listar";
     }
     

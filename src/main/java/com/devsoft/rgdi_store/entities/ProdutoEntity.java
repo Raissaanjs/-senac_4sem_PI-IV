@@ -1,12 +1,17 @@
 package com.devsoft.rgdi_store.entities;
 
+import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -14,7 +19,6 @@ import jakarta.persistence.Table;
 public class ProdutoEntity {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;    
@@ -24,7 +28,13 @@ public class ProdutoEntity {
     @Column(columnDefinition = "TEXT")
     private String descricao;    
     private int avaliacao;
-    private boolean status;    
+    private boolean status;
+    
+    // 'orphanRemoval' Apagará no DB algum item que não conte na lista
+    @OneToMany(mappedBy = "produto", orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnore
+    private List<ProdutoImagens> produtoImagens;
+    
     
     // Construtor padrão
     public ProdutoEntity() {
@@ -33,7 +43,7 @@ public class ProdutoEntity {
 
     // Construtor com parâmetros
     public ProdutoEntity(Long id, String nome, double preco, int quantidade, String descricao, int avaliacao,
-			boolean status) {
+			boolean status, List<ProdutoImagens> produtoImagens) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -42,13 +52,19 @@ public class ProdutoEntity {
 		this.descricao = descricao;
 		this.avaliacao = avaliacao;
 		this.status = status;
+		this.produtoImagens = produtoImagens;
+	}
+    
+    public ProdutoEntity(Long id, String nome, double preco) {
+		this.id = id;
+		this.nome = nome;
+		this.preco = preco;
 	}
 
-    
-    // Getters e Setters
+	// Getters e Setters
 	public Long getId() {
 		return id;
-	}
+	}	
 
 	public void setId(Long id) {
 		this.id = id;
@@ -100,8 +116,20 @@ public class ProdutoEntity {
 
 	public void setStatus(boolean status) {
 		this.status = status;
+	}	
+	
+	public List<ProdutoImagens> getProdutoImagens() {
+		return produtoImagens;
+	}
+
+	public void setProdutoImagens(List<ProdutoImagens> pdi) {
+		for(ProdutoImagens p: pdi) {
+			p.setProduto(this);
+		}
+		this.produtoImagens = pdi;
 	}
 	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

@@ -57,12 +57,12 @@
 							<td th:text="${prod.id}"></td>
 							<td th:text="${prod.nome}"></td>
 							<td th:text="${prod.quantidade}"></td>
-							<td th:text="${prod.preco}"></td>
+							<td th:text="${#numbers.formatDecimal(prod.preco, 1, 2)}"></td>
 							<td id="prod-status-cell-${prod.id}"><span
 								th:text="${prod.status ? 'Ativo' : 'Inativo'}"></span></td>
 							<td class="align-inline">
 								<!-- CHAMAR cadproductedit.html -->								
-								 <button type="button" class="btn btn-info btn-sm" th:onclick="'openEditModal(' + ${prod.id} + ')'">
+								 <button type="button" class="btn btn-info btn-sm" th:onclick="'openEditProdModal(' + ${prod.id} + ')'">
 							        <span class="fa-solid fa-pen-to-square" title="Editar" aria-hidden="true"></span>
 							    </button>
 
@@ -99,29 +99,48 @@
 				<p>Nenhum registro encontrado.</p>
 			</div>
 			
-			<!-- Modal Visualização-->
-		    <div class="modal fade" id="viewProdModal" tabindex="-1" aria-labelledby="viewProdModalLabel" aria-hidden="true">
-		        <div class="modal-dialog">
-		            <div class="modal-content">
-		                <div class="modal-header">
-		                    <h5 class="modal-title" id="viewProdModalLabel">Detalhes do Produto</h5>
-		                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-		                        <span aria-hidden="true">&times;</span>
-		                    </button>
-		                </div>
-		                <div class="modal-body">
-		                    <input type="hidden" id="prodId">
-		                    <p><strong>Nome:</strong> <span id="prodNome"></span></p>
-							<p><strong>Preço:</strong> R$ <span id="prodPreco"></span></p>
-							<p><strong>Avaliação:</strong> <span id="prodAvaliacao"></span></p>
-		                </div>
-		                <div class="modal-footer">
-		                    <button type="button" class="btn btn-primary">Comprar</button>
-		                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-		    			</div>
-		   		 </div>	
-			
-				</div>
+			<!-- Modal Visualização -->
+			<div class="modal fade" id="viewProdModal" tabindex="-1" aria-labelledby="viewProdModalLabel" aria-hidden="true">
+			    <div class="modal-dialog">
+			        <div class="modal-content">
+			            <div class="modal-header">
+			                <h5 class="modal-title" id="viewProdModalLabel">Detalhes do Produto</h5>
+			                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+			                    <span aria-hidden="true">&times;</span>
+			                </button>
+			            </div>
+			            <div class="modal-body">
+			                <input type="hidden" id="prodId">
+			                <div class="row d-flex">
+			                    <div class="col-md-5">
+			                        <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+			                            <div class="carousel-inner" id="carouselImages">
+			                                <!-- As imagens serão inseridas aqui -->
+			                            </div>
+			                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+			                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			                                <span class="visually-hidden">Previous</span>
+			                            </button>
+			                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+			                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+			                                <span class="visually-hidden">Next</span>
+			                            </button>
+			                        </div>
+			                    </div>
+			                    <div class="col-md-7">
+			                        <p><strong>Nome:</strong> <span id="prodNome"></span></p>
+			                        <p><strong>Preço:</strong> <span id="prodPreco"></span></p>
+			                        <p><strong>Descrição:</strong> <span id="prodDescricao"></span></p>
+			                        <p><strong>Avaliação:</strong> <span id="prodAvaliacao"></span></p>
+			                    </div>
+			                </div>
+			            </div>
+			            <div class="modal-footer">
+			                <button type="button" class="btn btn-success">Comprar</button>
+			                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+			            </div>
+			        </div>
+			    </div>
 			</div>
 			
 			<!-- Modal de Edição -->
