@@ -18,8 +18,11 @@ public class ProdutoImagens {
 	private String nome;
 	
 	@ManyToOne
-    @JoinColumn(name = "idProduto") //alterar o nome da coluna de de relacionamento no DB
+    @JoinColumn(name = "idProduto") //alterar o nome da coluna de relacionamento no DB
+	//@JsonIgnore // Evita que entre em loop
     private ProdutoEntity produto;
+	private boolean principal;
+	
 	
 	public ProdutoImagens() {
 	}
@@ -30,6 +33,7 @@ public class ProdutoImagens {
 		this.nome = nome;
 		this.produto = produto;
 	}
+
 
 	public Long getId() {
 		return id;
@@ -47,12 +51,20 @@ public class ProdutoImagens {
 		this.nome = nome;
 	}
 
-	public ProdutoEntity getProduct() {
+	public ProdutoEntity getProduto() {
 		return produto;
 	}
 
-	public void setProduct(ProdutoEntity produto) {
+	public void setProduto(ProdutoEntity produto) {
 		this.produto = produto;
+	}
+
+	public boolean isPrincipal() {
+		return principal;
+	}
+
+	public void setPrincipal(boolean principal) {
+		this.principal = principal;
 	}
 	
 	
