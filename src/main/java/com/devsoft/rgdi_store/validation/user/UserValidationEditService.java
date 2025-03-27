@@ -22,7 +22,7 @@ public class UserValidationEditService {
     public static void validateAndUpdateName(String nome, UserEntity entity) {
         if (nome != null && !nome.isEmpty()) {
             if (!NameValidation.isValidName(nome)) {
-                throw new NameValidationException("Nome inválido. Deve conter entre 3 e 150 caracteres");
+                throw new NameValidationException("Nome inválido. Deve conter entre 3 e 200 caracteres");
             }
             entity.setNome(nome); // Atualiza o nome na entidade
         }
