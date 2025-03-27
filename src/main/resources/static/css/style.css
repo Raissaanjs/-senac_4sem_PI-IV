@@ -6,7 +6,7 @@ html, body {
 }
 
 body {
-	padding-top: 56px;
+	/*padding-top: 56px;*/
 	padding-left: 0;
 } 
 
@@ -191,11 +191,15 @@ a.navbar-brand.navbar-brand-custom{
 }
 
 .btn, .btn-primary, .btn-md, .btn-top{
-	margin-top: 0.5rem;
 	margin-right: 0.5rem;
 }
 
 .star {
 	font-size: 1.1em;
     color: gold;
-    }
+}
+
+.username {
+     display: block;  /* Faz com que o nome do usuário fique em uma linha separada */
+     margin-top: 5px; /* Adiciona algum espaçamento opcional entre o logout e o nome do usuário */
+ }
