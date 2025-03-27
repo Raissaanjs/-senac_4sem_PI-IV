@@ -1,5 +1,7 @@
 package com.devsoft.rgdi_store.entities;
 
+import java.util.Objects;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,6 +24,7 @@ public class ProdutoImagens {
 	//@JsonIgnore // Evita que entre em loop
     private ProdutoEntity produto;
 	private boolean principal;
+	private String url;
 	
 	
 	public ProdutoImagens() {
@@ -32,8 +35,24 @@ public class ProdutoImagens {
 		this.id = id;
 		this.nome = nome;
 		this.produto = produto;
+	}	
+	
+	public ProdutoImagens(Long id, String nome, ProdutoEntity produto, String url) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.produto = produto;
+		this.url = url;
 	}
 
+	public ProdutoImagens(Long id, String nome, ProdutoEntity produto, boolean principal, String url) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.produto = produto;
+		this.principal = principal;
+		this.url = url;
+	}
 
 	public Long getId() {
 		return id;
@@ -65,6 +84,32 @@ public class ProdutoImagens {
 
 	public void setPrincipal(boolean principal) {
 		this.principal = principal;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ProdutoImagens other = (ProdutoImagens) obj;
+		return Objects.equals(id, other.id);
 	}
 	
 	

@@ -7,6 +7,6 @@ public class NameValidation {
             return false;
         }
         int length = name.length();
-        return length >= 3 && length <= 150;
+        return length >= 3 && length <= 200;
     }
 }

@@ -14,8 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.devsoft.rgdi_store.dto.ProdutoDto;
 import com.devsoft.rgdi_store.dto.ProdutoMapper;
 import com.devsoft.rgdi_store.entities.ProdutoEntity;
+import com.devsoft.rgdi_store.repositories.ProdutoImagensRepository;
 import com.devsoft.rgdi_store.repositories.ProdutoRepository;
 import com.devsoft.rgdi_store.services.exceptions.ResourceNotFoundException;
+
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
@@ -24,22 +26,26 @@ public class ProdutoService {
     @Autowired
     private ProdutoRepository repository;
     
+    @Autowired
+    private ProdutoImagensRepository produtoImagensRepository;
+    
     public List<ProdutoEntity> findAllIndex() {
         return repository.findAll(); // Aqui usamos o método findAll do repositório
     }
+        
     
-    //Mostra todos os registros - com paginação
+    //Busca todos os registros - com paginação
   	@Transactional(readOnly = true)
   	public Page<ProdutoDto> findAll(Pageable pageable) {
   		if (pageable == null) {
-  	        pageable = PageRequest.of(0, 5); // Página 0 com 10 itens por padrão
+  	        pageable = PageRequest.of(0, 10); // Página 0 com 10 itens por padrão
   	    }
   	    Page<ProdutoEntity> result = repository.findAll(pageable);
   	    // Usa o UserMapper para a conversão de UserEntity para UserDto
   	    return result.map(ProdutoMapper::toDto);
   	}
   	
-  	//Mostra todos os registros
+  	//Busca todos os registros
   	@Transactional(readOnly = true)
   	public List<ProdutoDto> buscarTodos() {
   	    List<ProdutoEntity> result = repository.findAll();
@@ -54,7 +60,7 @@ public class ProdutoService {
   	public Page<ProdutoDto> findByName(String nome, Pageable pageable) {
   	    // Define a página padrão caso 'pageable' seja nulo
   	    if (pageable == null) {
-  	        pageable = PageRequest.of(0, 5);
+  	        pageable = PageRequest.of(0, 10);
   	    }
 
   	    // Verifica se o nome está vazio ou nulo e decide qual consulta executar
@@ -71,7 +77,7 @@ public class ProdutoService {
   	    return result.map(ProdutoMapper::toDto);
   	}
   	
-    /// Busca por id
+    // Busca por id
 	@Transactional(readOnly = true)
 	public ProdutoDto findById(Long id) {		
 		ProdutoEntity entity = repository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Recurso não encontrado - service/findById [Verifique o id]"));

@@ -9,6 +9,7 @@ public class ProdutoImagensMapper {
         dto.setId(entity.getId());
         dto.setNome(entity.getNome());
         dto.setProduto(entity.getProduto()); // Define o objeto ProdutoEntity
+        dto.setUrl(entity.getUrl());
         return dto;
     }
 	

@@ -1,8 +1,5 @@
 package com.devsoft.rgdi_store.controllers;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.devsoft.rgdi_store.config.UploadConfig;
 import com.devsoft.rgdi_store.dto.ProdutoImagensDto;
 import com.devsoft.rgdi_store.entities.ProdutoImagens;
 import com.devsoft.rgdi_store.services.ProdutoImagensService;
@@ -36,10 +31,6 @@ public class ProdutoImagensController {
     
     @Autowired
     private ProdutoService produtoService;
-    
-    @Autowired
-    private UploadConfig uploadConfig;
-    
 
     @GetMapping("/listar")
     public String list(Model model,
@@ -68,13 +59,6 @@ public class ProdutoImagensController {
         return ResponseEntity.ok(imagens);
     }
     
-    // Usar para listagem da imagem do produto na Home (index.html)
-    @GetMapping("/imagem-principal/{id}")
-    public ResponseEntity<List<ProdutoImagensDto>> buscarImagemPrincipalPorProdutoId(@PathVariable Long id) {
-        List<ProdutoImagensDto> imagemPrincipal = produtoImagensService.buscarImagemPrincipalPorProdutoId(id); // Seu serviço para buscar as imagens
-        return ResponseEntity.ok(imagemPrincipal);
-    }    
-    
     @GetMapping("/cadastrar")
     public String showForm(Model model) {
         model.addAttribute("productImage", new ProdutoImagens());
@@ -94,6 +78,7 @@ public class ProdutoImagensController {
         return "redirect:/produto-imagens/cadastrar";
     }
     
+    //Finalizar
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
         ProdutoImagens produtoImagens = produtoImagensService.findById(id);
@@ -105,6 +90,7 @@ public class ProdutoImagensController {
         }
     }    
 
+    //Finalizar
     @PutMapping("/update/{id}")
     public String update(
             @PathVariable Long id,
@@ -122,6 +108,7 @@ public class ProdutoImagensController {
         }
     }
     
+    //Ver depois
     @GetMapping("/delete/{id}")
     public String deleteProductImage(@PathVariable Long id) {
     	produtoImagensService.deleteById(id);

@@ -3,16 +3,16 @@ package com.devsoft.rgdi_store.entities;
 import java.util.List;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "tb_produto")
@@ -21,18 +21,19 @@ public class ProdutoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nome;    
+    @Size(max=200, message="Tamanho máximo de 200 caracteres")
+    private String nome;
     private double preco;
     private int quantidade;
     
     @Column(columnDefinition = "TEXT")
-    private String descricao;    
+    private String descricao;
     private int avaliacao;
     private boolean status;
     
     // 'orphanRemoval' Apagará no DB algum item que não conte na lista
-    @OneToMany(mappedBy = "produto", orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JsonIgnore
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    //@JsonIgnore
     private List<ProdutoImagens> produtoImagens;
     
     
@@ -122,13 +123,9 @@ public class ProdutoEntity {
 		return produtoImagens;
 	}
 
-	public void setProdutoImagens(List<ProdutoImagens> pdi) {
-		for(ProdutoImagens p: pdi) {
-			p.setProduto(this);
-		}
-		this.produtoImagens = pdi;
+	public void setProdutoImagens(List<ProdutoImagens> produtoImagens) {
+		this.produtoImagens = produtoImagens;
 	}
-	
 
 	@Override
 	public int hashCode() {

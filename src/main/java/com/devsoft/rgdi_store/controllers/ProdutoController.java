@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,13 +21,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.devsoft.rgdi_store.dto.ProdutoDto;
 import com.devsoft.rgdi_store.entities.ProdutoEntity;
 import com.devsoft.rgdi_store.entities.ProdutoImagens;
 import com.devsoft.rgdi_store.repositories.ProdutoImagensRepository;
+import com.devsoft.rgdi_store.repositories.ProdutoRepository;
 import com.devsoft.rgdi_store.services.ProdutoService;
 
 @Controller
@@ -39,13 +38,16 @@ public class ProdutoController {
     private ProdutoService produtoService;
     
     @Autowired
+    private ProdutoRepository produtoRepository;
+    
+    @Autowired
     private ProdutoImagensRepository produtoImagensRepository;
 
     //Lista geral - Menu  
   	@GetMapping("/listar")
   	public String list(
   	    Model model,
-  	    @PageableDefault(page = 0, size = 5, sort = "id") Pageable pageable
+  	    @PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable
   	) {
   	    Page<ProdutoDto> dtoPage = produtoService.findAll(pageable);
 
@@ -54,7 +56,24 @@ public class ProdutoController {
   	    model.addAttribute("page", dtoPage); // Metadados da página (como total de páginas e número atual)
 
   	    return "produto/listproduct"; // Template Thymeleaf
-  	}  	
+  	}
+  	
+  	@GetMapping("/loja/{id}")
+    public String exibirProduto(@PathVariable("id") Long idProduto, Model model) {
+        // Busca o produto no banco de dados
+        ProdutoEntity produto = produtoRepository.findById(idProduto)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        // Busca a imagem principal do produto
+        ProdutoImagens imagemPrincipal = produtoImagensRepository.findByProdutoAndPrincipal(produto, true);
+
+        // Adiciona os atributos ao modelo para serem usados na view
+        model.addAttribute("imagemPrincipal", imagemPrincipal); // Imagem principal
+        model.addAttribute("prodLoja", produto); // Produto específico (diferente de "produtos")
+
+        // Retorna a página HTML (o nome da página .html será a view Thymeleaf)
+        return "index";
+    }
   	
   	//Busca por id - para framework de Front/ Postman
   	@GetMapping("/detalhes/{id}")
@@ -63,18 +82,10 @@ public class ProdutoController {
   		return ResponseEntity.ok(dto);
   	}  	
   	
-  	// Botão Visualizar - Listar produtos
-  	@GetMapping("/produtoview/{id}")
-  	 public String getProduto(@PathVariable Long id, Model model) {
-        ProdutoDto produto = produtoService.findById(id);
-        model.addAttribute("produto", produto);
-        return "produto";
-    }
-  	
   	@GetMapping("/buscar-nome")
 	public String buscarPorNomeOuTodos(
 	    @RequestParam(value = "nome", required = false, defaultValue = "") String nome,
-	    @PageableDefault(page = 0, size = 5, sort = "id") Pageable pageable,
+	    @PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable,
 	    Model model) {
 	    // Busca por nome ou retorna todos os usuários com paginação
 	    Page<ProdutoDto> produtos = (nome == null || nome.trim().isEmpty()) 
@@ -94,8 +105,7 @@ public class ProdutoController {
         model.addAttribute("product", new ProdutoEntity());
         return "produto/cadproduct"; // Nome da página Thymeleaf
     }  
-   
-    
+       
     // Método para salvar um novo produto
     @PostMapping("/salvar")
     public String salvarProduto(@ModelAttribute ProdutoDto produtoDto, RedirectAttributes redirectAttributes) {
@@ -103,8 +113,7 @@ public class ProdutoController {
         produtoService.insert(produtoDto);
         
         return "redirect:/produtos/listar";
-    }
-    
+    }    
 	  
 	@PostMapping
 	 public ResponseEntity<ProdutoDto> insert(@RequestBody ProdutoDto dto) {	

@@ -30,11 +30,11 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 	    http.securityMatcher("/**") // Aplica a segurança para todas as rotas
 	        .authorizeHttpRequests(auth -> auth
-        	.requestMatchers("/", "/produto-imagens/imagem-principal/**", "/produtos/detalhes/**","/produto-imagens/detalhes/**","/carrinho/**", "/upload/**", "/uploads/**", "/css/**", "/js/**").permitAll()
+        	.requestMatchers("/", "/produtos/loja/**", "/produto-imagens/imagem-principal/**", "/produtos/detalhes/**","/produto-imagens/detalhes/**","/carrinho/**", "/upload/**", "/uploads/**", "/css/**", "/js/**").permitAll()
 	            .requestMatchers("/login", "/webjars/**", "/image/**", "/error-login", "/error-user-inat", "/access-denied",
 	                             "/error-no-perm", "/error-no-auth", "/auth", "/api/files",
 	                             "/uploads/**", "/list").permitAll()
-	            .requestMatchers("/usuarios/**", "/h2-console/**").hasAuthority("ROLE_ADMIN")
+	            .requestMatchers("/usuarios/**", "/h2-console/**", "/username/**").hasAuthority("ROLE_ADMIN")
 	            .requestMatchers("/produtos/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers("/admin").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers("/front-adm").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")

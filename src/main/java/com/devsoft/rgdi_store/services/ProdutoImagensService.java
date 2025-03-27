@@ -82,7 +82,7 @@ public class ProdutoImagensService {
                 .collect(Collectors.toList());
     }
     
-    
+    // USADO PELO "MainController"
     // Usar para listagem da imagem do produto na Home (index.html)
     @Transactional(readOnly = true)
     public List<ProdutoImagensDto> buscarImagemPrincipalPorProdutoId(Long id) {
@@ -92,17 +92,15 @@ public class ProdutoImagensService {
                 .filter(ProdutoImagens::isPrincipal) // Filtra apenas as imagens principais
                 .collect(Collectors.toList());
 
-        // Mapeia para o DTO e adiciona a URL relativa
+        // Mapeia para o DTO e usa a URL salva no banco de dados
         return imagemPrincipal.stream()
                 .map(imagem -> {
                     ProdutoImagensDto dto = new ProdutoImagensDto(imagem.getNome(), imagem.isPrincipal());
-                    dto.setUrl("/uploads/" + imagem.getNome());  // URL relativa
+                    dto.setUrl(imagem.getUrl());  // Usa a URL salva no banco de dados
                     return dto;
                 })
                 .collect(Collectors.toList());
     }
-
-
     
     @Transactional
     public ProdutoImagens inserir(Long idProduto, MultipartFile file) {
@@ -122,7 +120,7 @@ public class ProdutoImagensService {
 
         try {
             if (!file.isEmpty()) {
-            	// Gerar nome único para a imagem
+                // Gerar nome único para a imagem
                 String nomeImagem = savedObjeto.getId() + "_" + file.getOriginalFilename();
                 byte[] bytes = file.getBytes();
                 
@@ -136,7 +134,11 @@ public class ProdutoImagensService {
                 Files.write(caminho, bytes); // Salva o arquivo no diretório
                 savedObjeto.setNome(nomeImagem); // Definindo o nome da imagem no objeto
 
-                // Atualizamos a entidade com o nome da imagem
+                // Definindo a URL relativa
+                String urlRelativa = "/uploads/" + nomeImagem;
+                savedObjeto.setUrl(urlRelativa); // Salvando a URL relativa no objeto
+
+                // Atualizamos a entidade com o nome da imagem e a URL relativa
                 produtoImagensRepository.saveAndFlush(savedObjeto);
             }
         } catch (IOException e) {
@@ -146,6 +148,8 @@ public class ProdutoImagensService {
         return savedObjeto;
     }
 
+    
+    //Finalizar método
     @Transactional
     public ProdutoImagens update(Long id, MultipartFile file) {
         // Verifica se a imagem do produto existe
@@ -175,24 +179,10 @@ public class ProdutoImagensService {
         }
 
         return produtoImagens;
-    }
+    }    
     
-    /*
-    @Transactional
-    public ProdutoImagensDto update(Long id, ProdutoImagensDto dto) {
-    	try {
-    		ProdutoImagens entity = produtoImagensRepository.getReferenceById(id);
-    		ProdutoImagensMapper.updateEntityFromDto(dto, entity); // Atualiza a entidade com os dados do DTO
-            
-            entity = produtoImagensRepository.saveAndFlush(entity);
-            
-            return ProdutoImagensMapper.toDto(entity, dto.getImagens());
-    	} catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException("Recurso não encontrado - service/update [verifique 'id'/ se está cadastrado]");
-        }        
-    } 
-    */
 
+    //Ver depois
     @Transactional
     public void deleteById(Long id) {
         produtoImagensRepository.deleteById(id);

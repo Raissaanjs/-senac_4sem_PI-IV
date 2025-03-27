@@ -14,6 +14,5 @@ public interface ProdutoImagensRepository extends JpaRepository<ProdutoImagens, 
 	List<ProdutoImagens> findByProdutoId(Long produtoId);
 	List<ProdutoImagens> findByProdutoIdAndPrincipalTrue(Long produtoId);
 	boolean existsByProdutoAndPrincipal(ProdutoEntity produto, boolean principal);
-	//Optional<ProdutoImagens> findByProdutoAndPrincipal(ProdutoEntity produto, boolean principal);
-    
+	ProdutoImagens findByProdutoAndPrincipal(ProdutoEntity produto, boolean principal);
 }
