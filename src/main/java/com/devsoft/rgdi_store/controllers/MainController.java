@@ -60,20 +60,6 @@ public class MainController {
     public String loginPage() {
         return "login"; // Exibe a página de login (login.html)
     }
-    
-    /*
-    @GetMapping("/carrinho")
-    public String carinho() {
-        return "carrinho";
-    }
-    */
-    
-    /*
-    @GetMapping("/upload-image")
-    public String formUploadTest() { //APROVADO
-        return "upload-file";
-    }   
-    */
 
     @GetMapping("/h2-console")
     public String redirectToH2Console() {
