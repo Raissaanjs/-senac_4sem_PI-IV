@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt" xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net/thymeleaf/layout">
+	xmlns:layout="http://www.ultraq.net/thymeleaf/layout" 
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>    
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -16,6 +17,7 @@
   
     <!-- Custom styles for this template -->
     <link href="/css/style.css" rel="stylesheet"/>
+    <link href="/css/_position.css" rel="stylesheet"/>
 </head>
 <body>
     <header>
@@ -29,11 +31,15 @@
 
 				</div>
 				
-				<div class="navbar-header-right">   					 
+				<div class="navbar-header-right d-flex align-items-center">
+                <!-- Exibe o nome do usuário -->
+                	 <!-- Exibe o nome do usuário --> 					 
 				    <form th:action="@{/logout}" method="post">
 				        <button type="submit" class="btn btn-dark">
-				            <i class="fa-solid fa-right-from-bracket"></i> Logout
-				        </button>
+				        <span class="mr-3" th:text="${userName}">Guest</span>
+				        	<br/>
+					        <i class="fa-solid fa-right-from-bracket"></i> <strong>Sair</strong>
+					    </button>
 				    </form>
 				</div>
 			</div>

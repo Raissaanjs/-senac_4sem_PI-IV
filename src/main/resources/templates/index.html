@@ -10,17 +10,13 @@
         <!-- Section-->
         <section class="py-5" layout:fragment="corpo">
             <div class="container px-4 px-lg-5 mt-5">
+                
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                      <div class="col mb-5" th:each="prod, iterStat : ${produtos}">
                 		<div class="card h-100">
-					    <!-- Product image-->
-					   
-					    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+					    <!-- Product image-->					   
 					    
-					    <!-- 
-					   <img class="card-img-top" th:src="@{/produto-imagens/imagem-principal/{id}(id=${imagemPrincipal.getNome})}" alt="Imagem do Produto">
-					   -->
-										
+					   <img th:src="@{${imagensPrincipais[prod.id].url}}" alt="Imagem do Produto" th:if="${imagensPrincipais[prod.id] != null}"/>
 					
 					    <!-- Product details-->
 					    <div class="card-body p-4" >
@@ -63,6 +59,7 @@
 					</div>
                     </div>
                 </div>
+                
             </div>
             
             <!-- Modal Visualização -->
@@ -95,8 +92,8 @@
 			                    </div>
 			                    <div class="col-md-7">
 			                        <p><strong>Nome:</strong> <span id="prodNome"></span></p>
-			                        <p><strong>Preço:</strong> <span id="prodPreco"></span></p>
 			                        <p><strong>Descrição:</strong> <span id="prodDescricao"></span></p>
+			                        <p><strong>Preço:</strong> <span id="prodPreco"></span></p>			                        
 			                        <p><strong>Avaliação:</strong> <span id="prodAvaliacao"></span></p>
 			                    </div>
 			                </div>
