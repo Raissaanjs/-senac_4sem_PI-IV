@@ -1,14 +1,24 @@
 <!DOCTYPE html>
 <html lang="pt" xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net/thymeleaf/layout"
-	layout:decorate="~{fragments/layoutcarrinho}">
+	layout:decorate="~{fragments/layoutindex}">
 <head>
   <title>RGDI Store Loja - Carrinho de compras</title>
   
   <!-- https://bootsnipp.com/snippets/2eKOz - botão para aumentar ou diminuir quantidade-->
   <!-- https://bootsnipp.com/snippets/84KX - url do carrinho -->
 </head>
-    <body>        
+    <body>
+    	<header class="bg-dark py-5" layout:fragment="header">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h3 class="fw-bolder">Seu Carrinho</h3>
+                    <!--
+                    <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
+                     -->
+                </div>
+            </div>
+        </header>        
         <!-- Section-->
         <section class="py-5" layout:fragment="corpo">
 	        <div class="container px-4 px-lg-5 mt-5">
@@ -20,7 +30,7 @@
 			                        <th>Quantidade</th>
 			                        <th class="text-center">Unitário</th>
 			                        <th class="text-center">Total</th>
-			                        <th> </th>
+			                        <th >teste</th>
 			                    </tr>
 			                </thead>
 			                <tbody>
@@ -35,21 +45,32 @@
 			                            </div>
 			                        </div></td>
 			                        <td class="col-sm-1 col-md-1" style="text-align: center">
-			                        <input type="email" class="form-control" id="exampleInputEmail1" value="3">
+										<form th:action="@{/carrinho/alterarQuantidade}" method="post" style="display: inline;">
+							               <input type="hidden" name="produtoId" th:value="${item.id}" />
+							               <input type="hidden" name="quantidade" value="decrease" />
+							               <button type="submit" class="btn btn-sm btn-outline-secondary">-</button>
+							           </form>
+			                        <span th:text="${item.quantidade}">Quantidade</span>  <!-- Exibe a quantidade do produto -->
+									
+									<form th:action="@{/carrinho/alterarQuantidade}" method="post" style="display: inline;">
+						                <input type="hidden" name="produtoId" th:value="${item.id}" />
+						                <input type="hidden" name="quantidade" value="increase" />
+						                <button type="submit" class="btn btn-sm btn-outline-secondary">+</button>
+						            </form>
 			                        </td>
 			                        <td class="col-sm-1 col-md-1 text-center" ><strong th:text="${#numbers.formatDecimal(item.preco, 1, 2)}">$4.87</strong></td>
-			                        <td class="col-sm-1 col-md-1 text-center"><strong>$14.61</strong></td>
-			                        <td class="col-sm-1 col-md-1">
-			                        <button type="button" class="btn btn-danger">
-			                            <span class="glyphicon glyphicon-remove"></span> Remove
-			                        </button></td>
-			                    </tr>			                    
+			                        <td class="col-sm-1 col-md-1 text-center"><strong th:text="${#numbers.formatDecimal(item.preco * item.quantidade, 1, 2)}">$14.61</strong></td>
+									<td class="col-sm-1 col-md-1">
+							            <button type="button" class="btn btn-danger">
+							                <span class="glyphicon glyphicon-remove"></span> Remove
+							            </button>
+							        </td>			                    
 			                    <tr>
 			                        <td>   </td>
 			                        <td>   </td>
 			                        <td>   </td>
 			                        <td><h5>Subtotal</h5></td>
-			                        <td class="text-right"><h5><strong>$24.59</strong></h5></td>
+			                        <td class="text-right"><h5><strong th:text="${#numbers.formatDecimal(subtotal, 2, 2)}">$24.59</strong></h5></td>  <!-- Exibe o subtotal calculado -->
 			                    </tr>
 			                    <tr>
 			                        <td>   </td>
@@ -62,19 +83,21 @@
 			                        <td>   </td>
 			                        <td>   </td>
 			                        <td>   </td>
-			                        <td><h3>Total</h3></td>
-			                        <td class="text-right"><h3><strong>$31.53</strong></h3></td>
+			                        <td><h4>Total</h4></td>
+			                        <td class="text-right"><h4><strong>$31.53</strong></h4></td>
 			                    </tr>
 			                    <tr>
+			                        <td>   </td>
 			                        <td>   </td>
 			                        <td colspan="2">
 			                        <a type="button" class="btn btn-default" href="/">
 			                            <span class="glyphicon glyphicon-shopping-cart"></span> Continue Comprando
-			                        </a></td>
+			                        </a></td>			                        
 			                        <td colspan="2">
 			                        <button type="button" class="btn btn-success w-100">
 									    Finalizar Compra <span class="glyphicon glyphicon-play"></span>
 									</button>
+									</td>
 			                    </tr>
 			                </tbody>
 			            </table>

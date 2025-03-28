@@ -38,6 +38,12 @@ public class CarrinhoController {
         // Recupera os itens do carrinho
         List<ProdutoEntity> itensCarrinho = carrinhoService.getItens();
 
+        // Calcular o subtotal
+        double subtotal = 0.0;
+        for (ProdutoEntity produto : itensCarrinho) {
+            subtotal += produto.getPreco() * produto.getQuantidade(); // Calcula o total para cada item
+        }
+
         // Criar um mapa de imagens principais para cada produto no carrinho
         Map<Long, ProdutoImagensDto> imagensPrincipais = new HashMap<>();
         for (ProdutoEntity produto : itensCarrinho) {
@@ -48,12 +54,24 @@ public class CarrinhoController {
             }
         }
 
-        // Passa os produtos do carrinho e as imagens principais para o modelo
+        // Passa os produtos do carrinho, as imagens principais e o subtotal para o modelo
         model.addAttribute("itensCarrinho", itensCarrinho);
         model.addAttribute("imagensPrincipais", imagensPrincipais);
+        model.addAttribute("subtotal", subtotal);  // Passa o subtotal para a visão
 
         // Retorna o template carrinho.html
         return "carrinho"; 
+    }
+
+    // Método para alterar a quantidade de um produto no carrinho
+    @PostMapping("/carrinho/alterarQuantidade")
+    public String alterarQuantidade(@RequestParam("produtoId") Long produtoId, @RequestParam("quantidade") String quantidade) {
+        if ("increase".equals(quantidade)) {
+            carrinhoService.incrementarQuantidade(produtoId);  // Incrementa a quantidade
+        } else if ("decrease".equals(quantidade)) {
+            carrinhoService.decrementarQuantidade(produtoId);  // Decrementa a quantidade
+        }
+        return "redirect:/carrinho";  // Redireciona para a página do carrinho após a alteração
     }
 }
 
