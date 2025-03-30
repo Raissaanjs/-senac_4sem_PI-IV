@@ -39,7 +39,6 @@ public class SecurityConfig {
 	            .requestMatchers("/admin").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers("/front-adm").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers("/produto-imagens/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
-	            .requestMatchers("/uploadImage/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .anyRequest().authenticated() // Qualquer outra rota requer autenticação
 	        )
 	        .httpBasic(Customizer.withDefaults()) // Habilita autenticação básica, útil para Postman

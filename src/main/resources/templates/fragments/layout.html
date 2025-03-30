@@ -54,7 +54,7 @@
 					<i class="fa-solid fa-house"></i> <span>Home</span>
 					</a></li>
 				</ul>               
-                <ul class="nav nav-pills">
+                <ul class="nav nav-pills" th:if="${isAdmin}">
                     <li class="nav-item"><span class="nav-link active">Usuários (ADMIN)</span></li>
                     <li class="nav-item"><a class="nav-link"
                         href="/usuarios/cadastrar"> <i class="fa-solid fa-plus"></i> <span>Cadastrar</span>
@@ -67,14 +67,14 @@
     
                 <ul class="nav nav-pills">
                     <li class="nav-item"><span class="nav-link active">Produtos</span></li>
-                    <li class="nav-item"><a class="nav-link"
+                    <li class="nav-item" th:if="${isAdmin}"><a class="nav-link"
                                             href="/produtos/cadastrar"> <i class="fa-solid fa-plus"></i> <span>Cadastrar </span>
                     </a></li>
                     <li class="nav-item"><a class="nav-link"
                                             href="/produtos/listar"> <i class="fa-solid fa-table-list"></i> <span>Listar </span>
                     </a></li>
                 </ul>
-                <ul class="nav nav-pills">
+                <ul class="nav nav-pills" th:if="${isAdmin}">
                     <li class="nav-item"><span class="nav-link active">Produtos - Imagens</span></li>
                     <li class="nav-item"><a class="nav-link"
                                             href="/produto-imagens/cadastrar"> <i class="fa-solid fa-plus"></i> <span>Cadastrar </span>

@@ -156,12 +156,12 @@
 			                <div class="modal-body">
 			                    <div class="mb-3">
 			                        <label for="prodEditNome" class="form-label">Nome</label>
-			                        <input type="text" id="prodEditNome" class="form-control" required aria-required="true"/>
+			                        <input type="text" id="prodEditNome" class="form-control" required aria-required="true" th:disabled="${!isAdmin}"/>
 			                    </div>
 			                    <div class="mb-3">
 			                        <label for="prodEditPreco" class="form-label">Preço</label>
 			                        <input type="text" id="prodEditPreco" class="form-control" data-mask="#####0.00"
-	                               data-mask-reverse="true" required aria-required="true"/>
+	                               data-mask-reverse="true" required aria-required="true" th:disabled="${!isAdmin}"/>
 			                    </div>
 			                    <div class="mb-3">
 			                        <label for="prodEditQuantidade" class="form-label">Quantidade</label>
@@ -169,11 +169,11 @@
 			                    </div>
 			                    <div class="mb-3">
 			                        <label for="prodEditAvaliacao" class="form-label">Avaliação</label>
-			                        <input type="number" id="prodEditAvaliacao" class="form-control" required aria-required="true"/>
+			                        <input type="number" id="prodEditAvaliacao" class="form-control" required aria-required="true" th:disabled="${!isAdmin}"/>
 			                    </div>
 			                    <div class="mb-3">
 			                        <label for="prodEditDescricao" class="form-label">Descrição</label>
-			                        <textarea id="prodEditDescricao" class="form-control" required aria-required="true"></textarea>
+			                        <textarea id="prodEditDescricao" class="form-control" required aria-required="true" th:disabled="${!isAdmin}"></textarea>
 			                    </div>
 			                </div>
 			                <div class="modal-footer">
@@ -184,9 +184,6 @@
 			        </div>
 			    </div>
 			</div>
-
-	
-		
 		</div>
 	</section>
 </body>

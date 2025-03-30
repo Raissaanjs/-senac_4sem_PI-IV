@@ -1,6 +1,7 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-data-bs-theme="dark" class="h-100">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	data-bs-theme="dark" class="h-100">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">    
@@ -17,7 +18,7 @@ data-bs-theme="dark" class="h-100">
 		<h2>Escolha uma opção:</h2>			
 		
 		<div>
-		<a class="btn btn-dark btn-lg d-block mb-2" sec:authorize="hasRole('ROLE_ADMIN')" href="/usuarios/listar">
+		<a class="btn btn-dark btn-lg d-block mb-2" href="/usuarios/listar" th:if="${isAdmin}">
 		<i class="fa-solid fa-table-list"></i> <span>Listar Usuários (ADMIN)</span></a>
 		<a class="btn btn-dark btn-lg d-block mb-2" href="/produtos/listar">
 		<i class="fa-solid fa-table-list"></i> <span>Listar Produtos</span></a>

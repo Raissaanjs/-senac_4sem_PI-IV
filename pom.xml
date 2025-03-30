@@ -43,13 +43,13 @@
 		    <groupId>nz.net.ultraq.thymeleaf</groupId>
 		    <artifactId>thymeleaf-layout-dialect</artifactId>
 		    <version>3.3.0</version> <!--$NO-MVN-MAN-VER$ -->
-		</dependency>		
+		</dependency>
+		<!-- usado no sec:authorize="hasRole('ADMIN')" -->	
 		<dependency>
 		    <groupId>org.thymeleaf.extras</groupId>
 		    <artifactId>thymeleaf-extras-springsecurity5</artifactId>
 		    <version>3.1.1.RELEASE</version>
-		</dependency>
-		<!-- usado no sec:authorize="hasRole('ADMIN')" -->
+		</dependency>		
 		<dependency>
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-taglibs</artifactId>

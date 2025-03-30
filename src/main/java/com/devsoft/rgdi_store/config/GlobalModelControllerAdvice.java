@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 public class GlobalModelControllerAdvice {
 
     @Autowired
-	private UserRepository userRepository;  // Injeção do seu repositório de usuários
+    private UserRepository userRepository;  // Injeção do seu repositório de usuários
     
     @Autowired
     private CarrinhoService carrinhoService;
@@ -36,8 +36,19 @@ public class GlobalModelControllerAdvice {
             } else {
                 model.addAttribute("userName", "Guest");  // Caso não encontre, coloca como "Guest"
             }
+
+            // Verifica as funções do usuário
+            model.addAttribute("isAdmin", authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
+            model.addAttribute("isEstoque", authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ESTOQ")));
+            model.addAttribute("isUser", authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_USER")));
         } else {
             model.addAttribute("userName", "Guest");  // Se não estiver autenticado, coloca "Guest"
+            model.addAttribute("isAdmin", false);
+            model.addAttribute("isEstoque", false);
+            model.addAttribute("isUser", false);
         }
 
         // Adiciona o número total de itens no carrinho ao modelo
