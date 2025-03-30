@@ -21,88 +21,104 @@
         </header>        
         <!-- Section-->
         <section class="py-5" layout:fragment="corpo">
-	        <div class="container px-4 px-lg-5 mt-5">
-			        <div class="col-sm-12 col-md-offset-1">
-			            <table class="table table-hover">
-			                <thead>
-			                    <tr>
-			                        <th>Produto</th>
-			                        <th>Quantidade</th>
-			                        <th class="text-center">Unitário</th>
-			                        <th class="text-center">Total</th>
-			                        <th >teste</th>
-			                    </tr>
-			                </thead>
-			                <tbody>
-			                    <tr th:each="item : ${itensCarrinho}">
-			                        <td class="col-sm-8 col-md-6">
-			                        <div class="media">			                            
-			                            <div class="media-body">
-			                               <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-								                <img class="card-img-top" th:src="@{${imagensPrincipais[item.id].url}}" alt="Imagem do Produto" style="height:75px; width: 50px; object-fit: cover;">
-								            	<span th:text="${item.nome}">Nome</span>
-								            </div>
-			                            </div>
-			                        </div></td>
-			                        <td class="col-sm-1 col-md-1" style="text-align: center">
-										<form th:action="@{/carrinho/alterarQuantidade}" method="post" style="display: inline;">
-							               <input type="hidden" name="produtoId" th:value="${item.id}" />
-							               <input type="hidden" name="quantidade" value="decrease" />
-							               <button type="submit" class="btn btn-sm btn-outline-secondary">-</button>
-							           </form>
-			                        <span th:text="${item.quantidade}">Quantidade</span>  <!-- Exibe a quantidade do produto -->
-									
-									<form th:action="@{/carrinho/alterarQuantidade}" method="post" style="display: inline;">
-						                <input type="hidden" name="produtoId" th:value="${item.id}" />
-						                <input type="hidden" name="quantidade" value="increase" />
-						                <button type="submit" class="btn btn-sm btn-outline-secondary">+</button>
-						            </form>
-			                        </td>
-			                        <td class="col-sm-1 col-md-1 text-center" ><strong th:text="${#numbers.formatDecimal(item.preco, 1, 2)}">$4.87</strong></td>
-			                        <td class="col-sm-1 col-md-1 text-center"><strong th:text="${#numbers.formatDecimal(item.preco * item.quantidade, 1, 2)}">$14.61</strong></td>
-									<td class="col-sm-1 col-md-1">
-							            <button type="button" class="btn btn-danger">
-							                <span class="glyphicon glyphicon-remove"></span> Remove
-							            </button>
-							        </td>			                    
-			                    <tr>
-			                        <td>   </td>
-			                        <td>   </td>
-			                        <td>   </td>
-			                        <td><h5>Subtotal</h5></td>
-			                        <td class="text-right"><h5><strong th:text="${#numbers.formatDecimal(subtotal, 2, 2)}">$24.59</strong></h5></td>  <!-- Exibe o subtotal calculado -->
-			                    </tr>
-			                    <tr>
-			                        <td>   </td>
-			                        <td>   </td>
-			                        <td>   </td>
-			                        <td><h5>Frete</h5></td>
-			                        <td class="text-right"><h5><strong>$0,00</strong></h5></td>
-			                    </tr>
-			                    <tr>
-			                        <td>   </td>
-			                        <td>   </td>
-			                        <td>   </td>
-			                        <td><h4>Total</h4></td>
-			                        <td class="text-right"><h4><strong>$31.53</strong></h4></td>
-			                    </tr>
-			                    <tr>
-			                        <td>   </td>
-			                        <td>   </td>
-			                        <td colspan="2">
-			                        <a type="button" class="btn btn-default" href="/">
-			                            <span class="glyphicon glyphicon-shopping-cart"></span> Continue Comprando
-			                        </a></td>			                        
-			                        <td colspan="2">
-			                        <button type="button" class="btn btn-success w-100">
-									    Finalizar Compra <span class="glyphicon glyphicon-play"></span>
-									</button>
-									</td>
-			                    </tr>
-			                </tbody>
-			            </table>
-			        </div>
-			    </div>
-	    </section>
+		    <div class="container px-4 px-lg-5 mt-5">
+		        <div class="col-sm-12">
+		            <table class="table table-hover">
+		                <thead>
+		                    <tr>
+		                        <th class="col-produto">Produto</th>
+		                        <th class="text-center" style="width: 12%;">Quantidade</th>
+		                        <th class="text-center" style="width: 15%;">Unitário</th>
+		                        <th class="text-center" style="width: 20%;">Total</th>
+		                        <th class="text-center">Ação</th>
+		                    </tr>
+		                </thead>
+		                <tbody>
+		                    <tr th:each="item : ${itensCarrinho}" style="vertical-align: middle;">
+		                        <td class="col-sm-8 col-md-6">
+		                            <div class="media">
+		                                <div class="media-body">
+		                                    <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+		                                        <img class="card-img-top" th:src="@{${imagensPrincipais[item.id].url}}" alt="Imagem do Produto" style="height:75px; width: 50px; object-fit: cover;">
+		                                        <span th:text="${item.nome}">Nome</span>
+		                                    </div>
+		                                </div>
+		                            </div>
+		                        </td>
+		                        <td class="col-sm-1 col-md-1 text-center">
+		                            <form th:action="@{/carrinho/alterarQuantidade}" method="post" style="display: inline;">
+		                                <input type="hidden" name="produtoId" th:value="${item.id}" />
+		                                <input type="hidden" name="quantidade" value="decrease" />
+		                                <button type="submit" class="btn btn-sm btn-outline-secondary">-</button>
+		                            </form>
+		                            <span th:text="${item.quantidade}">Quantidade</span>
+		                            <form th:action="@{/carrinho/alterarQuantidade}" method="post" style="display: inline;">
+		                                <input type="hidden" name="produtoId" th:value="${item.id}" />
+		                                <input type="hidden" name="quantidade" value="increase" />
+		                                <button type="submit" class="btn btn-sm btn-outline-secondary">+</button>
+		                            </form>
+		                        </td>
+		                        <td class="col-sm-1 col-md-1 text-center">R$ <strong th:text="${#numbers.formatDecimal(item.preco, 1, 2)}">$4.87</strong></td>
+		                        <td class="col-sm-1 col-md-1 text-center">R$ <strong th:text="${#numbers.formatDecimal(item.preco * item.quantidade, 1, 2)}">$14.61</strong></td>
+		                        <td class="col-sm-1 col-md-1">
+								    <form th:action="@{/carrinho/remover}" method="post">
+								        <input type="hidden" name="produtoId" th:value="${item.id}" />
+								        <button type="submit" class="btn btn-danger w-100">
+								            <span class="glyphicon glyphicon-remove"></span> Remove
+								        </button>
+								    </form>
+								</td>
+		                    </tr>
+		                    <tr style="vertical-align: middle;">
+		                        <td>   </td>
+		                        <td>   </td>
+		                        <td><h5>Subtotal</h5></td>
+		                        <td class="text-center" colspan="2"><h5>R$ <strong th:text="${#numbers.formatDecimal(subtotal, 1, 2)}">$24.59</strong></h5></td>
+		                    </tr>
+		                    <tr style="vertical-align: middle;">
+		                        <td>   </td>
+		                        <td>   </td>
+		                        <td><h5>Frete</h5></td>
+		                        <td class="text-center" colspan="2"><h5>R$ <strong th:text="${#numbers.formatDecimal(frete, 1, 2)}">$0.00</strong></h5></td>
+		                    </tr>
+		                    <tr style="vertical-align: middle;">
+		                        <td>   </td>
+		                        <td>   </td>
+		                        <td><h4>Total</h4></td>
+		                        <td class="text-center" colspan="2"><h4>R$ <strong th:text="${#numbers.formatDecimal(total, 1, 2)}">$31.53</strong></h4></td>
+		                    </tr>
+		                    <tr style="vertical-align: middle;">
+		                        <td>   </td>
+		                        <td colspan="2"><h5 style="margin-left: 0.75rem;">Escolher Frete</h5></td>
+		                        <td colspan="2">
+		                            <form th:action="@{/carrinho/frete}" method="post">
+		                                <select name="tipoFrete" class="form-control">
+		                                    <option value="">Clique Aqui e Escolha o Frete</option>
+		                                    <option value="municipal">SP Capital</option>
+		                                    <option value="estadual">SP Estado</option>
+		                                    <option value="nacional">Demas Regiões</option>
+		                                </select>
+		                                <button type="submit" class="btn btn-primary mt-3">Escolher Frete</button>
+		                            </form>
+		                        </td>
+		                    </tr>
+		                    <tr style="vertical-align: middle;">
+		                        <td>   </td>
+		                        <td colspan="2">
+		                            <a type="button" class="btn btn-default" href="/">
+		                                <span class=""></span>Continue Comprando
+		                            </a>
+		                        </td>
+		                        <td colspan="2">
+		                            <button type="button" class="btn btn-success w-100">
+		                                Finalizar Compra <span class="glyphicon glyphicon-play"></span>
+		                            </button>
+		                        </td>
+		                    </tr>
+		                </tbody>
+		            </table>
+		        </div>
+		    </div>
+		</section>
     </body>
 </html>

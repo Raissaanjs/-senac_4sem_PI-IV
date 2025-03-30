@@ -1,40 +1,47 @@
 package com.devsoft.rgdi_store.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.devsoft.rgdi_store.entities.UserEntity;
 import com.devsoft.rgdi_store.repositories.UserRepository;
+import com.devsoft.rgdi_store.services.CarrinhoService;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
 @ControllerAdvice
 public class GlobalModelControllerAdvice {
 
-    private final UserRepository userRepository;  // Injeção do seu repositório de usuários
+    @Autowired
+	private UserRepository userRepository;  // Injeção do seu repositório de usuários
+    
+    @Autowired
+    private CarrinhoService carrinhoService;
 
     public GlobalModelControllerAdvice(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @ModelAttribute
-    public void addUserNameToModel(Authentication authentication, Model model) {
+    public void addAttributesToModel(Authentication authentication, Model model) {
+        // Adiciona o nome do usuário ao modelo, se autenticado
         if (authentication != null) {
-            // Pega o e-mail do usuário autenticado
-            String email = authentication.getName();  // O nome do usuário geralmente é o e-mail
+            String email = authentication.getName();  // Pega o nome do usuário (geralmente o e-mail)
 
-            // Busca o usuário pelo e-mail no banco de dados
             UserEntity user = userRepository.findByEmail(email).orElse(null);
-
-            // Se o usuário for encontrado, adiciona o nome ao modelo
             if (user != null) {
-                model.addAttribute("userName", user.getNome());  // Adiciona o nome do usuário ao modelo
+                model.addAttribute("userName", user.getNome());  // Nome do usuário autenticado
             } else {
                 model.addAttribute("userName", "Guest");  // Caso não encontre, coloca como "Guest"
             }
         } else {
             model.addAttribute("userName", "Guest");  // Se não estiver autenticado, coloca "Guest"
         }
+
+        // Adiciona o número total de itens no carrinho ao modelo
+        int totalItens = carrinhoService.getQuantidadeTotalItens(); // Método que calcula a quantidade total de itens no carrinho
+        model.addAttribute("totalItens", totalItens);  // Adiciona a quantidade de itens no carrinho ao modelo
     }
 }

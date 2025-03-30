@@ -13,6 +13,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
         <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/style.css" rel="stylesheet" />
         <link href="css/styles-loja.css" rel="stylesheet" />
     </head>
     <body>
@@ -41,7 +42,7 @@
 	                        <a href="/carrinho" class="btn btn-outline-dark">
 							    <i class="bi-cart-fill me-1"></i>							    
 							    Carrinho
-							    <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>							    
+							    <span class="badge bg-dark text-white ms-1 rounded-pill" th:text="${totalItens}">0</span>							    
 							</a>
 							</div>
 							<div>
@@ -171,29 +172,7 @@
             });
         });
         
-        /*
-        document.addEventListener("DOMContentLoaded", function() {
-		    const prodId = document.getElementById("prodId").value;
-		    fetch(`/produto-imagens/imagem-principal/${prodId}`)
-		        .then(response => {
-		            if (!response.ok) {
-		                throw new Error('Erro na resposta do servidor');
-		            }
-		            return response.json();
-		        })
-		        .then(data => {
-		            if (data.length > 0) {
-		                const imagemPrincipal = data[0]; // Supondo que a primeira imagem é a principal
-		                const container = document.getElementById("imagem-principal-container");
-		                const imgElement = document.createElement("img");
-		                imgElement.src = imagemPrincipal.url; // Usando a URL da imagem principal
-		                imgElement.alt = imagemPrincipal.nome; // Usando o nome da imagem como alt
-		                container.appendChild(imgElement);
-		            }
-		        })
-		        .catch(error => console.error('Erro ao buscar a imagem principal:', error));
-		});
-		*/
+       
 	 </script>
     </body>
 </html>

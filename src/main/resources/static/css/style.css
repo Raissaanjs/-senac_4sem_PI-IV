@@ -203,3 +203,23 @@ a.navbar-brand.navbar-brand-custom{
      display: block;  /* Faz com que o nome do usuário fique em uma linha separada */
      margin-top: 5px; /* Adiciona algum espaçamento opcional entre o logout e o nome do usuário */
  }
+ 
+ .col-produto {
+    width: 33%  !important;
+}
+
+.col-quantidade {
+    width: 15%  !important;
+}
+
+.col-unitario {
+    width: 12%  !important;
+}
+
+.col-total {
+    width: 15%  !important;
+}
+
+.col-acao {
+    width: 25% !important;
+}
