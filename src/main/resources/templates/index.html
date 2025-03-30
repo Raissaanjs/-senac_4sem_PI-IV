@@ -108,9 +108,13 @@
 			                </div>
 			            </div>
 			            <div class="modal-footer">
-			                <a class="btn btn-success mt-auto" href="/carrinho/adicionar">Comprar</a>
-			                <button type="button" class="btn btn-secondary mt-auto" data-bs-dismiss="modal">Fechar</button>
-			            </div>
+	                        <form th:action="@{/carrinho/adicionar}" method="post">
+	                            <input type="hidden" name="produtoId" id="modalProdutoId" />
+	                            <button type="submit" class="btn btn-success mt-auto">Comprar</button>
+	                        </form>
+	                        <button type="button" class="btn btn-secondary mt-auto" data-bs-dismiss="modal">Fechar</button>
+	                    </div>
+			            
 			        </div>
 			    </div>
 			</div>
