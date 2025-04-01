@@ -37,14 +37,14 @@ import com.devsoft.rgdi_store.dto.UserDto;
 import com.devsoft.rgdi_store.entities.UserGroup;
 import com.devsoft.rgdi_store.repositories.UserRepository;
 import com.devsoft.rgdi_store.services.UserService;
-import com.devsoft.rgdi_store.services.exceptions.user.ConfirmPassNullException;
-import com.devsoft.rgdi_store.services.exceptions.user.EmailDivergException;
-import com.devsoft.rgdi_store.services.exceptions.user.EmailExistsException;
-import com.devsoft.rgdi_store.services.exceptions.user.InvalidCpfException;
-import com.devsoft.rgdi_store.services.exceptions.user.InvalidPassException;
-import com.devsoft.rgdi_store.services.exceptions.user.NameValidationException;
+import com.devsoft.rgdi_store.services.exceptions.All.ConfirmPassNullException;
+import com.devsoft.rgdi_store.services.exceptions.All.EmailDivergException;
+import com.devsoft.rgdi_store.services.exceptions.All.EmailExistsException;
+import com.devsoft.rgdi_store.services.exceptions.All.InvalidCpfException;
+import com.devsoft.rgdi_store.services.exceptions.All.InvalidPassException;
+import com.devsoft.rgdi_store.services.exceptions.All.NameValidationException;
+import com.devsoft.rgdi_store.validation.base.ValidationGroups;
 import com.devsoft.rgdi_store.validation.user.UserValidationSaveService;
-import com.devsoft.rgdi_store.validation.user.ValidationGroups;
 
 import jakarta.validation.groups.Default;
 
