@@ -1,10 +1,10 @@
 package com.devsoft.rgdi_store.services.exceptions.All;
 
-public class NameValidationException extends RuntimeException {
+public class CpfExistsException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public NameValidationException(String msg) {
+	public CpfExistsException(String msg) {
         super(msg);
     }
 }

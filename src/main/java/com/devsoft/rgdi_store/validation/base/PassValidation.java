@@ -1,4 +1,4 @@
-package com.devsoft.rgdi_store.validation.user;
+package com.devsoft.rgdi_store.validation.base;
 
 public class PassValidation {
 

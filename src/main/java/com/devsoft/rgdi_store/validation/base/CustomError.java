@@ -1,4 +1,4 @@
-package com.devsoft.rgdi_store.validation.user;
+package com.devsoft.rgdi_store.validation.base;
 
 public class CustomError {    
     private Integer status;
@@ -15,14 +15,4 @@ public class CustomError {
 
     public String getError() {
         return error;    }
-
-    /*
-    public List<FieldMessage> getFieldErrors() {
-        return fieldErrors;
-    }
-
-    public void addFieldError(String fieldname, String message) {
-        this.fieldErrors.add(new FieldMessage(fieldname, message));
-    }
-    */
 }

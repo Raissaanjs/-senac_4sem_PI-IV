@@ -1,4 +1,4 @@
-package com.devsoft.rgdi_store.validation.user;
+package com.devsoft.rgdi_store.validation.base;
 
 import java.util.regex.Pattern;
 

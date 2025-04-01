@@ -1,8 +1,10 @@
-package com.devsoft.rgdi_store.validation.user;
+package com.devsoft.rgdi_store.validation.cliente;
 
-import com.devsoft.rgdi_store.dto.UserDto;
-import com.devsoft.rgdi_store.repositories.UserRepository;
+
+import com.devsoft.rgdi_store.dto.ClienteDto;
+import com.devsoft.rgdi_store.repositories.ClienteRepository;
 import com.devsoft.rgdi_store.services.exceptions.All.ConfirmPassNullException;
+import com.devsoft.rgdi_store.services.exceptions.All.CpfExistsException;
 import com.devsoft.rgdi_store.services.exceptions.All.EmailDivergException;
 import com.devsoft.rgdi_store.services.exceptions.All.EmailExistsException;
 import com.devsoft.rgdi_store.services.exceptions.All.InvalidCpfException;
@@ -14,32 +16,35 @@ import com.devsoft.rgdi_store.validation.base.EmailValidator;
 import com.devsoft.rgdi_store.validation.base.NameValidation;
 import com.devsoft.rgdi_store.validation.base.PassValidation;
 
-public class UserValidationSaveService {
+public class ClienteValidationSaveService {
 
     // Método principal para validar todos os campos do usuário
-    public static void validateUser(UserDto dto, UserRepository repository) {
+    public static void validateCliente(ClienteDto dto, ClienteRepository repository) {
         validateName(dto.getNome());
-        validateCpf(dto.getCpf());
+        validateCpf(dto.getCpf(), repository);
         validateEmail(dto.getEmail(), repository);
         validatePassword(dto.getSenha(), dto.getConfirmasenha());
     }
 
     // Validação do nome
     private static void validateName(String nome) {
-        if (!NameValidation.isValidName(nome)) {
-            throw new NameValidationException("Nome inválido. Deve conter entre 3 e 200 caracteres.");
+        if (!NameValidation.hasValidWords(nome)) {
+            throw new NameValidationException("Nome inválido. Deve conter pelo menos duas palavras com no mínimo 3 letras cada, exceto 'de' e 'da'.");
         }
     }
 
     // Validação de CPF
-    private static void validateCpf(String cpf) {
+    private static void validateCpf(String cpf, ClienteRepository repository) {
         if (!CpfValidator.isValidCPF(cpf)) {
             throw new InvalidCpfException("O CPF informado é inválido.");
+        }
+        if(repository.existsByCpf(cpf)) {
+        	throw new CpfExistsException("O cpf informado já está cadastrado no sistema.");
         }
     }
 
     // Validação de e-mail e checagem de duplicidade
-    private static void validateEmail(String email, UserRepository repository) {
+    private static void validateEmail(String email, ClienteRepository repository) {
         if (!EmailValidator.isValidEmail(email)) {
             throw new EmailDivergException("O e-mail informado está vazio ou em formato inválido ([email@email.com]).");
         }

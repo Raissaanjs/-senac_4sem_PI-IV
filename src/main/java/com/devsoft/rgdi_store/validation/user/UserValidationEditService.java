@@ -3,10 +3,14 @@ package com.devsoft.rgdi_store.validation.user;
 import com.devsoft.rgdi_store.dto.UserDto;
 import com.devsoft.rgdi_store.entities.UserEntity;
 import com.devsoft.rgdi_store.repositories.UserRepository;
-import com.devsoft.rgdi_store.services.exceptions.user.ConfirmPassNullException;
-import com.devsoft.rgdi_store.services.exceptions.user.InvalidCpfException;
-import com.devsoft.rgdi_store.services.exceptions.user.InvalidPassException;
-import com.devsoft.rgdi_store.services.exceptions.user.NameValidationException;
+import com.devsoft.rgdi_store.services.exceptions.All.ConfirmPassNullException;
+import com.devsoft.rgdi_store.services.exceptions.All.InvalidCpfException;
+import com.devsoft.rgdi_store.services.exceptions.All.InvalidPassException;
+import com.devsoft.rgdi_store.services.exceptions.All.NameValidationException;
+import com.devsoft.rgdi_store.validation.base.ConfirmPassValidationNull;
+import com.devsoft.rgdi_store.validation.base.CpfValidator;
+import com.devsoft.rgdi_store.validation.base.NameValidation;
+import com.devsoft.rgdi_store.validation.base.PassValidation;
 
 public class UserValidationEditService {
 

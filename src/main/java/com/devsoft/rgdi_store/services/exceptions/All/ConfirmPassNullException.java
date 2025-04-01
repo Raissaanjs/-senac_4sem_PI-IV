@@ -1,4 +1,4 @@
-package com.devsoft.rgdi_store.services.exceptions.user;
+package com.devsoft.rgdi_store.services.exceptions.All;
 
 public class ConfirmPassNullException extends RuntimeException {
    

@@ -11,14 +11,15 @@ import com.devsoft.rgdi_store.services.exceptions.DataIntegrityViolationExceptio
 import com.devsoft.rgdi_store.services.exceptions.DatabaseException;
 import com.devsoft.rgdi_store.services.exceptions.FieldValidationException;
 import com.devsoft.rgdi_store.services.exceptions.ResourceNotFoundException;
-import com.devsoft.rgdi_store.services.exceptions.user.ConfirmPassNullException;
-import com.devsoft.rgdi_store.services.exceptions.user.EmailDivergException;
-import com.devsoft.rgdi_store.services.exceptions.user.EmailExistsException;
-import com.devsoft.rgdi_store.services.exceptions.user.InvalidCpfException;
-import com.devsoft.rgdi_store.services.exceptions.user.InvalidPassException;
-import com.devsoft.rgdi_store.services.exceptions.user.NameValidationException;
-import com.devsoft.rgdi_store.validation.user.CustomError;
-import com.devsoft.rgdi_store.validation.user.ValidationError;
+import com.devsoft.rgdi_store.services.exceptions.All.ConfirmPassNullException;
+import com.devsoft.rgdi_store.services.exceptions.All.CpfExistsException;
+import com.devsoft.rgdi_store.services.exceptions.All.EmailDivergException;
+import com.devsoft.rgdi_store.services.exceptions.All.EmailExistsException;
+import com.devsoft.rgdi_store.services.exceptions.All.InvalidCpfException;
+import com.devsoft.rgdi_store.services.exceptions.All.InvalidPassException;
+import com.devsoft.rgdi_store.services.exceptions.All.NameValidationException;
+import com.devsoft.rgdi_store.validation.base.CustomError;
+import com.devsoft.rgdi_store.validation.base.ValidationError;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -70,6 +71,20 @@ public class ControllerExceptionHandler {
 	    return ResponseEntity.status(status).body(error);
 	}	
 	
+	//Trata excessão de cpf duplicado
+	@ExceptionHandler(CpfExistsException.class)
+	public ResponseEntity<CustomError> CpfExists(CpfExistsException e, HttpServletRequest request) {
+	    HttpStatus status = HttpStatus.BAD_REQUEST;
+
+	    // Cria o erro customizado com informações gerais
+	    CustomError err = new CustomError(
+	        status.value(),
+	        e.getMessage()
+	    );	    
+
+	    return ResponseEntity.status(status).body(err);
+	}
+	
 	//trata excessão de campo email vazio/ fora do formato
 	@ExceptionHandler(EmailDivergException.class)
 	public ResponseEntity<CustomError> EmailDiverg(EmailDivergException e, HttpServletRequest request) {
@@ -80,9 +95,6 @@ public class ControllerExceptionHandler {
 	        status.value(),
 	        e.getMessage()
 	    );
-
-	    // Adiciona o erro específico do campo "email"
-	    //err.addFieldError("email", e.getMessage());
 
 	    return ResponseEntity.status(status).body(err);
 	}
@@ -98,12 +110,9 @@ public class ControllerExceptionHandler {
 	        e.getMessage()
 	    );
 
-	    // Adiciona o erro específico do campo "email"
-	    //err.addFieldError("email", e.getMessage());
-
 	    return ResponseEntity.status(status).body(err);
 	}
-	
+		
 	//Trata excessão de senha vazia ou com menos de 6 dígitos
 	@ExceptionHandler(InvalidPassException.class)
     public ResponseEntity<CustomError> InvalidPassword(InvalidPassException ex, HttpServletRequest request) {
