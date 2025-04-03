@@ -29,7 +29,7 @@ public class RoleRedirectController {
                         case ROLE_ADMIN:
                             return "redirect:/usuarios/listar"; // Painel do administrador
                         case ROLE_ESTOQ:
-                            return "redirect:/inventory-path"; // Estoque
+                            return "redirect:/produtos/listar"; // Estoque
                         case ROLE_USER:
                             return "redirect:/error-no-perm"; // Erro de permissão
                         default:

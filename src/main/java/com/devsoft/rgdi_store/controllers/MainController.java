@@ -60,7 +60,7 @@ public class MainController {
     public String loginPage() {
         return "login"; // Exibe a página de login (login.html)
     }
-
+    
     @GetMapping("/h2-console")
     public String redirectToH2Console() {
         return "redirect:/h2-console"; // Redireciona para o console do H2

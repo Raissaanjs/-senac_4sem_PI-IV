@@ -1,5 +1,4 @@
 package com.devsoft.rgdi_store.authentication;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -29,4 +28,5 @@ public class PasswordUtils {
         return encoder.matches(rawPassword, encodedPassword);
     }
 }
+
 
