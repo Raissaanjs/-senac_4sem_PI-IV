@@ -14,7 +14,6 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordUtils passwordUtils;
 
-    // Injete o PasswordUtils no construtor
     public AuthenticationService(UserRepository userRepository, PasswordUtils passwordUtils) {
         this.userRepository = userRepository;
         this.passwordUtils = passwordUtils;
@@ -28,10 +27,7 @@ public class AuthenticationService {
 
         return userRepository.findByEmail(email)
                 .map(userFromDb -> {
-                    // Agora usando o método não estático
-                    
-                	
-                	boolean isMatch = passwordUtils.matches(senha, userFromDb.getSenha());
+                    boolean isMatch = passwordUtils.matches(senha, userFromDb.getSenha());
                     logger.info("Autenticação para o email {} {}", email, (isMatch ? "bem-sucedida" : "falhou"));
                     return isMatch;
                 })
