@@ -24,8 +24,11 @@ public class UserService {
 	@Autowired
 	private UserRepository repository;	
 	
-	@Autowired
-	private PasswordUtils passwordUtils;	
+	private final PasswordUtils passwordUtils;
+
+    public UserService(PasswordUtils passwordUtils) {
+        this.passwordUtils = passwordUtils;
+    }	
 	
 	//validação para email único
 	public boolean existsByEmail(String email) {

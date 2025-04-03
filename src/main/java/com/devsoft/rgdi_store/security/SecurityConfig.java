@@ -2,18 +2,19 @@ package com.devsoft.rgdi_store.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
 import com.devsoft.rgdi_store.controllers.handlers.CustomAuthenticationFailureHandler;
 import com.devsoft.rgdi_store.controllers.handlers.CustomNoAuthenticatedHandler;
 
 @Configuration
 @EnableWebSecurity
+@Order(2)
 public class SecurityConfig {
 
 	private final CustomNoAuthenticatedHandler customNoAuthenticatedHandler;
@@ -72,8 +73,4 @@ public class SecurityConfig {
 	    return http.build();    	
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }

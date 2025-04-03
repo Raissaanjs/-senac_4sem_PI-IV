@@ -75,7 +75,7 @@ public class UserController {
 	    return ResponseEntity.ok(existe);
 	}
 	
-	//busca o usuário logado. Usado para não permitir o usuário logado alterar seu grupo 
+	//busca o usuário logado. Usado para não permitir o usuário logado alterar seu grupo - NÃO ESTÁ FUNCIONANDO
 	@GetMapping("/logged")
 	public String getUsuarios(
 	        Model model,
@@ -84,6 +84,9 @@ public class UserController {
 	    if (loggedInUser instanceof UserDto) {
 	        UserDto user = (UserDto) loggedInUser;
 	        model.addAttribute("loggedInUser", user);
+	        
+	        // Adiciona um atributo para desativar o campo grupo se o usuário estiver logado
+	        model.addAttribute("disableGroupField", true);
 	    } else {
 	        throw new IllegalStateException("Usuário logado não é do tipo esperado!");
 	    }
@@ -115,8 +118,6 @@ public class UserController {
 
 	    return "usuario/listuser";
 	}
-
-
 
 	//Lista geral - Menu  
 	@GetMapping("/listar")
@@ -184,8 +185,8 @@ public class UserController {
 	}
 
 	
-	//não esquecer o "@Valid" - necessario para validacao de campos
-	@PostMapping(produces = "application/json;charset=UTF-8")
+	//não esquecer o "@Validted" - necessario para validacao de campos
+	@PostMapping
     public ResponseEntity<UserDto> insert(@Validated({ ValidationGroups.Create.class, Default.class }) @RequestBody UserDto dto) {	
 		dto = userService.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
