@@ -53,14 +53,14 @@ public class CarrinhoService {
         session.setAttribute("carrinho", carrinho);
     }
 
-    // Incrementa a quantidade de um produto no carrinho
+    // Botão(+) que incrementa a quantidade de um produto no carrinho
     public void incrementarQuantidade(Long produtoId) {
         Map<Long, Integer> carrinho = getCarrinho();
         carrinho.put(produtoId, carrinho.getOrDefault(produtoId, 0) + 1);
         session.setAttribute("carrinho", carrinho);
     }
 
-    // Decrementa a quantidade de um produto no carrinho
+    // Botão(-) que decrementa a quantidade de um produto no carrinho
     public void decrementarQuantidade(Long produtoId) {
         Map<Long, Integer> carrinho = getCarrinho();
         int quantidadeAtual = carrinho.getOrDefault(produtoId, 0);

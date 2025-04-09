@@ -95,13 +95,13 @@ public class CarrinhoController {
         double valorFrete = 0.0;
 
         switch (tipoFrete) {
-            case "municipal":
+            case "correios":
                 valorFrete = 10.0;  // Exemplo de valor para frete municipal
                 break;
-            case "estadual":
+            case "fedex":
                 valorFrete = 20.0;  // Exemplo de valor para frete estadual
                 break;
-            case "nacional":
+            case "loggi":
                 valorFrete = 50.0;  // Exemplo de valor para frete nacional
                 break;
         }
