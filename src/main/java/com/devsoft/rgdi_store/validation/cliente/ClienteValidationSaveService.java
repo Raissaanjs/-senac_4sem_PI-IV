@@ -1,7 +1,6 @@
 package com.devsoft.rgdi_store.validation.cliente;
 
-
-import com.devsoft.rgdi_store.dto.ClienteDto;
+import com.devsoft.rgdi_store.entities.ClienteEntity;
 import com.devsoft.rgdi_store.repositories.ClienteRepository;
 import com.devsoft.rgdi_store.services.exceptions.All.ConfirmPassNullException;
 import com.devsoft.rgdi_store.services.exceptions.All.CpfExistsException;
@@ -18,18 +17,19 @@ import com.devsoft.rgdi_store.validation.base.PassValidation;
 
 public class ClienteValidationSaveService {
 
-    // Método principal para validar todos os campos do usuário
-    public static void validateCliente(ClienteDto dto, ClienteRepository repository) {
-        validateName(dto.getNome());
-        validateCpf(dto.getCpf(), repository);
-        validateEmail(dto.getEmail(), repository);
-        validatePassword(dto.getSenha(), dto.getConfirmasenha());
+    // Método principal para validar todos os campos do cliente
+    public static void validateCliente(ClienteEntity cliente, ClienteRepository repository) {
+        validateName(cliente.getNome());
+        validateCpf(cliente.getCpf(), repository);
+        validateEmail(cliente.getEmail(), repository);
+        validatePassword(cliente.getSenha(), cliente.getSenha()); // usando a mesma senha como confirmação por enquanto
     }
 
     // Validação do nome
     private static void validateName(String nome) {
         if (!NameValidation.hasValidWords(nome)) {
-            throw new NameValidationException("Nome inválido. Deve conter pelo menos duas palavras com no mínimo 3 letras cada, exceto 'de' e 'da'.");
+            throw new NameValidationException("Nome inválido. Deve conter pelo menos duas palavras com no mínimo "
+            		+ "3 letras cada, exceto 'de' e 'da'.");
         }
     }
 
@@ -39,7 +39,7 @@ public class ClienteValidationSaveService {
             throw new InvalidCpfException("O CPF informado é inválido.");
         }
         if(repository.existsByCpf(cpf)) {
-        	throw new CpfExistsException("O cpf informado já está cadastrado no sistema.");
+        	throw new CpfExistsException("O CPF informado já está cadastrado no sistema.");
         }
     }
 
@@ -53,7 +53,7 @@ public class ClienteValidationSaveService {
         }
     }
 
-    // Validação de senha e confirmação de senha
+    // Validação de senha e confirmação de senha (temporário - sem campo separado de confirmação)
     private static void validatePassword(String senha, String confirmasenha) {
         if (!PassValidation.isValidPassword(senha)) {
             throw new InvalidPassException("A senha não pode ser nula e deve ter no mínimo 6 caracteres.");

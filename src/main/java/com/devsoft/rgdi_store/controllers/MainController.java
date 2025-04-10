@@ -56,6 +56,11 @@ public class MainController {
         return "home-admin"; // Renderiza o template home-admin.html
     }
     
+    @GetMapping("/cliente")
+    public String posLoginCliente() {
+        return "home-cliente"; // Renderiza o template home-admin.html
+    }
+    
     @GetMapping("/login")
     public String loginPage() {
         return "login"; // Exibe a página de login (login.html)

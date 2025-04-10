@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net/thymeleaf/layout"
+	layout:decorate="~{fragments/layoutcliente}">
+<head>
+    <title>RGDI Store - Cadastro de Cliente</title>
+</head>
+<body>
+    <header class="bg-dark py-5" layout:fragment="header">
+           <div class="container px-4 px-lg-5 my-5">
+               <div class="text-center text-white">
+                   <h3 class="fw-bolder">Detalhes do Cliente</h3>
+               </div>
+           </div>
+       </header>
+    <section class="py-5" layout:fragment="corpo">  
+	    <div class="container" id="cadastro">
+	        <p><strong>Nome:</strong> <span th:text="${cliente.nome}"></span></p>
+			<p><strong>Email:</strong> <span th:text="${cliente.email}"></span></p>
+			<p><strong>CPF:</strong> <span th:text="${cliente.cpf}"></span></p>
+			<p><strong>Data de Nascimento:</strong> <span th:text="${#dates.format(cliente.dataNascimento, 'dd/MM/yyyy')}"></span></p>
+			<p><strong>Gênero:</strong> <span th:text="${cliente.genero}"></span></p>
+			
+			<h2>Endereços</h2>
+			<ul>
+			    <li th:each="endereco : ${cliente.enderecos}">
+			        <span th:text="${endereco.logradouro} + ', ' + ${endereco.numero} + ' - ' + ${endereco.bairro} + ', ' + ${endereco.cidade} + '/' + ${endereco.uf}"></span>
+			    </li>
+			</ul>
+			
+			<a href="/">Voltar</a>
+        </div>
+	</section>
+
+</body>
+</html>		

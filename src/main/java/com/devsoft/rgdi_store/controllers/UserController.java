@@ -12,8 +12,6 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -73,25 +71,6 @@ public class UserController {
 	public ResponseEntity<Boolean> checkEmail(@RequestParam String email) {
 	    boolean existe = userService.existsByEmail(email);
 	    return ResponseEntity.ok(existe);
-	}
-	
-	//busca o usuário logado. Usado para não permitir o usuário logado alterar seu grupo - NÃO ESTÁ FUNCIONANDO
-	@GetMapping("/logged")
-	public String getUsuarios(
-	        Model model,
-	        @AuthenticationPrincipal UserDetails loggedInUser,
-	        Pageable pageable) {
-	    if (loggedInUser instanceof UserDto) {
-	        UserDto user = (UserDto) loggedInUser;
-	        model.addAttribute("loggedInUser", user);
-	        
-	        // Adiciona um atributo para desativar o campo grupo se o usuário estiver logado
-	        model.addAttribute("disableGroupField", true);
-	    } else {
-	        throw new IllegalStateException("Usuário logado não é do tipo esperado!");
-	    }
-	    model.addAttribute("usuarios", userService.findAll(pageable));
-	    return "usuarios";
 	}
 
 	@GetMapping("/buscar-nome")

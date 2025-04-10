@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net/thymeleaf/layout"
+	layout:decorate="~{fragments/layoutcliente}">
+<head>
+    <title>RGDI Store - Cadastro de Endereco</title>
+</head>
+<body>
+    <section class="layout-content" layout:fragment="corpo">
+	    <div class="page-header">
+	        <nav class="navbar navbar-expand-md navbar-top bg-light">
+	            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+	                <ul class="navbar-nav">
+	                    <li class="nav-item active">
+	                        <i class="fa-solid fa-caret-right"></i>
+	                        <span>Cadastrar Endereços</span>
+	                    </li>
+	                </ul>
+	            </div>
+	        </nav>
+	    </div>
+	    <div class="container" id="cadastro-endereco">
+	        <form th:action="@{/clientes/salvar-enderecos}" method="POST">
+	            <input type="hidden" name="clienteId" th:value="${clienteId}" />
+	
+	            <hr/>
+	            <h4>Endereço de Faturamento</h4>
+	            <div th:object="${enderecoFaturamento}">
+	                <input type="hidden" th:field="*{tipo}" th:value="'FATURAMENTO'" name="tipoFaturamento"/>
+	
+	                <div class="row">
+	                    <div class="mb-3 col-md-2">
+	                        <label>CEP</label>
+	                        <input type="text" class="form-control" th:field="*{cep}" id="cepFaturamento" name="cepFaturamento" required/>
+	                    </div>
+	                    <div class="mb-3 col-md-5">
+	                        <label>Logradouro</label>
+	                        <input type="text" class="form-control" th:field="*{logradouro}" id="logradouroFaturamento" name="logradouroFaturamento" required/>
+	                    </div>
+	                    <div class="mb-3 col-md-2">
+	                        <label>Número</label>
+	                        <input type="number" class="form-control" th:field="*{numero}" id="numeroFaturamento" name="numeroFaturamento" required/>
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="mb-3 col-md-4">
+	                        <label>Complemento</label>
+	                        <input type="text" class="form-control" th:field="*{complemento}" id="complementoFaturamento" name="complementoFaturamento"/>
+	                    </div>
+	                    <div class="mb-3 col-md-5">
+	                        <label>Bairro</label>
+	                        <input type="text" class="form-control" th:field="*{bairro}" id="bairroFaturamento" name="bairroFaturamento"/>
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="mb-3 col-md-7">
+	                        <label>Cidade</label>
+	                        <input type="text" class="form-control" th:field="*{cidade}" id="cidadeFaturamento" name="cidadeFaturamento"/>
+	                    </div>
+	                    <div class="mb-3 col-md-2">
+	                        <label>UF</label>
+	                        <input type="text" class="form-control" th:field="*{uf}" id="ufFaturamento" name="ufFaturamento"/>
+	                    </div>
+	                </div>
+	            </div>
+	
+	            <hr />
+	
+	            <h4>Endereço de Entrega</h4>
+	            <div class="form-check mb-3">
+	                <input type="checkbox" class="form-check-input" id="copiarEndereco" onclick="copiarEnderecoFaturamento()">
+	                <label class="form-check-label" for="copiarEndereco">
+	                    Usar o mesmo endereço de faturamento
+	                </label>
+	            </div>
+	
+	            <div th:object="${enderecoEntrega}">
+	                <input type="hidden" th:field="*{tipo}" th:value="'ENTREGA'" name="tipoEntrega"/>
+	
+	                <div class="row">
+	                    <div class="mb-3 col-md-2">
+	                        <label>CEP</label>
+	                        <input type="text" class="form-control" th:field="*{cep}" id="cepEntrega" name="cepEntrega" required/>
+	                    </div>
+	                    <div class="mb-3 col-md-5">
+	                        <label>Logradouro</label>
+	                        <input type="text" class="form-control" th:field="*{logradouro}" id="logradouroEntrega" name="logradouroEntrega" required/>
+	                    </div>
+	                    <div class="mb-3 col-md-2">
+	                        <label>Número</label>
+	                        <input type="text" class="form-control" th:field="*{numero}" id="numeroEntrega" name="numeroEntrega" required/>
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="mb-3 col-md-4">
+	                        <label>Complemento</label>
+	                        <input type="text" class="form-control" th:field="*{complemento}" id="complementoEntrega" name="complementoEntrega"/>
+	                    </div>
+	                    <div class="mb-3 col-md-5">
+	                        <label>Bairro</label>
+	                        <input type="text" class="form-control" th:field="*{bairro}" id="bairroEntrega" name="bairroEntrega"/>
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="mb-3 col-md-7">
+	                        <label>Cidade</label>
+	                        <input type="text" class="form-control" th:field="*{cidade}" id="cidadeEntrega" name="cidadeEntrega"/>
+	                    </div>
+	                    <div class="mb-3 col-md-2">
+	                        <label>UF</label>
+	                        <input type="text" class="form-control" th:field="*{uf}" id="ufEntrega" name="ufEntrega"/>
+	                    </div>
+	                </div>
+	            </div>
+	
+	            <button type="submit" class="btn btn-primary">Salvar Endereços</button>
+	            <a th:href="@{/clientes/cadastrar}" class="btn btn-secondary">Voltar para Cliente</a>
+	        </form>
+	    </div>
+	</section>
+
+</body>
+</html>		

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<head>
+	<title>RGDI Store - Home Admin</title>	
+</head>
+<body>			
+	<section class="layout-content" layout:fragment="corpo">	
+		<nav class="navbar navbar-expand-md bg-light">
+			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<i class="fa-solid fa-caret-right"></i>
+						<span>Home</span>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<div class="container">
+			<h2>Home Cliente</h2>
+			
+			  <p>Seja Bem vindo(a) <span th:text="${userName}">Guest</span>!</p>
+		</div>
+		
+	</section>
+</body>
+</html>

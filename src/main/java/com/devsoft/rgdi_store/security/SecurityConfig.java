@@ -6,11 +6,11 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import com.devsoft.rgdi_store.controllers.handlers.CustomAuthenticationFailureHandler;
+import com.devsoft.rgdi_store.controllers.handlers.CustomAuthenticationFailureHandlerLoja;
 import com.devsoft.rgdi_store.controllers.handlers.CustomNoAuthenticatedHandler;
+import com.devsoft.rgdi_store.controllers.handlers.CustomNoAuthenticatedHandlerLoja;
 
 @Configuration
 @EnableWebSecurity
@@ -18,11 +18,16 @@ public class SecurityConfig {
 
 	private final CustomNoAuthenticatedHandler customNoAuthenticatedHandler;
     private final CustomAuthenticationFailureHandler customFailureHandler;
+    private final CustomNoAuthenticatedHandlerLoja customNoAuthenticatedHandlerLoja;
+    private final CustomAuthenticationFailureHandlerLoja customFailureHandlerLoja;
 
     public SecurityConfig(CustomNoAuthenticatedHandler usuarioInativoHandler,
-                          CustomAuthenticationFailureHandler customFailureHandler) {
+                          CustomAuthenticationFailureHandler customFailureHandler, CustomNoAuthenticatedHandlerLoja
+                          clienteInativoHandler, CustomAuthenticationFailureHandlerLoja customFailureHandlerLoja) {
         this.customNoAuthenticatedHandler = usuarioInativoHandler;
         this.customFailureHandler = customFailureHandler;
+        this.customNoAuthenticatedHandlerLoja = clienteInativoHandler;
+        this.customFailureHandlerLoja = customFailureHandlerLoja;
     }
     
 	   
@@ -30,13 +35,17 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 	    http.securityMatcher("/**") // Aplica a segurança para todas as rotas
 	        .authorizeHttpRequests(auth -> auth
-        	.requestMatchers("/", "/produtos/loja/**", "/produto-imagens/imagem-principal/**", "/produtos/detalhes/**","/produto-imagens/detalhes/**","/carrinho/**", "/upload/**", "/uploads/**", "/css/**", "/js/**").permitAll()
-	            .requestMatchers("/login", "/webjars/**", "/image/**", "/error-login", "/error-user-inat", "/access-denied",
-	                             "/error-no-perm", "/error-no-auth", "/auth", "/api/files",
-	                             "/uploads/**", "/list").permitAll()
+        	.requestMatchers("/css/**", "/js/**", "/image/**", "/webjars/**", "/upload/**", "/uploads/**", "/list", "/auth").permitAll()
+        		.requestMatchers("/", "/clientes/cadastrar", "/clientes/salvar-cliente", "/clientes/salvar-enderecos/**", "/clientes/cadastrar-endereco/**", "/clientes/detalhes/**").permitAll()
+        		.requestMatchers("/produtos/loja/**", "/produto-imagens/imagem-principal/**" ,
+            			"/produto-imagens/detalhes/**", "/produtos/detalhes/**","/carrinho/**").permitAll()
+	            .requestMatchers("/login", "/clientes/login").permitAll()
+	            .requestMatchers("/error-login", "/error-user-inat",
+        				"/access-denied", "/error-no-perm", "/error-no-auth").permitAll()
 	            .requestMatchers("/usuarios/**", "/h2-console/**", "/username/**").hasAuthority("ROLE_ADMIN")
 	            .requestMatchers("/produtos/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers("/admin").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
+	            .requestMatchers("/cliente").hasAnyAuthority("ROLE_USER")
 	            .requestMatchers("/front-adm").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers("/produto-imagens/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .anyRequest().authenticated() // Qualquer outra rota requer autenticação
@@ -70,10 +79,5 @@ public class SecurityConfig {
 	        .headers(headers -> headers.frameOptions().sameOrigin());
 
 	    return http.build();    	
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }

@@ -58,7 +58,7 @@
 					        <td colspan="6" class="text-center text-danger">Nenhum usuário encontrado</td>
 					    </tr>
 					    
-			            <tr th:each="user, iterStat : ${usuarios}">
+			            <tr th:each="user, iterStat : ${usuarios}" th:disabled="${isAdmin}">
 			                <td th:text="${user.id}"></td> <!-- Número sequencial -->
 			                <td th:text="${user.nome}"></td> <!-- Nome do usuário -->
 			                <td th:text="${user.email}"></td> <!-- Email do usuário -->	
@@ -72,7 +72,7 @@
 							    </button>
 							    <div class="form-check">
 						            <input class="form-check-input" type="checkbox" 
-						                   th:checked="${user.status}" 
+						                   th:checked="${user.status}"
 						                   th:attr="onchange= 'toggleStatusUser(this, ' + ${user.id} + ')'" />
 						            <label class="form-check-label">
 						                <span>Ativo</span> <!-- Texto fixo ao lado do checkbox -->
@@ -141,11 +141,13 @@
 			                    <div class="form-group">
 			                        <label for="grupo">Grupo</label>
 			                        <select class="form-control" id="grupo" name="grupo">
-			                            <option value="">Selecione...</option>
-			                            <option value="ROLE_ADMIN">Administrador</option>
-							            <option value="ROLE_ESTOQ">Estoquista</option>
-							       		<option value="ROLE_USER">Cliente</option>
-			                        </select>
+									    <option value="">Selecione...</option>
+									    <option value="ROLE_ADMIN">Administrador</option>
+									    <option value="ROLE_ESTOQ">Estoquista</option>
+									    <option value="ROLE_USER">Cliente</option>
+									</select>
+
+
 			                        <div class="invalid-feedback" id="grupoError" style="display: none;"></div>
 			                    </div>			                   
 			                </div>

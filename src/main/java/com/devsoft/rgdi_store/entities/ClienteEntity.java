@@ -1,7 +1,6 @@
 package com.devsoft.rgdi_store.entities;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,7 +25,7 @@ public class ClienteEntity {
     private Long id;    
     private String nome;
     private Date dataNascimento;
-    @Enumerated(EnumType.STRING) // Armazena o nome do enum (e.g., "FATURAMENTO", "ENTREGA")
+    @Enumerated(EnumType.STRING) // Armazena o nome do enum (e.g., "MASCULINO", "FEMININO", etc)
     private ClienteGenero genero;
     @Column(unique = true)
     private String cpf;
@@ -46,7 +45,6 @@ public class ClienteEntity {
 
 	public ClienteEntity(Long id, String nome, Date dataNascimento, ClienteGenero genero, String cpf, String email,
 			String senha, UserGroup grupo) {
-		super();
 		this.id = id;
 		this.nome = nome;
 		this.dataNascimento = dataNascimento;
@@ -57,26 +55,23 @@ public class ClienteEntity {
 		this.grupo = UserGroup.ROLE_USER; // Define o grupo como ROLE_USER
 	}
 
-
-	//Construtor para adicionar endereços
-	public ClienteEntity(String nome) {
-        this.nome = nome;
-        this.enderecos = new ArrayList<>();
-    }    
-
-	public List<EnderecoEntity> getEnderecos() {
-		return enderecos;
+	public ClienteEntity(Long id, String nome, Date dataNascimento, ClienteGenero genero, String cpf, String email,
+			String senha) {
+		this.id = id;
+		this.nome = nome;
+		this.dataNascimento = dataNascimento;
+		this.genero = genero;
+		this.cpf = cpf;
+		this.email = email;
+		this.senha = senha;
 	}
     
-    public void adicionarEndereco(EnderecoEntity endereco) {
-        this.enderecos.add(endereco);
-    } 
 	
 	
     //Demais Getters and Setters
     public Long getId() {
 		return id;
-	}
+	}	
 
 	public void setId(Long id) {
 		this.id = id;
@@ -136,6 +131,14 @@ public class ClienteEntity {
 
 	public void setGrupo(UserGroup grupo) {
 		this.grupo = grupo;
+	}	
+
+	public List<EnderecoEntity> getEnderecos() {
+		return enderecos;
+	}
+	
+	public void setEnderecos(List<EnderecoEntity> enderecos) {
+		this.enderecos = enderecos;
 	}
 	
 

@@ -3,7 +3,7 @@ package com.devsoft.rgdi_store.entities;
 public enum UserGroup {
     ROLE_ADMIN("Administrador"),
     ROLE_ESTOQ("Estoquista"),
-    ROLE_USER("Cliente");
+    ROLE_USER("User");
 
     private final String descricao;
 

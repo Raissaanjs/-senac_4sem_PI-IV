@@ -34,7 +34,7 @@ public class GlobalModelControllerAdvice {
             if (user != null) {
                 model.addAttribute("userName", user.getNome());  // Nome do usuário autenticado
             } else {
-                model.addAttribute("userName", "Guest");  // Caso não encontre, coloca como "Guest"
+                model.addAttribute("userName", "Visitante");  // Caso não encontre, coloca como "Visitante"
             }
 
             // Verifica as funções do usuário

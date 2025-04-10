@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net/thymeleaf/layout" 
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>    
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>RGDI Store - Cadastro de Clientes</title>
+    <link rel="icon" href="/image/favicon.png"/>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  
+    <!-- Custom styles for this template -->
+    <link href="/css/style.css" rel="stylesheet"/>
+    <link href="/css/_position.css" rel="stylesheet"/>
+</head>
+<body>
+    <header>
+		<nav class="navbar navbar-inverse navbar navbar-dark bg-dark fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="btn btn-dark navbar-toggle pull-left">
+						<i class="fa-solid fa-bars"></i>
+					</button>
+					<a class="navbar-brand" href="/admin"><img th:src="@{/image/logo_50X50.png}" alt="Logo"></a>
+
+				</div>
+				
+				<div class="navbar-header-right d-flex align-items-center" th:if="${isUser}">
+                <!-- Exibe o nome do usuário -->
+                	 <!-- Exibe o nome do usuário --> 					 
+				    <form th:action="@{/logout}" method="post">
+				        <button type="submit" class="btn btn-dark">
+				        <span class="mr-3" th:text="${userName}">Visitante</span>
+				        	<br/>
+					        <i class="fa-solid fa-right-from-bracket"></i> <strong>Sair</strong>
+					    </button>
+				    </form>
+				</div>
+			</div>
+		</nav>
+	</header>
+    
+    <div class="layout-main">    
+        <aside>
+            <nav class="sidebar  sidebar-open" th:if="${isUser}">
+            	<ul class="nav nav-pills">
+					<li class="nav-item"><a class="nav-link " href="/cliente"> 
+					<i class="fa-solid fa-house"></i> <span>Home</span>
+					</a></li>
+				</ul> 
+                <ul class="nav nav-pills">
+                    <li class="nav-item"><span class="nav-link active">Cliente</span></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            href="/clientes/cadastrar"> <i class="fa-solid fa-plus"></i> <span>Cadastrar Cliente</span>
+                    </a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            href="/enderecos/cadastrar"> <i class="fa-solid fa-plus"></i> <span>Cadastrar Endereço</span>
+                    </a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            href="/#"> <i class="fa-solid fa-table-list"></i> <span>Listar</span>
+                    </a></li>
+                </ul>   
+            </nav>
+        </aside>
+    
+        <section class="layout-content" layout:fragment="corpo">
+	    	<h5>Home</h5>
+		</section>
+    
+    </div>
+    
+    <footer class="footer-edit">
+        <div class="container">
+            <span class="footer-copy">Copyright &copy; <script>document.write(new Date().getFullYear())</script> - RGDI Store<span th:if="${isUser}"> - Painel Cliente</span></span>
+        </div>
+    </footer>
+   
+	    
+    <!-- Bootstrap core JavaScript -->
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>    
+   
+	<script>
+        
+	    function copiarEnderecoFaturamento() {
+	        const campos = [
+	            "cep",
+	            "logradouro",
+	            "numero",
+	            "complemento",
+	            "bairro",
+	            "cidade",
+	            "uf"
+	        ];
+	
+	        const copiar = document.getElementById("copiarEndereco").checked;
+	
+	        campos.forEach(campo => {
+	            const campoFat = document.getElementById(`${campo}Faturamento`);
+	            const campoEnt = document.getElementById(`${campo}Entrega`);
+	            if (campoFat && campoEnt) {
+	                campoEnt.value = copiar ? campoFat.value : '';
+	            }
+	        });
+	    }
+        
+        function buscarEndereco(cepInputId, tipoEndereco) {
+        const cep = document.getElementById(cepInputId).value.replace(/\D/g, '');
+
+        if (!/^\d{8}$/.test(cep)) {
+            console.warn("CEP inválido");
+            return;
+        }
+
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.erro) {
+                    alert("CEP não encontrado.");
+                    return;
+                }
+
+                document.getElementById(`logradouro${tipoEndereco}`).value = data.logradouro || '';
+                document.getElementById(`bairro${tipoEndereco}`).value = data.bairro || '';
+                document.getElementById(`cidade${tipoEndereco}`).value = data.localidade || '';
+                document.getElementById(`uf${tipoEndereco}`).value = data.uf || '';
+            })
+            .catch(() => alert("Erro ao buscar o CEP."));
+    }
+
+    function copiarEnderecoFaturamento() {
+        const campos = ["cep", "logradouro", "numero", "complemento", "bairro", "cidade", "uf"];
+        const usarMesmoEndereco = document.getElementById("copiarEndereco").checked;
+
+        campos.forEach(campo => {
+            const origem = document.getElementById(`${campo}Faturamento`);
+            const destino = document.getElementById(`${campo}Entrega`);
+            destino.value = usarMesmoEndereco ? origem.value : '';
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("cepFaturamento").addEventListener("blur", function () {
+            buscarEndereco("cepFaturamento", "Faturamento");
+        });
+
+        document.getElementById("cepEntrega").addEventListener("blur", function () {
+            buscarEndereco("cepEntrega", "Entrega");
+        });
+    });
+    </script>
+
+
+
+</body>
+</html>

@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.devsoft.rgdi_store.dto.ProdutoDto;
 import com.devsoft.rgdi_store.dto.ProdutoMapper;
 import com.devsoft.rgdi_store.entities.ProdutoEntity;
-import com.devsoft.rgdi_store.repositories.ProdutoImagensRepository;
 import com.devsoft.rgdi_store.repositories.ProdutoRepository;
 import com.devsoft.rgdi_store.services.exceptions.ResourceNotFoundException;
 
@@ -25,9 +24,6 @@ public class ProdutoService {
 
     @Autowired
     private ProdutoRepository repository;
-    
-    @Autowired
-    private ProdutoImagensRepository produtoImagensRepository;
     
     public List<ProdutoEntity> findAllIndex() {
         return repository.findAll(); // Aqui usamos o método findAll do repositório
