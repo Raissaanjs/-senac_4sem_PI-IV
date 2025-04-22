@@ -69,26 +69,30 @@
 			            
 			        </tbody>
 			    </table>
-			</div>		
-			
-			<!-- 
+			</div>			
+			 
 			<div th:if="${page != null}">
-				<div>
-					Página <span th:text="${page.number + 1}"></span> de <span
-						th:text="${page.totalPages}"></span>
-				</div>
-				<div>
-					<a th:if="${page.hasPrevious()}"
-						th:href="@{/produtos/buscar-nome(nome=${nome}, page=${page.number - 1}, size=${page.size})}">
-						Anterior </a> <a th:if="${page.hasNext()}"
-						th:href="@{/produtos/buscar-nome(nome=${nome}, page=${page.number + 1}, size=${page.size})}">
-						Próximo </a>
-				</div>
+			    <div>
+			        Página <span th:text="${page.number + 1}"></span> de 
+			        <span th:text="${page.totalPages}"></span>
+			    </div>
+			
+			    <div>
+			        <a class="sem-sublinhado" th:if="${!page.first}" 
+			           th:href="@{|?page=${page.number - 1}&size=${page.size}|}">
+			            ← Página Anterior
+			        </a>
+			
+			        <a class="sem-sublinhado" th:if="${!page.last}" 
+			           th:href="@{|?page=${page.number + 1}&size=${page.size}|}">
+			            Próxima Página →
+			        </a>
+			    </div>
 			</div>
+			
 			<div th:if="${produtosImage.empty}">
-				<p>Nenhum registro encontrado.</p>
+			    <p>Nenhum registro encontrado.</p>
 			</div>
-			 -->
 			 
 			 <!-- Modal para editar imagem -->
 			<div class="modal fade" id="OpenEditImgProdModal" tabindex="-1" aria-labelledby="editImageModalLabel" aria-hidden="true">

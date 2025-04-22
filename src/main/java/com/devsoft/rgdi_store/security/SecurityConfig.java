@@ -2,15 +2,18 @@ package com.devsoft.rgdi_store.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+
 import com.devsoft.rgdi_store.controllers.handlers.CustomAuthenticationFailureHandler;
-import com.devsoft.rgdi_store.controllers.handlers.CustomAuthenticationFailureHandlerLoja;
+import com.devsoft.rgdi_store.controllers.handlers.CustomAuthenticationFailureHandlerCliente;
 import com.devsoft.rgdi_store.controllers.handlers.CustomNoAuthenticatedHandler;
-import com.devsoft.rgdi_store.controllers.handlers.CustomNoAuthenticatedHandlerLoja;
+import com.devsoft.rgdi_store.controllers.handlers.CustomNoAuthenticatedHandlerCliente;
 
 @Configuration
 @EnableWebSecurity
@@ -18,34 +21,30 @@ public class SecurityConfig {
 
 	private final CustomNoAuthenticatedHandler customNoAuthenticatedHandler;
     private final CustomAuthenticationFailureHandler customFailureHandler;
-    private final CustomNoAuthenticatedHandlerLoja customNoAuthenticatedHandlerLoja;
-    private final CustomAuthenticationFailureHandlerLoja customFailureHandlerLoja;
 
     public SecurityConfig(CustomNoAuthenticatedHandler usuarioInativoHandler,
-                          CustomAuthenticationFailureHandler customFailureHandler, CustomNoAuthenticatedHandlerLoja
-                          clienteInativoHandler, CustomAuthenticationFailureHandlerLoja customFailureHandlerLoja) {
+                          CustomAuthenticationFailureHandler customFailureHandler) {
         this.customNoAuthenticatedHandler = usuarioInativoHandler;
         this.customFailureHandler = customFailureHandler;
-        this.customNoAuthenticatedHandlerLoja = clienteInativoHandler;
-        this.customFailureHandlerLoja = customFailureHandlerLoja;
     }
     
 	   
 	@Bean
+	@Order(2)
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-	    http.securityMatcher("/**") // Aplica a segurança para todas as rotas
+	    http
 	        .authorizeHttpRequests(auth -> auth
-        	.requestMatchers("/css/**", "/js/**", "/image/**", "/webjars/**", "/upload/**", "/uploads/**", "/list", "/auth").permitAll()
-        		.requestMatchers("/", "/clientes/cadastrar", "/clientes/salvar-cliente", "/clientes/salvar-enderecos/**", "/clientes/cadastrar-endereco/**", "/clientes/detalhes/**").permitAll()
+	        	.requestMatchers("/", "/css/**", "/js/**", "/image/**", "/webjars/**", "/upload/**", "/uploads/**", "/list", "/auth").permitAll()
         		.requestMatchers("/produtos/loja/**", "/produto-imagens/imagem-principal/**" ,
             			"/produto-imagens/detalhes/**", "/produtos/detalhes/**","/carrinho/**").permitAll()
-	            .requestMatchers("/login", "/clientes/login").permitAll()
+	            .requestMatchers("/login", "/login-cliente").permitAll()
 	            .requestMatchers("/error-login", "/error-user-inat",
         				"/access-denied", "/error-no-perm", "/error-no-auth").permitAll()
-	            .requestMatchers("/usuarios/**", "/h2-console/**", "/username/**").hasAuthority("ROLE_ADMIN")
-	            .requestMatchers("/produtos/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
+	            .requestMatchers("/usuarios/**", "/username/**").hasAuthority("ROLE_ADMIN")
+	            .requestMatchers("/produtos/listar/**","/produtos/detalhes/**" ,"/produtos/update/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
+	            .requestMatchers(HttpMethod.PUT, "/produtos/*/status").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
+	            .requestMatchers("/produtos/**").hasAnyAuthority("ROLE_ADMIN")	            
 	            .requestMatchers("/admin").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
-	            .requestMatchers("/cliente").hasAnyAuthority("ROLE_USER")
 	            .requestMatchers("/front-adm").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers("/produto-imagens/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .anyRequest().authenticated() // Qualquer outra rota requer autenticação

@@ -8,39 +8,46 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.devsoft.rgdi_store.controllers.handlers.CustomAuthenticationFailureHandlerLoja;
-import com.devsoft.rgdi_store.controllers.handlers.CustomNoAuthenticatedHandlerLoja;
+import com.devsoft.rgdi_store.controllers.handlers.CustomAuthenticationFailureHandlerCliente;
+import com.devsoft.rgdi_store.controllers.handlers.CustomNoAuthenticatedHandlerCliente;
 
 @Configuration
 @EnableWebSecurity
-@Order(1)  // Colocando a configuração do cliente com prioridade (menor valor)
 public class SecurityConfigClient {
 
-    private final CustomNoAuthenticatedHandlerLoja customNoAuthenticatedHandlerLoja;
-    private final CustomAuthenticationFailureHandlerLoja customFailureHandlerLoja;
+    private final CustomNoAuthenticatedHandlerCliente customNoAuthenticatedHandlerCliente;
+    private final CustomAuthenticationFailureHandlerCliente customFailureHandlerCliente;
 
-    public SecurityConfigClient(CustomNoAuthenticatedHandlerLoja clienteInativoHandler,
-                                CustomAuthenticationFailureHandlerLoja customFailureHandler) {
-        this.customNoAuthenticatedHandlerLoja = clienteInativoHandler;
-        this.customFailureHandlerLoja = customFailureHandler;
+    public SecurityConfigClient(CustomNoAuthenticatedHandlerCliente clienteInativoHandler,
+                                CustomAuthenticationFailureHandlerCliente customFailureHandler) {
+        this.customNoAuthenticatedHandlerCliente = clienteInativoHandler;
+        this.customFailureHandlerCliente = customFailureHandler;
     }
 
     @Bean
+    @Order(1)
     public SecurityFilterChain clientSecurityFilterChain(HttpSecurity http) throws Exception {
         http.securityMatcher("/clientes/**")  // Aplica segurança apenas para rotas de cliente
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/clientes/cadastrar", "/clientes/login", "/clientes/registrar").permitAll()  // Permite o cadastro e login
+            	.requestMatchers("/clientes/cadastrar", "/clientes/salvar-cliente/**", 
+        				"/clientes/detalhes/**").permitAll()
+        		.requestMatchers("/error-login-cliente", "/error-cliente-inat",
+        				"/error-no-perm-cliente", "/error-no-auth-cliente").permitAll()
+        		.requestMatchers("/clientes/cadastrar-enderecos/**", "/clientes/cadastrar-endereco/**",
+        				"/clientes/salvar-enderecos/**", "/clientes/salvar-endereco-faturamento-inicial/**",
+        				"/clientes/salvar-endereco-entrega/**").permitAll()
+	            .requestMatchers("/cliente").hasAnyAuthority("ROLE_CLIENT", "ROLE_ADMIN")
                 .anyRequest().authenticated()  // Qualquer outra rota do cliente requer autenticação
             )
             .formLogin(form -> form
-                .loginPage("/clientes/login")  // Página de login personalizada para cliente
+                .loginPage("/login-cliente")  // Página de login personalizada para cliente
                 .usernameParameter("email")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/carrinho", true)  // Redireciona após login bem-sucedido
-                .failureHandler(customFailureHandlerLoja)  // Handler personalizado para falhas
+                .defaultSuccessUrl("/cliente", true)  // Redireciona após login bem-sucedido
+                .failureHandler(customFailureHandlerCliente)  // Handler personalizado para falhas
             )
             .logout(logout -> logout
-                .logoutUrl("/cliente/logout")  // URL de logout do cliente
+                .logoutUrl("/logout")  // URL de logout do cliente
                 .logoutSuccessUrl("/")  // Redireciona após logout
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
@@ -49,12 +56,12 @@ public class SecurityConfigClient {
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .maximumSessions(1)
-                .expiredUrl("/clientes/login?expired=true")
+                .expiredUrl("/login-cliente?expired=true")
                 .maxSessionsPreventsLogin(false)
             )
             .exceptionHandling(exceptions -> exceptions
-                .authenticationEntryPoint(customNoAuthenticatedHandlerLoja)
-                .accessDeniedPage("/error-no-perm")
+                .authenticationEntryPoint(customNoAuthenticatedHandlerCliente)
+                .accessDeniedPage("/error-no-perm-cliente")
             )
             .csrf(csrf -> csrf.disable())  // Desabilita CSRF para facilitar testes no Postman
             .headers(headers -> headers.frameOptions().sameOrigin());

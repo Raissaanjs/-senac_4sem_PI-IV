@@ -88,11 +88,12 @@
 						th:text="${page.totalPages}"></span>
 				</div>
 				<div>
-					<a th:if="${page.hasPrevious()}"
+					<a class="sem-sublinhado" th:if="${page.hasPrevious()}"
 						th:href="@{/produtos/buscar-nome(nome=${nome}, page=${page.number - 1}, size=${page.size})}">
-						Anterior </a> <a th:if="${page.hasNext()}"
+						← Página Anterior </a>
+					<a class="sem-sublinhado" th:if="${page.hasNext()}"
 						th:href="@{/produtos/buscar-nome(nome=${nome}, page=${page.number + 1}, size=${page.size})}">
-						Próximo </a>
+						Próxima Página → </a>
 				</div>
 			</div>
 			<div th:if="${produtos.empty}">

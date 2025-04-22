@@ -37,6 +37,7 @@
 				    <form th:action="@{/logout}" method="post">
 				        <button type="submit" class="btn btn-dark">
 				        <span class="mr-3" th:text="${userName}">Visitante</span>
+				        <span class="badge ml-2" th:text="${userGroup}">Grupo</span>
 				        	<br/>
 					        <i class="fa-solid fa-right-from-bracket"></i> <strong>Sair</strong>
 					    </button>
@@ -83,12 +84,9 @@
                                             href="/produto-imagens/listar"> <i class="fa-solid fa-table-list"></i> <span>Listar </span>
                     </a></li>
                 </ul> 
-                <ul class="nav nav-pills">
-                    <li class="nav-item"><span class="nav-link active">Cliente</span></li>
-                    <li class="nav-item"><a class="nav-link"
-                                            href="/clientes/cadastrar"> <i class="fa-solid fa-plus"></i> <span>Cadastrar Cliente</span>
-                    </a></li>
-                    <li class="nav-item"><a class="nav-link"
+                <ul class="nav nav-pills" th:if="${isAdmin or isEstoque or isClient}">
+                    <li class="nav-item"><span class="nav-link active">Cliente</span></li>                    
+                    <li class="nav-item" th:if="${isAdmin}"><a class="nav-link"
                                             href="/enderecos/cadastrar"> <i class="fa-solid fa-plus"></i> <span>Cadastrar Endereço</span>
                     </a></li>
                     <li class="nav-item"><a class="nav-link"

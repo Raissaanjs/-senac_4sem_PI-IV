@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
+//@EnableFeignClients //para consumo de API
 @ComponentScan(basePackages = "com.devsoft.rgdi_store") // Ajuste o pacote conforme necessário
 public class RgdiStoreApplication {
     public static void main(String[] args) {

@@ -48,17 +48,14 @@
     
     <div class="layout-main">    
         <aside>
-            <nav class="sidebar  sidebar-open" th:if="${isUser}">
+            <nav class="sidebar  sidebar-open" th:if="${isClient}">
             	<ul class="nav nav-pills">
 					<li class="nav-item"><a class="nav-link " href="/cliente"> 
 					<i class="fa-solid fa-house"></i> <span>Home</span>
 					</a></li>
 				</ul> 
                 <ul class="nav nav-pills">
-                    <li class="nav-item"><span class="nav-link active">Cliente</span></li>
-                    <li class="nav-item"><a class="nav-link"
-                                            href="/clientes/cadastrar"> <i class="fa-solid fa-plus"></i> <span>Cadastrar Cliente</span>
-                    </a></li>
+                    <li class="nav-item"><span class="nav-link active">Cliente</span></li>                    
                     <li class="nav-item"><a class="nav-link"
                                             href="/enderecos/cadastrar"> <i class="fa-solid fa-plus"></i> <span>Cadastrar Endereço</span>
                     </a></li>
@@ -88,62 +85,47 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>    
    
-	<script>
-        
-	    function copiarEnderecoFaturamento() {
-	        const campos = [
-	            "cep",
-	            "logradouro",
-	            "numero",
-	            "complemento",
-	            "bairro",
-	            "cidade",
-	            "uf"
-	        ];
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+	    const btnAdicionarEntrega = document.getElementById('btnAdicionarEntrega');
+	    const enderecoEntregaSection = document.getElementById('enderecoEntregaSection');
+	    const formFaturamento = document.getElementById('formFaturamento');
+	    const clienteId = /*[[${clienteId}]]*/ null; // Recupera o clienteId do Thymeleaf
 	
-	        const copiar = document.getElementById("copiarEndereco").checked;
+	    if (formFaturamento) {
+	        formFaturamento.addEventListener('submit', function (event) {
+	            event.preventDefault();
 	
-	        campos.forEach(campo => {
-	            const campoFat = document.getElementById(`${campo}Faturamento`);
-	            const campoEnt = document.getElementById(`${campo}Entrega`);
-	            if (campoFat && campoEnt) {
-	                campoEnt.value = copiar ? campoFat.value : '';
-	            }
+	            const formData = new FormData(formFaturamento);
+	            fetch('/clientes/salvar-endereco-faturamento-inicial', {
+	                method: 'POST',
+	                body: formData,
+	            })
+	                .then(response => response.json())
+	                .then(data => {
+	                    enderecoEntregaSection.style.display = 'block';
+	                    btnAdicionarEntrega.disabled = true;
+	                })
+	                .catch(error => {
+	                    console.error('Erro ao salvar endereço de faturamento:', error);
+	                    alert('Erro ao salvar endereço de faturamento.');
+	                });
 	        });
+	    } else {
+	        console.warn('formFaturamento não encontrado no DOM.');
 	    }
-        
-        function buscarEndereco(cepInputId, tipoEndereco) {
-        const cep = document.getElementById(cepInputId).value.replace(/\D/g, '');
+	});
 
-        if (!/^\d{8}$/.test(cep)) {
-            console.warn("CEP inválido");
-            return;
-        }
-
-        fetch(`https://viacep.com.br/ws/${cep}/json/`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.erro) {
-                    alert("CEP não encontrado.");
-                    return;
-                }
-
-                document.getElementById(`logradouro${tipoEndereco}`).value = data.logradouro || '';
-                document.getElementById(`bairro${tipoEndereco}`).value = data.bairro || '';
-                document.getElementById(`cidade${tipoEndereco}`).value = data.localidade || '';
-                document.getElementById(`uf${tipoEndereco}`).value = data.uf || '';
-            })
-            .catch(() => alert("Erro ao buscar o CEP."));
-    }
-
+	//Preencher o Endereço de Entrega como o mesmo do faturamento
     function copiarEnderecoFaturamento() {
-        const campos = ["cep", "logradouro", "numero", "complemento", "bairro", "cidade", "uf"];
         const usarMesmoEndereco = document.getElementById("copiarEndereco").checked;
-
+        const campos = ["cep", "logradouro", "numero", "complemento", "bairro", "cidade", "uf"];
         campos.forEach(campo => {
             const origem = document.getElementById(`${campo}Faturamento`);
             const destino = document.getElementById(`${campo}Entrega`);
-            destino.value = usarMesmoEndereco ? origem.value : '';
+            if (origem && destino) {
+                destino.value = usarMesmoEndereco ? origem.value : '';
+            }
         });
     }
 
@@ -156,9 +138,37 @@
             buscarEndereco("cepEntrega", "Entrega");
         });
     });
-    </script>
 
+	//API ViaCEP
+    function buscarEndereco(cepInputId, tipoEndereco) {
+        const cep = document.getElementById(cepInputId).value.replace(/\D/g, '');
 
+        if (!/^\d{8}$/.test(cep)) {
+            console.warn("CEP inválido");
+            return;
+        }
+
+        const campos = ['logradouro', 'bairro', 'cidade', 'uf'];
+        campos.forEach(campo => {
+            const input = document.getElementById(`${campo}${tipoEndereco}`);
+            if (input) input.value = '';
+        });
+
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.erro) {
+                    alert("CEP não encontrado.");
+                    return;
+                }
+                document.getElementById(`logradouro${tipoEndereco}`).value = data.logradouro || '';
+                document.getElementById(`bairro${tipoEndereco}`).value = data.bairro || '';
+                document.getElementById(`cidade${tipoEndereco}`).value = data.localidade || '';
+                document.getElementById(`uf${tipoEndereco}`).value = data.uf || '';
+            })
+            .catch(() => alert("Erro ao buscar o CEP."));
+    }
+</script>
 
 </body>
 </html>

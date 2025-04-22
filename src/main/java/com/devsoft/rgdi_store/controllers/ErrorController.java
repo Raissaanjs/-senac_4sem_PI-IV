@@ -31,6 +31,11 @@ public class ErrorController {
         return "error/error-access-denied"; // Renderiza o template access-denied.html
     }
     
+    @GetMapping("/error-no-perm-cliente")
+    public String errorPermCliente() {
+        return "error/error-cliente-access-denied"; // Renderiza o template access-denied.html
+    }
+    
     @GetMapping("/error-user-inat")
     public String loginErrorInative() {
         return "error/error-user-inative"; // Renderiza o template error-user-inative.html

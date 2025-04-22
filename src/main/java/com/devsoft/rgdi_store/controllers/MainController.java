@@ -51,26 +51,27 @@ public class MainController {
         return "frontadm"; // Exibe a página seleção (frontadm.html)
     }    
     
+    @GetMapping("/login")
+    public String loginAdmin() {
+        return "login"; // Exibe a página de login (login.html)
+    }
+    
     @GetMapping("/admin")
     public String posLogin() {
         return "home-admin"; // Renderiza o template home-admin.html
     }
     
+    @GetMapping("/login-cliente")
+    public String loginCliente() {
+        return "login-cliente";
+    }
+    
     @GetMapping("/cliente")
     public String posLoginCliente() {
         return "home-cliente"; // Renderiza o template home-admin.html
-    }
+    }   
     
-    @GetMapping("/login")
-    public String loginPage() {
-        return "login"; // Exibe a página de login (login.html)
-    }
-    
-    @GetMapping("/h2-console")
-    public String redirectToH2Console() {
-        return "redirect:/h2-console"; // Redireciona para o console do H2
-    }
-    
+    //endpoint de autenticação
     @GetMapping("/username")
     public String getUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

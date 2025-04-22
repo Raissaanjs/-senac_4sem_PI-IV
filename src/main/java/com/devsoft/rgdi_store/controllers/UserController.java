@@ -207,29 +207,6 @@ public class UserController {
 	    return ResponseEntity.ok(dto);
 	}
 	
-	//Update geral
-	//não esquecer o "@Validated" - necessario para validacao de campos
-	//@Validated (Criado grupo de validação definido o email não ser usado no "update")
-	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@PathVariable Long id, 
-	                                @Validated({ ValidationGroups.Update.class, Default.class }) 
-	                                @RequestBody UserDto dto, 
-	                                BindingResult bindingResult) {
-	    if (bindingResult.hasErrors()) {
-	        Map<String, String> errors = bindingResult.getFieldErrors()
-	            .stream()
-	            .collect(Collectors.toMap(
-	                FieldError::getField,
-	                FieldError::getDefaultMessage
-	            ));
-	        return ResponseEntity.badRequest().body(errors);
-	    }	   
-
-	    // Atualiza o usuário com os novos dados
-	    dto = userService.update(id, dto);
-	    return ResponseEntity.ok(dto);
-	}
-	
 	
 	//Alterna status
 	@PutMapping("/{id}/status")

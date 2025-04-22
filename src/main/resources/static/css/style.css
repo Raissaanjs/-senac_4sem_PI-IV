@@ -223,3 +223,13 @@ a.navbar-brand.navbar-brand-custom{
 .col-acao {
     width: 25% !important;
 }
+
+#enderecoEntregaSection {
+    display: none; /* Inicialmente invisível */
+}
+
+.sem-sublinhado {
+    text-decoration: none;
+    color: inherit; /* opcional: pra manter a cor do texto normal */
+    font-weight: bold;
+}
