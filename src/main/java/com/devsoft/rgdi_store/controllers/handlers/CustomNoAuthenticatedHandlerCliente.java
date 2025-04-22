@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class CustomNoAuthenticatedHandlerLoja implements AuthenticationEntryPoint {
+public class CustomNoAuthenticatedHandlerCliente implements AuthenticationEntryPoint {
 	
     public void commence(HttpServletRequest request, HttpServletResponse response, 
                          AuthenticationException authException) throws IOException {

@@ -18,11 +18,11 @@ import com.devsoft.rgdi_store.validation.base.PassValidation;
 public class ClienteValidationSaveService {
 
     // Método principal para validar todos os campos do cliente
-    public static void validateCliente(ClienteEntity cliente, ClienteRepository repository) {
+    public static void validateCliente(ClienteEntity cliente, ClienteRepository repository, String confirmaSenha) {
         validateName(cliente.getNome());
         validateCpf(cliente.getCpf(), repository);
         validateEmail(cliente.getEmail(), repository);
-        validatePassword(cliente.getSenha(), cliente.getSenha()); // usando a mesma senha como confirmação por enquanto
+        validatePassword(cliente.getSenha(), confirmaSenha);
     }
 
     // Validação do nome
@@ -54,11 +54,11 @@ public class ClienteValidationSaveService {
     }
 
     // Validação de senha e confirmação de senha (temporário - sem campo separado de confirmação)
-    private static void validatePassword(String senha, String confirmasenha) {
+    private static void validatePassword(String senha, String confirmaSenha) {
         if (!PassValidation.isValidPassword(senha)) {
             throw new InvalidPassException("A senha não pode ser nula e deve ter no mínimo 6 caracteres.");
         }
-        if (!ConfirmPassValidationNull.isPasswordMatching(senha, confirmasenha)) {
+        if (!ConfirmPassValidationNull.isPasswordMatching(senha, confirmaSenha)) {
             throw new ConfirmPassNullException("As senhas não coincidem.");
         }
     }

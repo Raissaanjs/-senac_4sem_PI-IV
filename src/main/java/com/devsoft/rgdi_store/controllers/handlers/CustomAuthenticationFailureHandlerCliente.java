@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class CustomAuthenticationFailureHandlerLoja implements AuthenticationFailureHandler {
+public class CustomAuthenticationFailureHandlerCliente implements AuthenticationFailureHandler {
     
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
