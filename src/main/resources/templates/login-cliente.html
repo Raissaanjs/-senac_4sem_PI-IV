@@ -3,28 +3,26 @@
 	xmlns:layout="http://www.ultraq.net/thymeleaf/layout"
 	layout:decorate="~{fragments/layoutindex}">
 <head>
-  <title>RGDI Store Loja - Carrinho de compras</title>
-  
-  <!-- https://bootsnipp.com/snippets/2eKOz - botão para aumentar ou diminuir quantidade-->
-  <!-- https://bootsnipp.com/snippets/84KX - url do carrinho -->
+  <title>Login Loja</title>
 </head>
-    <body>
-    	<header class="bg-dark py-5" layout:fragment="header">
+    <body>       
+        <header class="bg-dark py-5" layout:fragment="header">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
-                    <h3 class="fw-bolder">Seu Carrinho</h3>
+                    <h3 class="fw-bolder">Login</h3>
                     <!--
                     <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
                      -->
                 </div>
             </div>
-        </header>        
-        <!-- Section-->
-        <section class="py-5" layout:fragment="corpo">
-		    <form class=" " action="/clientes/login" method="post">
+        </header>
+		<section class="py-5" layout:fragment="corpo">	
+			<div class="container-login-cliente ">	    
+			<!-- Formulário de Login -->
+			<form class="form form-login" action="/clientes/login" method="post">
                
-                <div class="">
-                    <input type="email" class="" name="email" id="email" placeholder="Email" required>
+                <div class="form-input-container">
+                    <input type="email" class="form-input" name="email" id="email" placeholder="Email" required>
 					<input type="password" class="form-input" name="password" id="password" placeholder="Senha" required>
 
                 </div>
@@ -35,6 +33,9 @@
 			        </a>
 			    </div>
             </form>
-		</section>
-    </body>
+            </div>	  
+	  	</section>
+</body>
 </html>
+
+
