@@ -171,7 +171,34 @@
                 }
             });
         });
-        
+		
+		// Verifica carrinho vazio e frete não selecionado
+		document.addEventListener('DOMContentLoaded', function() {
+	        document.getElementById('finalizarCompra').addEventListener('click', function(event) {
+	            event.preventDefault(); // Previne o redirecionamento padrão
+	
+	            // Verifica se há itens no carrinho
+	            fetch('/carrinho/verificar')
+	                .then(response => response.json())
+	                .then(data => {
+	                    if (data.temItens) {
+	                        // Verifica se o frete foi escolhido
+	                        var tipoFrete = document.getElementById('tipoFrete').value;
+	                        if (tipoFrete === "") {
+	                            alert('Por favor, escolha um tipo de frete antes de finalizar a compra.');
+	                        } else {
+	                            window.location.href = '/login-cliente';
+	                        }
+	                    } else {
+	                        alert('Seu carrinho está vazio. Adicione itens antes de finalizar a compra.');
+	                    }
+	                })
+	                .catch(error => {
+	                    console.error('Erro ao verificar o carrinho:', error);
+	                    alert('Ocorreu um erro ao verificar o carrinho. Tente novamente mais tarde.');
+	                });
+	        });
+	    });
        
 	 </script>
     </body>

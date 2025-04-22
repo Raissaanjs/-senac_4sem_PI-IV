@@ -91,8 +91,8 @@
 		                        <td>   </td>
 		                        <td colspan="2"><h5 style="margin-left: 0.75rem;">Escolher Frete</h5></td>
 		                        <td colspan="2">
-		                            <form th:action="@{/carrinho/frete}" method="post">
-		                                <select name="tipoFrete" class="form-control">
+		                            <form id="formEscolherFrete" th:action="@{/carrinho/frete}" method="post">
+		                                <select id="tipoFrete" name="tipoFrete" class="form-control">
 		                                    <option value="">Clique Aqui e Escolha o Frete</option>
 		                                    <option value="correios">Correios</option>
 		                                    <option value="fedex">FedEx</option>
@@ -110,9 +110,9 @@
 		                            </a>
 		                        </td>
 		                        <td colspan="2">
-		                            <button type="button" class="btn btn-success w-100">
-		                                Finalizar Compra <span class="glyphicon glyphicon-play"></span>
-		                            </button>
+		                            <a id="finalizarCompra" type="button" class="btn btn-success w-100" th:href="@{/login-cliente}">
+		                                <span class="glyphicon glyphicon-play"></span>Finalizar Compra
+		                            </a>
 		                        </td>
 		                    </tr>
 		                </tbody>

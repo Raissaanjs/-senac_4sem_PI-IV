@@ -16,8 +16,11 @@ import jakarta.servlet.http.HttpSession;
 @Service
 public class CarrinhoService {
 
-    @Autowired
-    private ProdutoRepository produtoRepository;
+    private final ProdutoRepository produtoRepository;
+    
+    public CarrinhoService(ProdutoRepository produtoRepository) {
+    	this.produtoRepository = produtoRepository; 
+    }	
 
     @Autowired
     private HttpSession session;

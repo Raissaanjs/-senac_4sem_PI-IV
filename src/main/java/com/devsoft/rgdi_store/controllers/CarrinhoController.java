@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,21 +22,17 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class CarrinhoController {
 
-    @Autowired
-    private CarrinhoService carrinhoService;
-
-    @Autowired
-    private ProdutoImagensService produtoImagensService;
+    private final CarrinhoService carrinhoService;
+    private final ProdutoImagensService produtoImagensService;
+    
+    //Injeção de dependência
+    public CarrinhoController(CarrinhoService carrinhoService, ProdutoImagensService produtoImagensService) {
+    	this.carrinhoService = carrinhoService;
+    	this.produtoImagensService = produtoImagensService; 
+    }    
     
     @Autowired
-    private HttpSession session; // Injetar a sessão
-
-    // Método para adicionar produto ao carrinho
-    @PostMapping("/carrinho/adicionar")
-    public String adicionarProdutoAoCarrinho(@RequestParam("produtoId") Long produtoId) {
-        carrinhoService.adicionarProduto(produtoId);  // Chama o serviço para adicionar o produto
-        return "redirect:/carrinho"; // Redireciona para a página do carrinho
-    }
+    private HttpSession session; // Injetar a sessão    
 
     // Método para exibir o carrinho
     @GetMapping("/carrinho")
@@ -77,6 +74,22 @@ public class CarrinhoController {
         return "carrinho";  // Retorna o template do carrinho
     }
 
+    //Usado para verificar o carrinho ao clicar em Finalizar Compra
+    @GetMapping("carrinho/verificar")
+    public ResponseEntity<Map<String, Boolean>> verificarCarrinho() {
+    	int quantidadeItens = carrinhoService.getQuantidadeTotalItens();
+    	Map<String, Boolean> response = new HashMap<>();
+    	response.put("temItens", quantidadeItens > 0);
+    	return ResponseEntity.ok(response);
+    }
+    
+    // Método para adicionar produto ao carrinho
+    @PostMapping("/carrinho/adicionar")
+    public String adicionarProdutoAoCarrinho(@RequestParam("produtoId") Long produtoId) {
+        carrinhoService.adicionarProduto(produtoId);  // Chama o serviço para adicionar o produto
+        return "redirect:/carrinho"; // Redireciona para a página do carrinho
+    }
+    
     // Método para alterar a quantidade de um produto no carrinho
     @PostMapping("/carrinho/alterarQuantidade")
     public String alterarQuantidade(@RequestParam("produtoId") Long produtoId, @RequestParam("quantidade") String quantidade) {
