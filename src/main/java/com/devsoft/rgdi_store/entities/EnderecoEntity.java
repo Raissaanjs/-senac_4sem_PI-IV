@@ -25,7 +25,7 @@ public class EnderecoEntity {
 	private Integer numero;
 	private String complemento;
 	private String bairro;
-	private String cidade;
+	private String localidade;
 	private String uf;
 	@Enumerated(EnumType.STRING) 
 	private EnderecoTipo tipo;
@@ -39,14 +39,14 @@ public class EnderecoEntity {
 	}	
 		
 	public EnderecoEntity(Long id, String cep, String logradouro, Integer numero, String complemento, String bairro,
-			String cidade, String uf, EnderecoTipo tipo, ClienteEntity cliente) {
+			String localidade, String uf, EnderecoTipo tipo, ClienteEntity cliente) {
 		this.id = id;
 		this.cep = cep;
 		this.logradouro = logradouro;
 		this.numero = numero;
 		this.complemento = complemento;
 		this.bairro = bairro;
-		this.cidade = cidade;
+		this.localidade = localidade;
 		this.uf = uf;
 		this.tipo = tipo;
 		this.cliente = cliente;
@@ -101,12 +101,12 @@ public class EnderecoEntity {
 		this.bairro = bairro;
 	}
 
-	public String getCidade() {
-		return cidade;
+	public String getLocalidade() {
+		return localidade;
 	}
 
-	public void setCidade(String cidade) {
-		this.cidade = cidade;
+	public void setLocalidade(String localidade) {
+		this.localidade = localidade;
 	}
 
 	public String getUf() {
