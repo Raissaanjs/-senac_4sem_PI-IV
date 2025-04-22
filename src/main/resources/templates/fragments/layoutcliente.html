@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <title>RGDI Store - Cadastro de Clientes</title>
+    <title>RGDI Store - Layout Cliente Admin</title>
     <link rel="icon" href="/image/favicon.png"/>
 
     <!-- Bootstrap core CSS -->
@@ -27,14 +27,13 @@
 					<button type="button" class="btn btn-dark navbar-toggle pull-left">
 						<i class="fa-solid fa-bars"></i>
 					</button>
-					<a class="navbar-brand" href="/admin"><img th:src="@{/image/logo_50X50.png}" alt="Logo"></a>
+					<a class="navbar-brand" href="/"><img th:src="@{/image/logo_50X50.png}" alt="Logo"></a>
 
 				</div>
 				
-				<div class="navbar-header-right d-flex align-items-center" th:if="${isUser}">
-                <!-- Exibe o nome do usuário -->
+				<div class="navbar-header-right d-flex align-items-center" th:if="${isClient}">
                 	 <!-- Exibe o nome do usuário --> 					 
-				    <form th:action="@{/logout}" method="post">
+				    <form th:action="@{/clientes/logout}" method="post">
 				        <button type="submit" class="btn btn-dark">
 				        <span class="mr-3" th:text="${userName}">Visitante</span>
 				        	<br/>
@@ -55,12 +54,9 @@
 					</a></li>
 				</ul> 
                 <ul class="nav nav-pills">
-                    <li class="nav-item"><span class="nav-link active">Cliente</span></li>                    
+                    <li class="nav-item"><span class="nav-link active">Cliente</span></li>   
                     <li class="nav-item"><a class="nav-link"
-                                            href="/enderecos/cadastrar"> <i class="fa-solid fa-plus"></i> <span>Cadastrar Endereço</span>
-                    </a></li>
-                    <li class="nav-item"><a class="nav-link"
-                                            href="/#"> <i class="fa-solid fa-table-list"></i> <span>Listar</span>
+                                            th:href="@{/clientes/detalhes/{id}}"> <i class="fa-solid fa-plus"></i> <span>Meus Dados</span>
                     </a></li>
                 </ul>   
             </nav>
@@ -74,7 +70,7 @@
     
     <footer class="footer-edit">
         <div class="container">
-            <span class="footer-copy">Copyright &copy; <script>document.write(new Date().getFullYear())</script> - RGDI Store<span th:if="${isUser}"> - Painel Cliente</span></span>
+            <span class="footer-copy">Copyright &copy; <script>document.write(new Date().getFullYear())</script> - RGDI Store<span th:if="${isClient}"> - Painel Cliente</span></span>
         </div>
     </footer>
    

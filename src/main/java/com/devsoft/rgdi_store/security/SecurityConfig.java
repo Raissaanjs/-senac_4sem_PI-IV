@@ -34,10 +34,11 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 	    http
 	        .authorizeHttpRequests(auth -> auth
-	        	.requestMatchers("/", "/css/**", "/js/**", "/image/**", "/webjars/**", "/upload/**", "/uploads/**", "/list", "/auth").permitAll()
+	        	.requestMatchers("/", "/css/**", "/js/**", "/image/**", "/webjars/**", "/upload/**", "/uploads/**",
+	        			"/list", "/auth").permitAll()
         		.requestMatchers("/produtos/loja/**", "/produto-imagens/imagem-principal/**" ,
             			"/produto-imagens/detalhes/**", "/produtos/detalhes/**","/carrinho/**").permitAll()
-	            .requestMatchers("/login", "/login-cliente").permitAll()
+	            .requestMatchers("/login").permitAll()
 	            .requestMatchers("/error-login", "/error-user-inat",
         				"/access-denied", "/error-no-perm", "/error-no-auth").permitAll()
 	            .requestMatchers("/usuarios/**", "/username/**").hasAuthority("ROLE_ADMIN")

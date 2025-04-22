@@ -19,11 +19,11 @@ public class CustomAuthenticationFailureHandlerCliente implements Authentication
 			org.springframework.security.core.AuthenticationException exception) throws IOException, ServletException {
 		
 		if (exception instanceof DisabledException) {
-            response.sendRedirect("/error-cliente-inat"); // Redireciona para página personalizada de inativo
+            response.sendRedirect("/clientes/error/error-cliente-inat"); // Redireciona para um endpoint cliente inativo
         } else if (exception instanceof BadCredentialsException) {
-        	response.sendRedirect("/error-login-cliente"); // Página padrão de erro de login
+        	response.sendRedirect("/clientes/error/error-login-cliente"); // Endpoint padrão de erro de login
         } else {
-            response.sendRedirect("/error-loja"); // Redireciona para uma página genérica de erro
+            response.sendRedirect("/clientes/error/error-cliente-geral"); // Redireciona para um endpoint genérica de erro
         }
 	}
 }

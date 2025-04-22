@@ -8,7 +8,6 @@ import com.devsoft.rgdi_store.entities.ClienteEntity;
 import com.devsoft.rgdi_store.entities.EnderecoEntity;
 import com.devsoft.rgdi_store.entities.EnderecoTipo;
 import com.devsoft.rgdi_store.repositories.ClienteRepository;
-import com.devsoft.rgdi_store.repositories.EnderecoRepository;
 import com.devsoft.rgdi_store.services.exceptions.ResourceNotFoundException;
 import com.devsoft.rgdi_store.validation.cliente.ClienteValidationSaveService;
 
@@ -17,30 +16,41 @@ import jakarta.persistence.EntityNotFoundException;
 @Service
 public class ClienteService {
 
+	//Injetando dependências
     private final ClienteRepository repository;
-    private final EnderecoRepository enderecoRepository;
+    private final EnderecoService enderecoService;
     private final PasswordUtils passwordUtils;
 
-    public ClienteService(ClienteRepository repository, PasswordUtils passwordUtils, EnderecoRepository enderecoRepository) {
+    public ClienteService(ClienteRepository repository, PasswordUtils passwordUtils, EnderecoService enderecoService) {
         this.repository = repository;
         this.passwordUtils = passwordUtils;
-        this.enderecoRepository = enderecoRepository;
-    }
-
-    @Transactional(readOnly = true)
-    public ClienteEntity findClienteById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado"));
+        this.enderecoService = enderecoService;
     }
 
     @Transactional
-    public ClienteEntity saveClienteOnly(ClienteEntity cliente) {
+    public ClienteEntity findClienteById(Long clienteId) {
+        return repository.findById(clienteId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado"));
+    }
+    
+    
+    @Transactional
+    public ClienteEntity saveClienteOnly(ClienteEntity cliente, String confirmaSenha) {
         // Validação do cliente (pode ser simplificada aqui se já foi feita no controller)
-        ClienteValidationSaveService.validateCliente(cliente, repository);
+        ClienteValidationSaveService.validateCliente(cliente, repository, confirmaSenha);
 
         // Criptografando a senha
         cliente.setSenha(passwordUtils.encrypt(cliente.getSenha()));
         return repository.save(cliente);
+    }    
+    
+    //salva endereço individual
+    @Transactional
+    public void saveEndereco(Long clienteId, EnderecoEntity endereco) {
+        ClienteEntity cliente = repository.findById(clienteId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado"));
+        endereco.setCliente(cliente);
+        enderecoService.saveEndereco(cliente, endereco);
     }
 
     @Transactional
@@ -51,11 +61,8 @@ public class ClienteService {
         enderecoFaturamento.setTipo(EnderecoTipo.FATURAMENTO);
         enderecoEntrega.setTipo(EnderecoTipo.ENTREGA);
 
-        enderecoFaturamento.setCliente(cliente);
-        enderecoEntrega.setCliente(cliente);
-
-        enderecoRepository.save(enderecoFaturamento);
-        enderecoRepository.save(enderecoEntrega);
+        enderecoService.saveEndereco(cliente, enderecoFaturamento);
+        enderecoService.saveEndereco(cliente, enderecoEntrega);
     }
 
     @Transactional

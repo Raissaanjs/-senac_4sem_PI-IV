@@ -28,26 +28,27 @@ public class SecurityConfigClient {
     @Order(1)
     public SecurityFilterChain clientSecurityFilterChain(HttpSecurity http) throws Exception {
         http.securityMatcher("/clientes/**")  // Aplica segurança apenas para rotas de cliente
-            .authorizeHttpRequests(auth -> auth
-            	.requestMatchers("/clientes/cadastrar", "/clientes/salvar-cliente/**", 
-        				"/clientes/detalhes/**").permitAll()
-        		.requestMatchers("/error-login-cliente", "/error-cliente-inat",
-        				"/error-no-perm-cliente", "/error-no-auth-cliente").permitAll()
+            .authorizeHttpRequests(auth -> auth        		
+        		.requestMatchers("/clientes/login").permitAll()
+        		.requestMatchers("/clientes/cadastrar", "/clientes/salvar-cliente/**", 
+    				"/clientes/detalhes/**").permitAll()
+        		.requestMatchers("/clientes/error/error-no-perm-cliente", "/clientes/error/error-cliente-inat",
+        				"/clientes/error/error-login-cliente", "/clientes/error/error-no-auth-cliente").permitAll()
         		.requestMatchers("/clientes/cadastrar-enderecos/**", "/clientes/cadastrar-endereco/**",
         				"/clientes/salvar-enderecos/**", "/clientes/salvar-endereco-faturamento-inicial/**",
         				"/clientes/salvar-endereco-entrega/**").permitAll()
-	            .requestMatchers("/cliente").hasAnyAuthority("ROLE_CLIENT", "ROLE_ADMIN")
+	            .requestMatchers("/clientes/admin/**").hasAnyAuthority("ROLE_CLIENT")
                 .anyRequest().authenticated()  // Qualquer outra rota do cliente requer autenticação
             )
             .formLogin(form -> form
-                .loginPage("/login-cliente")  // Página de login personalizada para cliente
+                .loginPage("/clientes/login")  // Página de login personalizada para cliente
                 .usernameParameter("email")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/cliente", true)  // Redireciona após login bem-sucedido
+                .defaultSuccessUrl("/clientes/admin", true)  // Redireciona após login bem-sucedido
                 .failureHandler(customFailureHandlerCliente)  // Handler personalizado para falhas
             )
             .logout(logout -> logout
-                .logoutUrl("/logout")  // URL de logout do cliente
+                .logoutUrl("/clientes/logout")  // URL de logout do cliente
                 .logoutSuccessUrl("/")  // Redireciona após logout
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
@@ -56,12 +57,12 @@ public class SecurityConfigClient {
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .maximumSessions(1)
-                .expiredUrl("/login-cliente?expired=true")
+                .expiredUrl("/clientes/login?expired=true")
                 .maxSessionsPreventsLogin(false)
             )
             .exceptionHandling(exceptions -> exceptions
                 .authenticationEntryPoint(customNoAuthenticatedHandlerCliente)
-                .accessDeniedPage("/error-no-perm-cliente")
+                .accessDeniedPage("/clientes/error/error-no-perm-cliente")
             )
             .csrf(csrf -> csrf.disable())  // Desabilita CSRF para facilitar testes no Postman
             .headers(headers -> headers.frameOptions().sameOrigin());

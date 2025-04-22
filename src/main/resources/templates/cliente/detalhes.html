@@ -24,7 +24,7 @@
 			<h2>Endereços</h2>
 			<ul>
 			    <li th:each="endereco : ${cliente.enderecos}">
-			        <span th:text="${endereco.logradouro} + ', ' + ${endereco.numero} + ' - ' + ${endereco.bairro} + ', ' + ${endereco.cidade} + '/' + ${endereco.uf}"></span>
+			        <span th:text="${endereco.logradouro} + ', ' + ${endereco.numero} + ' - ' + ${endereco.bairro} + ', ' + ${endereco.localidade} + '/' + ${endereco.uf} + ' - ' + ${endereco.tipo}"></span>
 			    </li>
 			</ul>
 			

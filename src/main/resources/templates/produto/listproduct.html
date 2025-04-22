@@ -13,10 +13,12 @@
 						<span>Lista de Produtos</span></li>
 				</ul>
 			</div>
+			<div th:if="${isAdmin}">>
 			<a class="btn btn-primary btn-md" href="/produtos/cadastrar"
 				role="button"> <span class="fa-solid fa-plus" title="Cadastro"
 				aria-hidden="true"></span> <span>Novo Produto</span>
 			</a>
+			</div>
 		</nav>
 
 		<div class="container">

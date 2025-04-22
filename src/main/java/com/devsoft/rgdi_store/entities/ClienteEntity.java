@@ -52,7 +52,7 @@ public class ClienteEntity {
 		this.cpf = cpf;
 		this.email = email;
 		this.senha = senha;
-		this.grupo = UserGroup.ROLE_USER; // Define o grupo como ROLE_USER
+		this.grupo = UserGroup.ROLE_CLIENT; // Define o grupo como ROLE_USER
 	}
 
 	public ClienteEntity(Long id, String nome, Date dataNascimento, ClienteGenero genero, String cpf, String email,

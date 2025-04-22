@@ -47,6 +47,7 @@ public class GlobalModelControllerAdvice {
             model.addAttribute("isClient", authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_CLIENT")));
 
+           
             // Novo: pega o grupo como texto amigável
             String role = authentication.getAuthorities().stream()
                 .findFirst()

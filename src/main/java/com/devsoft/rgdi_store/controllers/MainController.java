@@ -54,22 +54,17 @@ public class MainController {
     @GetMapping("/login")
     public String loginAdmin() {
         return "login"; // Exibe a página de login (login.html)
+    }    
+    
+    @GetMapping("/logout")
+    public String logoutAdmin() {
+        return "login"; // Exibe a página de login (login.html)
     }
     
     @GetMapping("/admin")
     public String posLogin() {
         return "home-admin"; // Renderiza o template home-admin.html
-    }
-    
-    @GetMapping("/login-cliente")
-    public String loginCliente() {
-        return "login-cliente";
-    }
-    
-    @GetMapping("/cliente")
-    public String posLoginCliente() {
-        return "home-cliente"; // Renderiza o template home-admin.html
-    }   
+    }    
     
     //endpoint de autenticação
     @GetMapping("/username")
