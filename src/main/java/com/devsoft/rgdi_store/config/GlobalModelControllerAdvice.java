@@ -6,8 +6,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import com.devsoft.rgdi_store.entities.ClienteEntity;
 import com.devsoft.rgdi_store.entities.UserEntity;
 import com.devsoft.rgdi_store.entities.UserGroup;
+import com.devsoft.rgdi_store.repositories.ClienteRepository;
 import com.devsoft.rgdi_store.repositories.UserRepository;
 import com.devsoft.rgdi_store.services.CarrinhoService;
 
@@ -16,14 +18,17 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 @ControllerAdvice
 public class GlobalModelControllerAdvice {
 
-    @Autowired
-    private UserRepository userRepository;  // Injeção do seu repositório de usuários
+    private final UserRepository userRepository;  // Injeção do seu repositório de usuários   
+    private final CarrinhoService carrinhoService;
+    private final ClienteRepository clienteRepository;
     
-    @Autowired
-    private CarrinhoService carrinhoService;
 
-    public GlobalModelControllerAdvice(UserRepository userRepository) {
+    public GlobalModelControllerAdvice(UserRepository userRepository,
+    									CarrinhoService carrinhoService, 
+    									ClienteRepository clienteRepository) {
         this.userRepository = userRepository;
+        this.carrinhoService = carrinhoService;
+        this.clienteRepository = clienteRepository;    
     }
 
     @ModelAttribute
@@ -31,11 +36,19 @@ public class GlobalModelControllerAdvice {
         if (authentication != null) {
             String email = authentication.getName();
 
+         // 🔍 Tenta buscar como admin
             UserEntity user = userRepository.findByEmail(email).orElse(null);
+
             if (user != null) {
                 model.addAttribute("userName", user.getNome());
             } else {
-                model.addAttribute("userName", "Visitante");
+                // 🔍 Se não for admin, tenta buscar como cliente
+                ClienteEntity cliente = clienteRepository.findByEmail(email).orElse(null);
+                if (cliente != null) {
+                    model.addAttribute("userName", cliente.getNome());
+                } else {
+                    model.addAttribute("userName", "Visitante");
+                }
             }
 
             model.addAttribute("isAdmin", authentication.getAuthorities().stream()
@@ -63,7 +76,7 @@ public class GlobalModelControllerAdvice {
 
         } else {
             model.addAttribute("userName", "Guest");
-            model.addAttribute("userGroup", "Visitante");
+            model.addAttribute("userGroup", false);
             model.addAttribute("isAdmin", false);
             model.addAttribute("isEstoque", false);
             model.addAttribute("isUser", false);

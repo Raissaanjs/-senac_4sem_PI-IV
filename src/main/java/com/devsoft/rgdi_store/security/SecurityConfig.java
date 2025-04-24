@@ -4,16 +4,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.devsoft.rgdi_store.controllers.handlers.CustomAuthenticationFailureHandler;
-import com.devsoft.rgdi_store.controllers.handlers.CustomAuthenticationFailureHandlerCliente;
 import com.devsoft.rgdi_store.controllers.handlers.CustomNoAuthenticatedHandler;
-import com.devsoft.rgdi_store.controllers.handlers.CustomNoAuthenticatedHandlerCliente;
+import com.devsoft.rgdi_store.services.AdminUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
@@ -21,17 +24,37 @@ public class SecurityConfig {
 
 	private final CustomNoAuthenticatedHandler customNoAuthenticatedHandler;
     private final CustomAuthenticationFailureHandler customFailureHandler;
+    private final AdminUserDetailsService adminUserDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
     public SecurityConfig(CustomNoAuthenticatedHandler usuarioInativoHandler,
-                          CustomAuthenticationFailureHandler customFailureHandler) {
+                          CustomAuthenticationFailureHandler customFailureHandler,
+                          AdminUserDetailsService adminUserDetailsService,
+                          PasswordEncoder passwordEncoder) {
         this.customNoAuthenticatedHandler = usuarioInativoHandler;
         this.customFailureHandler = customFailureHandler;
+        this.adminUserDetailsService = adminUserDetailsService;
+        this.passwordEncoder = passwordEncoder;
     }
     
 	   
 	@Bean
 	@Order(2)
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		
+		// Configura o provider localmente para esta chain
+	    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+	    authProvider.setUserDetailsService(adminUserDetailsService);
+	    authProvider.setPasswordEncoder(passwordEncoder);
+
+	    AuthenticationManagerBuilder authBuilder =
+	        http.getSharedObject(AuthenticationManagerBuilder.class);
+	    authBuilder.authenticationProvider(authProvider);
+
+	    AuthenticationManager authenticationManager = authBuilder.build();
+	    http.authenticationManager(authenticationManager);
+		
+	    
 	    http
 	        .authorizeHttpRequests(auth -> auth
 	        	.requestMatchers("/", "/css/**", "/js/**", "/image/**", "/webjars/**", "/upload/**", "/uploads/**",
@@ -66,7 +89,9 @@ public class SecurityConfig {
 	            .permitAll()
 	        )
 	        .sessionManagement(session -> session
-	            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+        		.sessionFixation(sessionFixation -> sessionFixation.migrateSession())
+        		.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+        		.invalidSessionUrl("/login?invalid=true")
 	            .maximumSessions(1)
 	            .expiredUrl("/login?expired=true")
 	            .maxSessionsPreventsLogin(false)
@@ -79,5 +104,6 @@ public class SecurityConfig {
 	        .headers(headers -> headers.frameOptions().sameOrigin());
 
 	    return http.build();    	
-    }
+    }	
+	
 }
