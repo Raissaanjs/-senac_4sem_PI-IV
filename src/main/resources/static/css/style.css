@@ -15,7 +15,8 @@ body {
  */
 .layout-main {
     display: flex;
-    min-height: calc(100vh - 52px);
+    min-height: calc(80vh - 52px);
+    /*min-height: calc(100vh - 52px);*/
     overflow: hidden;
 }
 
@@ -24,7 +25,8 @@ body {
  */
 .layout-content {
     width: 100%;
-    padding-top: 0px;
+    /*padding-top: 30px;*/
+    padding-bottom: 30px;
 }
 
 .container {
@@ -32,6 +34,9 @@ body {
 	/*padding-top: 20px;*/
 }
 
+.container-admin {	
+	padding-top: 20px;
+}
 
 /* Nav */
 .navbar-header-rigth-custom> button{
@@ -119,8 +124,8 @@ a.navbar-brand.navbar-brand-custom{
 .footer-copy {
 	font-size: 92%;
 	display: block;
-	color: #777777;
 	text-align: center;
+	margin-top: 1rem;
 }
 
 /*font awesome*/
@@ -135,6 +140,10 @@ a.navbar-brand.navbar-brand-custom{
 
 .footer-edit{
 	height: 80px;
+	align-content: center;
+	--bs-bg-opacity: 1;
+  	background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;
+  	margin-bottom: 0rem;
 }
 
 .form-control {
@@ -245,4 +254,9 @@ a.navbar-brand.navbar-brand-custom{
   align-items: center;
   justify-content: center;
   gap: 10px; /* espaço entre os elementos */
+}
+
+.text-white {
+  --bs-text-opacity: 1;
+  color: rgba(var(--bs-white-rgb), var(--bs-text-opacity)) !important;
 }

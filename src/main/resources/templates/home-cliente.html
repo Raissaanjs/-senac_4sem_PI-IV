@@ -5,7 +5,18 @@
 <head>
 	<title>RGDI Store - Home Cliente</title>	
 </head>
-<body>			
+<body>
+	<header layout:fragment="header">
+        <div class="px-4 px-lg-5 ">
+          <div class="text-center text-white flex-inline">
+              <h3 class="fw-bolder">Área do Cliente</h3>
+              <div th:if="${isClient}">
+              <span>-> </span>
+              <span class="mr-3" th:text="${userName}">Visitante</span>		        
+        	  </div>
+          </div>
+        </div>
+    </header>			
 	<section class="layout-content" layout:fragment="corpo">	
 		<nav class="navbar navbar-expand-md bg-light">
 			<div class="collapse navbar-collapse" id="navbarsExampleDefault">

@@ -6,19 +6,18 @@
     <title>RGDI Store - Cadastro de Cliente</title>
 </head>
 <body>
-    <section class="layout-content" layout:fragment="corpo">  		
-	    <div class="page-header">
-            <nav class="navbar navbar-expand-md navbar-top bg-light">
-                <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-                    <ul class="navbar-nav">
-                        <li class="nav-item active">
-                            <i class="fa-solid fa-caret-right"></i>
-                            <span>Cadastrar Cliente</span>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+	<header layout:fragment="header">
+        <div class="px-4 px-lg-5 ">
+          <div class="text-center text-white flex-inline">
+              <h3 class="fw-bolder">Área do Cliente - Cadastro</h3>
+              <div th:if="${isClient}">
+              <span>- </span>
+              <span class="mr-3" th:text="${userName}">Visitante</span>		        
+        	  </div>
+          </div>
         </div>
+    </header>
+    <section class="layout-content" layout:fragment="corpo">	
 	    <!-- Formulário de Cadastro de Cliente -->
 	    <div class="container" id="cadastro">
 	        <form th:action="@{/clientes/salvar-cliente}" th:object="${cliente}" method="POST">

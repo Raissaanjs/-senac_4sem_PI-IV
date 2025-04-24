@@ -6,24 +6,22 @@
     <title>RGDI Store - Cadastro de Endereco</title>
 </head>
 <body>
+	<header layout:fragment="header">
+        <div class="px-4 px-lg-5 ">
+          <div class="text-center text-white flex-inline">
+              <h3 class="fw-bolder">Área do Cliente - Cadastro Endereço</h3>
+              <div th:if="${isClient}">
+              <span>-> </span>
+              <span class="mr-3" th:text="${userName}">Visitante</span>		        
+        	  </div>
+          </div>
+        </div>
+    </header>
     <section class="layout-content" layout:fragment="corpo">
-	    <div class="page-header">
-	        <nav class="navbar navbar-expand-md navbar-top bg-light">
-	            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-	                <ul class="navbar-nav">
-	                    <li class="nav-item active">
-	                        <i class="fa-solid fa-caret-right"></i>
-	                        <span>Cadastrar Endereços</span>
-	                    </li>
-	                </ul>
-	            </div>
-	        </nav>
-	    </div>
 	    <div class="container" id="cadastro-endereco">
 	
 	        <form id="formFaturamento">
 	            <input type="hidden" name="clienteId" th:value="${clienteId}" />
-	            <hr/>
 	            <h4>Endereço de Faturamento</h4>
 	            <div th:object="${enderecoFaturamento}">
 	                <input type="hidden" th:field="*{tipo}" th:value="'FATURAMENTO'"/>

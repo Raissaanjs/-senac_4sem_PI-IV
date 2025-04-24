@@ -34,9 +34,10 @@
 				<div class="navbar-header-right d-flex align-items-center">
                 <!-- Exibe o nome do usuário -->
                 	 <!-- Exibe o nome do usuário --> 					 
-				    <form th:action="@{/logout}" method="post">
+				    <form th:action="@{/logout}" method="post" onsubmit="return confirm('Tem certeza que deseja sair?');">
 				        <button type="submit" class="btn btn-dark">
 				        <span class="mr-3" th:text="${userName}">Visitante</span>
+				        <span>-> </span>
 				        <span class="badge ml-2" th:text="${userGroup}">Grupo</span>
 				        	<br/>
 					        <i class="fa-solid fa-right-from-bracket"></i> <strong>Sair</strong>
@@ -101,7 +102,7 @@
     
     <footer class="footer-edit">
         <div class="container">
-            <span class="footer-copy">Copyright &copy; <script>document.write(new Date().getFullYear())</script> - RGDI Store - Painel Administrativo</span>
+            <p class="footer-copy text-white">Copyright &copy; <script>document.write(new Date().getFullYear())</script> - RGDI Store - Painel Administrativo</p>
         </div>
     </footer>
    

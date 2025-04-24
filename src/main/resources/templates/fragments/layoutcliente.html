@@ -9,7 +9,7 @@
     <meta name="description" content=""/>
     <meta name="author" content=""/>
     <title>RGDI Store - Layout Cliente Admin</title>
-    <link rel="icon" href="/image/favicon.png"/>
+    <link th:href="@{/image/favicon.png}" rel="icon" />
 
     <!-- Bootstrap core CSS -->
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
@@ -67,45 +67,16 @@
             <div class="navbar-header-right d-flex align-items-center">
                <!-- Exibe o nome do usuário -->
                	 <!-- Exibe o nome do usuário --> 					 
-			    <form th:action="@{/clientes/logout}" method="post">
+			    <form th:action="@{/clientes/logout}" method="post" onsubmit="return confirm('Tem certeza que deseja sair?');" th:if="${isClient}">
 			        <button type="submit" class="btn btn-dark">			        
 				        <i class="fa-solid fa-right-from-bracket"></i> <strong>Sair</strong>
 				    </button>
 			    </form>
 			</div>
         </nav>    	
-        <div class="px-4 px-lg-5 layout-cliente">
-            <div class="text-center text-white flex-inline">
-                <h3 class="fw-bolder">Área do Cliente</h3>
-                <div th:if="${isClient}">
-                <span>- </span>
-                <span class="mr-3" th:text="${userName}">Visitante</span>		        
-		        </div>
-            </div>
+        <div class="px-4 px-lg-5 layout-cliente" layout:fragment="header">
+            <div>teste</div>
         </div>
-    	<!-- 
-		<nav class="navbar navbar-inverse navbar navbar-dark bg-dark fixed-top">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<button type="button" class="btn btn-dark navbar-toggle pull-left">
-						<i class="fa-solid fa-bars"></i>
-					</button>
-					<a class="navbar-brand" href="/"><img th:src="@{/image/logo_50X50.png}" alt="Logo"></a>
-				</div>
-				
-				<div class="navbar-header-right d-flex align-items-center" th:if="${isClient}">
-                	  					 
-				    <form th:action="@{/clientes/logout}" method="post">
-				        <button type="submit" class="btn btn-dark">
-				        <span class="mr-3" th:text="${userName}">Visitante</span>
-				        	<br/>
-					        <i class="fa-solid fa-right-from-bracket"></i> <strong>Sair</strong>
-					    </button>
-				    </form>
-				</div>
-			</div>
-		</nav>
-		-->
 		 
 	</header>
     

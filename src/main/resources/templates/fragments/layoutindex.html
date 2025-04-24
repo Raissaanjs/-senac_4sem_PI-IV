@@ -59,9 +59,18 @@
 							</a>
 							</div>
 						</div>
-                    </form>
+                    </form>                    
                 </div>
             </div>
+            <div class="navbar-header-right d-flex align-items-center">
+               <!-- Exibe o nome do usuário -->
+               	 <!-- Exibe o nome do usuário --> 					 
+			    <form th:action="@{/clientes/logout}" method="post" onsubmit="return confirm('Tem certeza que deseja sair?');" th:if="${isClient}">
+			        <button type="submit" class="btn btn-dark">			        
+				        <i class="fa-solid fa-right-from-bracket"></i> <strong>Sair</strong>
+				    </button>
+			    </form>
+			</div>
         </nav>
         <!-- Header-->
         
@@ -80,7 +89,7 @@
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
+        <script th:src="@{/js/scripts.js}"></script>
         
          <script>
         // Modal listproduct.html
