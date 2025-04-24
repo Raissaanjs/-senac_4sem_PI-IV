@@ -13,6 +13,6 @@ public class CustomNoAuthenticatedHandler implements AuthenticationEntryPoint {
 	
     public void commence(HttpServletRequest request, HttpServletResponse response, 
                          AuthenticationException authException) throws IOException {
-        response.sendRedirect("/error-no-auth"); // Redireciona para endpoint de erro
+        response.sendRedirect("/login"); // Redireciona para endpoint de erro
     }
 }

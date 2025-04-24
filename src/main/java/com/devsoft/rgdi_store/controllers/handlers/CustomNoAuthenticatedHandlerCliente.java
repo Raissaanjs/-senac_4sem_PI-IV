@@ -13,6 +13,6 @@ public class CustomNoAuthenticatedHandlerCliente implements AuthenticationEntryP
 	
     public void commence(HttpServletRequest request, HttpServletResponse response, 
                          AuthenticationException authException) throws IOException {
-        response.sendRedirect("error/error-no-auth-cliente"); // Redireciona para endpoint de erro
+        response.sendRedirect("login"); // Redireciona para endpoint de erro
     }
 }

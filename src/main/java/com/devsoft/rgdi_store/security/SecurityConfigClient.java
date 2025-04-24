@@ -12,7 +12,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.devsoft.rgdi_store.controllers.handlers.CustomAuthenticationFailureHandlerCliente;
 import com.devsoft.rgdi_store.controllers.handlers.CustomNoAuthenticatedHandlerCliente;
 import com.devsoft.rgdi_store.services.ClienteUserDetailsService;
 
@@ -21,16 +20,13 @@ import com.devsoft.rgdi_store.services.ClienteUserDetailsService;
 public class SecurityConfigClient {
 
     private final CustomNoAuthenticatedHandlerCliente customNoAuthenticatedHandlerCliente;
-    private final CustomAuthenticationFailureHandlerCliente customFailureHandlerCliente;
     private final ClienteUserDetailsService clienteUserDetailsService;
     private final PasswordEncoder passwordEncoder;
 
     public SecurityConfigClient(CustomNoAuthenticatedHandlerCliente clienteInativoHandler,
-                                CustomAuthenticationFailureHandlerCliente customFailureHandler,
                                 ClienteUserDetailsService clienteUserDetailsService,
                                 PasswordEncoder passwordEncoder) {
         this.customNoAuthenticatedHandlerCliente = clienteInativoHandler;
-        this.customFailureHandlerCliente = customFailureHandler;
         this.clienteUserDetailsService = clienteUserDetailsService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -55,7 +51,7 @@ public class SecurityConfigClient {
         http.securityMatcher("/clientes/**")  // Aplica segurança apenas para rotas de cliente
             .authorizeHttpRequests(auth -> auth        		
         		.requestMatchers("/clientes/login").permitAll()
-        		.requestMatchers("/clientes/cadastrar", "/clientes/salvar-cliente/**", 
+        		.requestMatchers("/clientes/cadastrar/**", "/clientes/salvar-cliente/**", 
     				"/clientes/detalhes/**").permitAll()
         		.requestMatchers("/clientes/error/**").permitAll()
         		.requestMatchers("/clientes/cadastrar-enderecos/**", "/clientes/cadastrar-endereco/**",
@@ -68,8 +64,7 @@ public class SecurityConfigClient {
                 .loginPage("/clientes/login")  // Página de login personalizada para cliente
                 .usernameParameter("email")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/clientes/admin", true)  // Redireciona após login bem-sucedido
-                .failureHandler(customFailureHandlerCliente)  // Handler personalizado para falhas
+                .defaultSuccessUrl("/clientes/admin", false) // Vai para o último endpoint acessado, senão vai para "/clientes/admin"
             )
             .logout(logout -> logout
                 .logoutUrl("/clientes/logout")  // URL de logout do cliente
@@ -83,7 +78,6 @@ public class SecurityConfigClient {
             	.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             	.invalidSessionUrl("/clientes/login?invalid=true") // URL para redirecionar quando a sessão for inválida
                 .maximumSessions(1) // Define quantos usuários podem estar logados ao mesmo tempo
-                .expiredUrl("/clientes/login?expired=true") // URL quando a sessão expirar
                 .maxSessionsPreventsLogin(false) // Permite que a última sessão expirada seja reautenticada
                 
             )

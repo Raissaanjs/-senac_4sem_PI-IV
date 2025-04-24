@@ -13,6 +13,8 @@ import com.devsoft.rgdi_store.authentication.CustomUserDetails;
 import com.devsoft.rgdi_store.entities.UserEntity;
 import com.devsoft.rgdi_store.repositories.UserRepository;
 
+// Usado na autenticação juntamente com:
+// CustomUserDetails e SecurityConfig
 @Service("adminUserDetailsService")
 public class AdminUserDetailsService implements UserDetailsService {
 

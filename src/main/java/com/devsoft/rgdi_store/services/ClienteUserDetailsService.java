@@ -13,6 +13,8 @@ import com.devsoft.rgdi_store.authentication.CustomClienteDetails;
 import com.devsoft.rgdi_store.entities.ClienteEntity;
 import com.devsoft.rgdi_store.repositories.ClienteRepository;
 
+// Usado na autenticação juntamente com:
+// CustomClienteDetails e SecurityConfigClient
 @Service("clienteUserDetailsService")
 public class ClienteUserDetailsService implements UserDetailsService {
 

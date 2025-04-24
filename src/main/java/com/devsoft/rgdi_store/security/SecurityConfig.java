@@ -14,7 +14,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.devsoft.rgdi_store.controllers.handlers.CustomAuthenticationFailureHandler;
 import com.devsoft.rgdi_store.controllers.handlers.CustomNoAuthenticatedHandler;
 import com.devsoft.rgdi_store.services.AdminUserDetailsService;
 
@@ -23,16 +22,13 @@ import com.devsoft.rgdi_store.services.AdminUserDetailsService;
 public class SecurityConfig {
 
 	private final CustomNoAuthenticatedHandler customNoAuthenticatedHandler;
-    private final CustomAuthenticationFailureHandler customFailureHandler;
     private final AdminUserDetailsService adminUserDetailsService;
     private final PasswordEncoder passwordEncoder;
 
     public SecurityConfig(CustomNoAuthenticatedHandler usuarioInativoHandler,
-                          CustomAuthenticationFailureHandler customFailureHandler,
                           AdminUserDetailsService adminUserDetailsService,
                           PasswordEncoder passwordEncoder) {
         this.customNoAuthenticatedHandler = usuarioInativoHandler;
-        this.customFailureHandler = customFailureHandler;
         this.adminUserDetailsService = adminUserDetailsService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -78,8 +74,7 @@ public class SecurityConfig {
 	            .loginPage("/login")
 	            .usernameParameter("email")
 	            .passwordParameter("password")
-	            .defaultSuccessUrl("/front-adm", true)
-	            .failureHandler(customFailureHandler) // Handler personalizado para falhas
+	            .defaultSuccessUrl("/front-adm", false) // Vai para o último endpoint acessado senão, vai para "/front-adm"
 	        )
 	        .logout(logout -> logout
 	            .logoutUrl("/logout")
@@ -93,7 +88,6 @@ public class SecurityConfig {
         		.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
         		.invalidSessionUrl("/login?invalid=true")
 	            .maximumSessions(1)
-	            .expiredUrl("/login?expired=true")
 	            .maxSessionsPreventsLogin(false)
 	        )
 	        .exceptionHandling(exceptions -> exceptions
