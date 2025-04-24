@@ -16,11 +16,74 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
   
     <!-- Custom styles for this template -->
-    <link href="/css/style.css" rel="stylesheet"/>
-    <link href="/css/_position.css" rel="stylesheet"/>
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/_position.css}" rel="stylesheet" />
 </head>
 <body>
     <header>
+    	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="/"><img th:src="@{/image/logo_50X50.png}" alt="Logo"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                     
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                        <!--
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="#!">All Products</a></li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li><a class="dropdown-item" href="#!">Popular Items</a></li>
+                                <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+                            </ul>
+                        </li>
+                        -->
+                    </ul>
+                     
+                    <form class="d-flex">
+                        <div class="d-flex align-items-center">
+	        				<div class="me-3">
+	                        <a href="/carrinho" class="btn btn-outline-dark">
+							    <i class="bi-cart-fill me-1"></i>							    
+							    Carrinho
+							    <span class="badge bg-dark text-white ms-1 rounded-pill" th:text="${totalItens}">0</span>							    
+							</a>
+							</div>
+							<div th:if="${!isClient}">
+							<a th:href="@{/clientes/login}" class="btn btn-outline-dark">
+							    <i class="bi-person-fill me-1"></i>
+							    <span class="">Login</span>
+							</a>
+							</div>
+						</div>
+                    </form>
+                </div>
+            </div>
+            <div class="navbar-header-right d-flex align-items-center">
+               <!-- Exibe o nome do usuário -->
+               	 <!-- Exibe o nome do usuário --> 					 
+			    <form th:action="@{/clientes/logout}" method="post">
+			        <button type="submit" class="btn btn-dark">			        
+				        <i class="fa-solid fa-right-from-bracket"></i> <strong>Sair</strong>
+				    </button>
+			    </form>
+			</div>
+        </nav>    	
+        <div class="px-4 px-lg-5 layout-cliente">
+            <div class="text-center text-white flex-inline">
+                <h3 class="fw-bolder">Área do Cliente</h3>
+                <div th:if="${isClient}">
+                <span>- </span>
+                <span class="mr-3" th:text="${userName}">Visitante</span>		        
+		        </div>
+            </div>
+        </div>
+    	<!-- 
 		<nav class="navbar navbar-inverse navbar navbar-dark bg-dark fixed-top">
 			<div class="container-fluid">
 				<div class="navbar-header">
@@ -28,11 +91,10 @@
 						<i class="fa-solid fa-bars"></i>
 					</button>
 					<a class="navbar-brand" href="/"><img th:src="@{/image/logo_50X50.png}" alt="Logo"></a>
-
 				</div>
 				
 				<div class="navbar-header-right d-flex align-items-center" th:if="${isClient}">
-                	 <!-- Exibe o nome do usuário --> 					 
+                	  					 
 				    <form th:action="@{/clientes/logout}" method="post">
 				        <button type="submit" class="btn btn-dark">
 				        <span class="mr-3" th:text="${userName}">Visitante</span>
@@ -43,13 +105,15 @@
 				</div>
 			</div>
 		</nav>
+		-->
+		 
 	</header>
     
     <div class="layout-main">    
         <aside>
             <nav class="sidebar  sidebar-open" th:if="${isClient}">
             	<ul class="nav nav-pills">
-					<li class="nav-item"><a class="nav-link " href="/cliente"> 
+					<li class="nav-item"><a class="nav-link " href="/clientes/admin"> 
 					<i class="fa-solid fa-house"></i> <span>Home</span>
 					</a></li>
 				</ul> 
