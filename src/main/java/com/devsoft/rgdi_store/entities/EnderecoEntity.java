@@ -2,6 +2,7 @@ package com.devsoft.rgdi_store.entities;
 
 import java.util.Objects;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -28,6 +29,7 @@ public class EnderecoEntity {
 	private String localidade;
 	private String uf;
 	@Enumerated(EnumType.STRING) 
+	@Column(nullable = false)
 	private EnderecoTipo tipo;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

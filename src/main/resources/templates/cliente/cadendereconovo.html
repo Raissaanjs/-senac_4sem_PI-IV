@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net/thymeleaf/layout"
+	layout:decorate="~{fragments/layoutcliente}">
+<head>
+    <title>RGDI Store - Cadastro de Endereco</title>
+</head>
+<body>
+	<header layout:fragment="header">
+        <div class="px-4 px-lg-5 ">
+          <div class="text-center text-white flex-inline">
+              <h3 class="fw-bolder">Cadastrar Novo Endereço</h3>
+              <div th:if="${isClient}">
+              <span>-> </span>
+              <span class="mr-3" th:text="${userName}">Visitante</span>		        
+        	  </div>
+          </div>
+        </div>
+    </header>
+    <section class="layout-content" layout:fragment="corpo">
+    	<nav class="navbar navbar-expand-md bg-light">
+			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<i class="fa-solid fa-caret-right"></i>
+						<span>Novo Endereço</span>
+					</li>
+				</ul>
+			</div>
+		</nav>
+	    <div class="container-fluid" id="cadastro-endereco">
+	    	<div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+			    <span th:text="${erro}"></span>
+			    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+			</div>
+
+	        <form th:action="@{/clientes/enderecos/salvar}" method="post" th:object="${endereco}">
+	            <input type="hidden" name="clienteId" th:value="${clienteId}" />
+	            
+	            <div class="row">
+	                <div class="mb-3 col-md-4">
+	                    <label for="tipo">Tipo de Endereço</label>
+	                    <select class="form-control" id="tipo" name="tipo" required aria-required="true">
+	                        <option value="">Selecione...</option>
+	                        <option value="FATURAMENTO" th:selected="${endereco.tipo == 'FATURAMENTO'}">Faturamento</option>
+	                        <option value="ENTREGA" th:selected="${endereco.tipo == 'ENTREGA'}">Entrega</option>
+	                    </select>
+	                    <div class="invalid-feedback" id="tipoError" style="display: none;"></div>
+	                </div>
+	            </div>
+	
+	            <div class="row">
+	                <div class="mb-3 col-md-2">
+	                    <label>CEP</label>
+	                    <input type="text" class="form-control" th:field="*{cep}" id="cep" onblur="buscarEnderecoUnico('cep')" required aria-required="true"
+	                    data-mask="00000000"/>
+	                </div>
+	                <div class="mb-3 col-md-5">
+	                    <label>Logradouro</label>
+	                    <input type="text" class="form-control" th:field="*{logradouro}" id="logradouro" required aria-required="true"/>
+	                </div>
+	                <div class="mb-3 col-md-2">
+	                    <label>Número</label>
+	                    <input type="text" class="form-control" th:field="*{numero}" id="numero" required aria-required="true"
+	                    data-mask="000000"/>
+	                </div>
+	            </div>
+	
+	            <div class="row">
+	                <div class="mb-3 col-md-4">
+	                    <label>Complemento</label>
+	                    <input type="text" class="form-control" th:field="*{complemento}" id="complemento"/>
+	                </div>
+	                <div class="mb-3 col-md-5">
+	                    <label>Bairro</label>
+	                    <input type="text" class="form-control" th:field="*{bairro}" id="bairro" required aria-required="true"/>
+	                </div>
+	            </div>
+	
+	            <div class="row">
+	                <div class="mb-3 col-md-7">
+	                    <label>Cidade</label>
+	                    <input type="text" class="form-control" th:field="*{localidade}" id="cidade" required aria-required="true"/>
+	                </div>
+	                <div class="mb-3 col-md-2">
+	                    <label>UF</label>
+	                    <input type="text" class="form-control" th:field="*{uf}" id="uf" required aria-required="true"
+	                    data-mask="AA"/>
+	                </div>
+	            </div>
+	
+	            <button type="submit" class="btn btn-primary">Salvar</button>
+	        </form>
+	    </div>
+	</section>
+
+
+</body>
+</html>		

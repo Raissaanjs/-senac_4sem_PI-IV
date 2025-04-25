@@ -18,7 +18,7 @@
         </div>
     </header>
     <section class="layout-content" layout:fragment="corpo">
-	    <div class="container" id="cadastro-endereco">
+	    <div class="container formcadastro" id="cadastro-endereco">
 	
 	        <form id="formFaturamento">
 	            <input type="hidden" name="clienteId" th:value="${clienteId}" />
@@ -28,7 +28,8 @@
 	                <div class="row">
 	                    <div class="mb-3 col-md-2">
 	                        <label>CEP</label>
-	                        <input type="text" class="form-control" th:field="*{cep}" id="cepFaturamento" required="required"/>
+	                        <input type="text" class="form-control" th:field="*{cep}" id="cepFaturamento" required="required"
+	                        data-mask="00000000"/>
 	                    </div>
 	                    <div class="mb-3 col-md-5">
 	                        <label>Logradouro</label>
@@ -36,7 +37,8 @@
 	                    </div>
 	                    <div class="mb-3 col-md-2">
 	                        <label>Número</label>
-	                        <input type="number" class="form-control" th:field="*{numero}" id="numeroFaturamento" required="required"/>
+	                        <input type="text" class="form-control" th:field="*{numero}" id="numeroFaturamento" required="required"
+	                        data-mask="000000"/>
 	                    </div>
 	                </div>
 	                <div class="row">
@@ -56,7 +58,8 @@
 	                    </div>
 	                    <div class="mb-3 col-md-2">
 	                        <label>UF</label>
-	                        <input type="text" class="form-control" th:field="*{uf}" id="ufFaturamento" required="required"/>
+	                        <input type="text" class="form-control" th:field="*{uf}" id="ufFaturamento" required="required"
+	                        data-mask="AA"/>
 	                    </div>
 	                </div>
 	            </div>
@@ -80,7 +83,8 @@
 	                    <div class="row">
 	                        <div class="mb-3 col-md-2">
 	                            <label>CEP</label>
-	                            <input type="text" class="form-control" th:field="*{cep}" id="cepEntrega" required="required"/>
+	                            <input type="text" class="form-control" th:field="*{cep}" id="cepEntrega" required="required"
+	                            data-mask="00000000"/>
 	                        </div>
 	                        <div class="mb-3 col-md-5">
 	                            <label>Logradouro</label>
@@ -88,7 +92,8 @@
 	                        </div>
 	                        <div class="mb-3 col-md-2">
 	                            <label>Número</label>
-	                            <input type="number" class="form-control" th:field="*{numero}" id="numeroEntrega" required="required"/>
+	                            <input type="text" class="form-control" th:field="*{numero}" id="numeroEntrega" required="required"
+	                            data-mask="000000"/>
 	                        </div>
 	                    </div>
 	                    <div class="row">
@@ -108,17 +113,16 @@
 	                        </div>
 	                        <div class="mb-3 col-md-2">
 	                            <label>UF</label>
-	                            <input type="text" class="form-control" th:field="*{uf}" id="ufEntrega" required="required"/>
+	                            <input type="text" class="form-control" th:field="*{uf}" id="ufEntrega" required="required"
+	                            data-mask="AA"/>
 	                        </div>
 	                    </div>
 	                </div>
 	                <button type="submit" class="btn btn-primary">Finalizar Cadastro</button>
-	                <a th:href="@{/clientes/cadastrar}" class="btn btn-secondary">Voltar para Cliente</a>
 	            </form>
 	        </div>
 	    </div>
 	</section>
-
 
 </body>
 </html>		
