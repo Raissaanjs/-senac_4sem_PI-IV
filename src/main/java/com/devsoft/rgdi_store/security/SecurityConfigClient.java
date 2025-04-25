@@ -51,13 +51,14 @@ public class SecurityConfigClient {
         http.securityMatcher("/clientes/**")  // Aplica segurança apenas para rotas de cliente
             .authorizeHttpRequests(auth -> auth        		
         		.requestMatchers("/clientes/login").permitAll()
-        		.requestMatchers("/clientes/cadastrar/**", "/clientes/salvar-cliente/**", 
-    				"/clientes/detalhes/**").permitAll()
+        		.requestMatchers("/clientes/cadastrar/**", "/clientes/salvar-cliente/**" 
+    				).permitAll()
         		.requestMatchers("/clientes/error/**").permitAll()
         		.requestMatchers("/clientes/cadastrar-enderecos/**", "/clientes/cadastrar-endereco/**",
         				"/clientes/salvar-enderecos/**", "/clientes/salvar-endereco-faturamento-inicial/**",
         				"/clientes/salvar-endereco-entrega/**").permitAll()
 	            .requestMatchers("/clientes/admin/**").hasAnyAuthority("ROLE_CLIENT")
+	            .requestMatchers("/clientes/detalhes/**", "/clientes/endereco/mudar-principal/**").hasAnyAuthority("ROLE_CLIENT")
                 .anyRequest().authenticated()  // Qualquer outra rota do cliente requer autenticação
             )
             .formLogin(form -> form

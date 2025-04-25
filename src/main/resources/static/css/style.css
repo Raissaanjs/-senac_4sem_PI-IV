@@ -34,6 +34,16 @@ body {
 	/*padding-top: 20px;*/
 }
 
+.container-fluid {
+  width: 100%;
+  padding-top: 1rem;
+  padding-top: 1rem;
+  padding-right: var(--bs-gutter-x, 0.75rem);  /* espaçamento lateral interno */
+  padding-left: var(--bs-gutter-x, 0.75rem);
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .container-admin {	
 	padding-top: 20px;
 }
@@ -146,6 +156,10 @@ a.navbar-brand.navbar-brand-custom{
   	margin-bottom: 0rem;
 }
 
+.formcadastro{
+	padding-top: 1rem;
+}
+
 .form-control {
   display: block;
   width: 100%; /* Ocupa 100% do contêiner */
@@ -245,8 +259,8 @@ a.navbar-brand.navbar-brand-custom{
 
 .layout-cliente{
 	background-color: #212529;
-	padding-top: 1.1rem;
-	padding-bottom: 1.1rem;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
 }
 
 .flex-inline {

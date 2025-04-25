@@ -30,19 +30,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                      
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                        <!--
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#!">All Products</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                                <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
-                            </ul>
-                        </li>
-                        -->
+                       
                     </ul>
                      
                     <form class="d-flex">
@@ -82,20 +70,25 @@
     
     <div class="layout-main">    
         <aside>
-            <nav class="sidebar  sidebar-open" th:if="${isClient}">
-            	<ul class="nav nav-pills">
-					<li class="nav-item"><a class="nav-link " href="/clientes/admin"> 
-					<i class="fa-solid fa-house"></i> <span>Home</span>
-					</a></li>
-				</ul> 
-                <ul class="nav nav-pills">
-                    <li class="nav-item"><span class="nav-link active">Cliente</span></li>   
-                    <li class="nav-item"><a class="nav-link"
-                                            th:href="@{/clientes/detalhes/{id}}"> <i class="fa-solid fa-plus"></i> <span>Meus Dados</span>
-                    </a></li>
-                </ul>   
-            </nav>
-        </aside>
+		    <nav class="sidebar sidebar-open" th:if="${isClient}">
+		        <ul class="nav nav-pills">
+		            <li class="nav-item">
+		                <a class="nav-link" href="/clientes/admin">
+		                    <i class="fa-solid fa-house"></i> <span>Home</span>
+		                </a>
+		            </li>
+		        </ul>
+		        <ul class="nav nav-pills">
+		            <li class="nav-item"><span class="nav-link active">Cliente</span></li>
+		            <li class="nav-item">
+		                <a class="nav-link" th:href="@{/clientes/detalhes-cliente}">
+		                    <i class="fa-solid fa-plus"></i> <span>Meus Dados</span>
+		                </a>
+		            </li>
+		        </ul>
+		    </nav>
+		</aside>
+
     
         <section class="layout-content" layout:fragment="corpo">
 	    	<h5>Home</h5>
@@ -105,7 +98,7 @@
     
     <footer class="footer-edit">
         <div class="container">
-            <span class="footer-copy">Copyright &copy; <script>document.write(new Date().getFullYear())</script> - RGDI Store<span th:if="${isClient}"> - Painel Cliente</span></span>
+            <p class="footer-copy text-white">Copyright &copy; <script>document.write(new Date().getFullYear())</script> - RGDI Store<span th:if="${isClient}"> - Painel Cliente</span></p>
         </div>
     </footer>
    
@@ -199,6 +192,39 @@
             })
             .catch(() => alert("Erro ao buscar o CEP."));
     }
+    
+    //API ViaCEP - Endereço único
+    function buscarEnderecoUnico(cepInputId) {
+	    const cep = document.getElementById(cepInputId).value.replace(/\D/g, '');
+	
+	    if (!/^\d{8}$/.test(cep)) {
+	        console.warn("CEP inválido");
+	        return;
+	    }
+	
+	    const campos = ['logradouro', 'bairro', 'cidade', 'uf'];
+	    campos.forEach(campo => {
+	        const input = document.getElementById(campo);
+	        if (input) input.value = '';  // Limpa os campos antes de preencher
+	    });
+	
+	    // Faz a requisição à API ViaCEP
+	    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+	        .then(res => res.json())
+	        .then(data => {
+	            if (data.erro) {
+	                alert("CEP não encontrado.");
+	                return;
+	            }
+	
+	            // Preenche os campos com os dados retornados
+	            document.getElementById('logradouro').value = data.logradouro || '';
+	            document.getElementById('bairro').value = data.bairro || '';
+	            document.getElementById('cidade').value = data.localidade || '';
+	            document.getElementById('uf').value = data.uf || '';
+	        })
+	        .catch(() => alert("Erro ao buscar o CEP."));
+	}
 </script>
 
 </body>
