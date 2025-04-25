@@ -6,30 +6,105 @@
     <title>RGDI Store - Cadastro de Cliente</title>
 </head>
 <body>
-    <header class="bg-dark py-5" layout:fragment="header">
-           <div class="container px-4 px-lg-5 my-5">
-               <div class="text-center text-white">
-                   <h3 class="fw-bolder">Detalhes do Cliente</h3>
-               </div>
-           </div>
-       </header>
-    <section class="py-5" layout:fragment="corpo">  
-	    <div class="container" id="cadastro">
-	        <p><strong>Nome:</strong> <span th:text="${cliente.nome}"></span></p>
-			<p><strong>Email:</strong> <span th:text="${cliente.email}"></span></p>
-			<p><strong>CPF:</strong> <span th:text="${cliente.cpf}"></span></p>
-			<p><strong>Data de Nascimento:</strong> <span th:text="${#dates.format(cliente.dataNascimento, 'dd/MM/yyyy')}"></span></p>
-			<p><strong>Gênero:</strong> <span th:text="${cliente.genero}"></span></p>
-			
-			<h2>Endereços</h2>
-			<ul>
-			    <li th:each="endereco : ${cliente.enderecos}">
-			        <span th:text="${endereco.logradouro} + ', ' + ${endereco.numero} + ' - ' + ${endereco.bairro} + ', ' + ${endereco.localidade} + '/' + ${endereco.uf} + ' - ' + ${endereco.tipo}"></span>
-			    </li>
-			</ul>
-			
-			<a href="/">Voltar</a>
+    <header layout:fragment="header">
+        <div class="px-4 px-lg-5 ">
+          <div class="text-center text-white flex-inline">
+              <h3 class="fw-bolder">Detalhes do Cliente</h3>
+              <div th:if="${isClient}">
+              <span>-> </span>
+              <span class="mr-3" th:text="${userName}">Visitante</span>		        
+        	  </div>
+          </div>
         </div>
+    </header>
+    <section class="layout-content" layout:fragment="corpo">
+    	<nav class="navbar navbar-expand-md bg-light">
+			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<i class="fa-solid fa-caret-right"></i>
+						<span>Dados do Cliente</span>
+					</li>
+				</ul>
+			</div>
+		</nav>
+	    <div class="container-fluid">
+	    	<div th:if="${param.sucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
+		    Endereço salvo com sucesso!
+		    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+		</div>
+
+		    <div class="row">
+		
+		        <!-- COLUNA 1: DADOS DO CLIENTE -->
+		         <div class="col-12 col-lg-4 mb-4">
+		            <div class="d-flex justify-content-between align-items-center mb-2">
+		                <h5 class="mb-2">DADOS BÁSICOS</h5>
+		            </div>
+		            <div class="card mb-4">
+		                <div class="card-header bg-secondary text-white">
+		                    <h5 class="mb-0">Dados do Cliente</h5>
+		                </div>
+		                <div class="card-body">
+		                    <p><strong>Nome:</strong> <span th:text="${cliente.nome}">Nome</span></p>
+		                    <p><strong>Email:</strong> <span th:text="${cliente.email}">email@example.com</span></p>
+		                    <p><strong>CPF:</strong> <span th:text="${cliente.cpf}">000.000.000-00</span></p>
+		                    <p><strong>Nascimento:</strong> 
+		                        <span th:text="${#dates.format(cliente.dataNascimento, 'dd/MM/yyyy')}">01/01/2000</span></p>
+		                    <p><strong>Gênero:</strong> <span th:text="${cliente.genero}">MASCULINO</span></p>
+		                    <a th:href="@{'/clientes/editar/' + ${cliente.id}}" class="btn btn-outline-primary mt-3">
+		                        ✏️ Editar
+		                    </a>
+		                </div>
+		            </div>
+		        </div>
+		
+		        <!-- COLUNA 2: ENDEREÇOS -->
+		        <div class="col-12 col-lg-6 mb-4">
+		        	<div class="d-flex justify-content-between align-items-center mb-2">
+		                <h5 class="mb-0">ENDEREÇOS</h5>
+		                <a class="btn btn-success btn-sm" th:href="@{/clientes/enderecos/novo}">
+		                    <i class="fa fa-plus"></i> Adicionar Endereço
+		                </a>
+		            </div>
+		
+		            <!-- Endereço de Faturamento (Principal) -->
+		            <div class="card mb-4" th:if="${enderecoFaturamento != null}">
+		                <div class="card-header bg-success text-white">
+		                    <strong>Principal</strong>
+		                </div>
+		                <div class="card-body">
+		                    <p th:text="${enderecoFaturamento.logradouro + ', ' + enderecoFaturamento.numero}">Rua</p>
+		                    <p th:text="${enderecoFaturamento.bairro + ' - ' + enderecoFaturamento.localidade + '/' + enderecoFaturamento.uf}">Cidade/UF</p>
+		                    <p th:text="'CEP: ' + ${enderecoFaturamento.cep}">CEP</p>
+		                    <p th:if="${enderecoFaturamento.complemento != null}" th:text="'Complemento: ' + ${enderecoFaturamento.complemento}"></p>
+		                </div>
+		            </div>
+		
+		            <!-- Endereços de Entrega (Secundários) -->
+		            <div th:each="endereco : ${enderecosEntrega}">
+		                <div class="card mb-4">
+		                    <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+		                        <span>Secundário</span>
+		                        <form th:action="@{'/clientes/endereco/mudar-principal/' + ${cliente.id} + '/' + ${endereco.id}}" method="post">		                            
+		                            <button type="submit" class="btn btn-sm btn-outline-light">
+		                                Mudar para Principal
+		                            </button>
+		                        </form>
+		                    </div>
+		                    <div class="card-body">
+		                        <p th:text="${endereco.logradouro + ', ' + endereco.numero}">Rua</p>
+		                        <p th:text="${endereco.bairro + ' - ' + endereco.localidade + '/' + endereco.uf}">Cidade/UF</p>
+		                        <p th:text="'CEP: ' + ${endereco.cep}">CEP</p>
+		                        <p th:if="${endereco.complemento != null}" th:text="'Complemento: ' + ${endereco.complemento}"></p>
+		                    </div>
+		                </div>
+		            </div>
+		
+		        </div>
+		
+		    </div>
+		</div>
 	</section>
 
 </body>

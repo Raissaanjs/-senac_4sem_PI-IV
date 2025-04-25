@@ -32,8 +32,7 @@
 					    <div class="mb-3 col-md-5">
 					        <label for="nome">Nome</label>
 					        <input type="text" class="form-control" id="nome" name="nome"
-					        th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid'" th:value="*{nome}" />
-					       <!--   <div class="invalid-feedback" th:if="${#fields.hasErrors('nome')}" th:text="${#fields.errors('nome')}"> -->
+					        th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid'" th:value="*{nome}" />					       
 					              <div class="invalid-feedback" th:text="${#fields.errors('nome')}"> 
 					        </div>
 					    </div>
