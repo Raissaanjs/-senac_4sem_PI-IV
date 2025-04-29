@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<head>
+<title>RGDI Store - Lista de Pedidos</title>
+<body>
+	<section class="layout-content" layout:fragment="corpo">
+		<nav class="navbar navbar-expand-md bg-light">
+			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active"><i class="fa-solid fa-caret-right"></i>
+						<span>Lista de Pedido</span></li>
+				</ul>
+			</div>
+			<div th:if="${isAdmin}">
+			<a class="btn btn-primary btn-md" href="/produtos/cadastrar"
+				role="button"> <span class="fa-solid fa-plus" title="Cadastro"
+				aria-hidden="true"></span> <span>Novo Produto</span>
+			</a>
+			</div>
+		</nav>
+
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<div class="d-flex align-items-center" id="collapseNome">
+						<nav class="navbar navbar-light bg-light">
+							<form class="d-flex" method="GET" action="/produtos/buscar-nome">
+								<input class="form-control me-2" type="search"
+									placeholder="produto" style="width: 20rem" aria-label="Search"
+									name="nome" th:value="${nome}" />
+								<button class="btn btn-success w-60" id="collapseNome">
+									<i class="fa-solid fa-magnifying-glass"></i>
+								</button>
+							</form>
+						</nav>
+					</div>
+				</div>
+			</div>
+			<div class="table-responsive">
+				<table class="table table-striped table-hover table-sm">
+					<thead>
+						<tr>
+							<th style="width: 5rem;">Código</th>
+							<th>Nome</th>
+							<th style="width: 8rem;">Quantidade</th>
+							<th style="width: 7rem;">Valor</th>
+							<th style="width: 6.5rem;">Status</th>
+							<th style="width: 10rem;">Opções</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:if="${produtos.size() == 0}">
+							<td colspan="6" class="text-center text-danger">Nenhum
+								produto encontrado</td>
+						</tr>
+						<tr th:each="prod, iterStat : ${produtos}">
+							<td th:text="${prod.id}"></td>
+							<td th:text="${prod.nome}"></td>
+							<td th:text="${prod.quantidade}"></td>
+							<td th:text="${#numbers.formatDecimal(prod.preco, 1, 2)}"></td>
+							<td id="prod-status-cell-${prod.id}"><span
+								th:text="${prod.status ? 'Ativo' : 'Inativo'}"></span></td>
+							<td class="align-inline">
+								<!-- CHAMAR cadproductedit.html -->								
+								 <button type="button" class="btn btn-info btn-sm" th:onclick="'openEditProdModal(' + ${prod.id} + ')'">
+							        <span class="fa-solid fa-pen-to-square" title="Editar" aria-hidden="true"></span>
+							    </button>
+
+								<button type="button" class="btn btn-info btn-sm" th:onclick="'openViewProdModal(' + ${prod.id} + ')'">
+								    <span class="fa-regular fa-eye" title="Visualizar" aria-hidden="true"></span>
+								</button>
+								
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox"
+										th:checked="${prod.status}"
+										th:attr="onchange= 'toggleStatusProd(this, ' + ${prod.id} + ')'" />
+									<label class="form-check-label"> <span>Ativo</span>
+									</label>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div th:if="${page != null}">
+				<div>
+					Página <span th:text="${page.number + 1}"></span> de <span
+						th:text="${page.totalPages}"></span>
+				</div>
+				<div>
+					<a class="sem-sublinhado" th:if="${page.hasPrevious()}"
+						th:href="@{/produtos/buscar-nome(nome=${nome}, page=${page.number - 1}, size=${page.size})}">
+						← Página Anterior </a>
+					<a class="sem-sublinhado" th:if="${page.hasNext()}"
+						th:href="@{/produtos/buscar-nome(nome=${nome}, page=${page.number + 1}, size=${page.size})}">
+						Próxima Página → </a>
+				</div>
+			</div>
+			<div th:if="${produtos.empty}">
+				<p>Nenhum registro encontrado.</p>
+			</div>
+			
+			<!-- Modal Visualização -->
+			<div class="modal fade" id="viewProdModal" tabindex="-1" aria-labelledby="viewProdModalLabel" aria-hidden="true">
+			    <div class="modal-dialog">
+			        <div class="modal-content">
+			            <div class="modal-header">
+			                <h5 class="modal-title" id="viewProdModalLabel">Detalhes do Produto</h5>
+			                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+			                    <span aria-hidden="true">&times;</span>
+			                </button>
+			            </div>
+			            <div class="modal-body">
+			                <input type="hidden" id="prodId">
+			                <div class="row d-flex">
+			                    <div class="col-md-5">
+			                        <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+			                            <div class="carousel-inner" id="carouselImages">
+			                                <!-- As imagens serão inseridas aqui -->
+			                            </div>
+			                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+			                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			                                <span class="visually-hidden">Previous</span>
+			                            </button>
+			                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+			                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+			                                <span class="visually-hidden">Next</span>
+			                            </button>
+			                        </div>
+			                    </div>
+			                    <div class="col-md-7">
+			                        <p><strong>Nome:</strong> <span id="prodNome"></span></p>			                        
+			                        <p><strong>Descrição:</strong> <span id="prodDescricao"></span></p>
+			                        <p><strong>Preço:</strong> <span id="prodPreco"></span></p>
+			                        <p><strong>Avaliação:</strong> <span id="prodAvaliacao"></span></p>
+			                    </div>
+			                </div>
+			            </div>
+			            <div class="modal-footer">
+			                <button type="button" class="btn btn-success">Comprar</button>
+			                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+			
+			<!-- Modal de Edição -->
+			<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+			    <div class="modal-dialog">
+			        <div class="modal-content">
+			            <form id="editProductForm">
+			            	<input type="hidden" id="prodEditId" name="id" />
+			                <div class="modal-header">
+			                    <h5 class="modal-title" id="editProductModalLabel">Editar Produto</h5>
+			                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			                </div>
+			                <div class="modal-body">
+			                    <div class="mb-3">
+			                        <label for="prodEditNome" class="form-label">Nome</label>
+			                        <input type="text" id="prodEditNome" class="form-control" required aria-required="true" th:disabled="${!isAdmin}"/>
+			                    </div>
+			                    <div class="mb-3">
+			                        <label for="prodEditPreco" class="form-label">Preço</label>
+			                        <input type="text" id="prodEditPreco" class="form-control" data-mask="#####0.00"
+	                               data-mask-reverse="true" required aria-required="true" th:disabled="${!isAdmin}"/>
+			                    </div>
+			                    <div class="mb-3">
+			                        <label for="prodEditQuantidade" class="form-label">Quantidade</label>
+			                        <input type="number" id="prodEditQuantidade" class="form-control" required aria-required="true"/>
+			                    </div>
+			                    <div class="mb-3">
+			                        <label for="prodEditAvaliacao" class="form-label">Avaliação</label>
+			                        <input type="number" id="prodEditAvaliacao" class="form-control" required aria-required="true" th:disabled="${!isAdmin}"/>
+			                    </div>
+			                    <div class="mb-3">
+			                        <label for="prodEditDescricao" class="form-label">Descrição</label>
+			                        <textarea id="prodEditDescricao" class="form-control" required aria-required="true" th:disabled="${!isAdmin}"></textarea>
+			                    </div>
+			                </div>
+			                <div class="modal-footer">
+			                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+			                    <button type="submit" class="btn btn-primary">Salvar</button>
+			                </div>
+			            </form>
+			        </div>
+			    </div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

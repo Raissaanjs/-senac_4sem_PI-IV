@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net/thymeleaf/layout"
+	layout:decorate="~{fragments/layoutindex}">
+<head>
+  <title>RGDI Store Loja - Confirmação de Pagamento</title>
+</head>
+    <body>
+    	<header class="bg-dark py-5" layout:fragment="header">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white flex-inline">
+                    <h3 class="fw-bolder">Confirmação de Pagamento</h3>
+                    <div th:if="${isClient}">
+		               <span><i class="fa-solid fa-caret-right"></i></span>
+		              <span class="mr-3" th:text="${userName}">Visitante</span>
+		              <span><i class="fa-solid fa-caret-left"></i></span>		        
+		        	</div>
+                </div>
+            </div>
+        </header>        
+        <!-- Section-->
+        <section class="py-5" layout:fragment="corpo">
+		    <div class="container px-4 px-lg-5 mt-5">
+		        <h2 class="mb-4">Pagamento Confirmado!</h2>
+		
+		        <p th:text="'Forma de Pagamento: ' + ${pedido.tipo}"></p>
+		        <p th:text="'Subtotal: R$ ' + ${#numbers.formatDecimal(pedido.valorTotal.subtract(pedido.frete), 1, 2)}"></p>
+		        <p th:text="'Frete: R$ ' + ${#numbers.formatDecimal(pedido.frete, 1, 2)}"></p>
+		        <p th:text="'Total: R$ ' + ${#numbers.formatDecimal(pedido.valorTotal, 1, 2)}"></p>
+		
+		        <div>
+		            <a th:href="@{/clientes/meus-pedidos}" class="btn btn-primary button-page-success">Meus Pedidos</a>
+		        </div>
+		    </div>
+		</section>
+
+    </body>
+</html>
