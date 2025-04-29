@@ -10,6 +10,7 @@ import com.devsoft.rgdi_store.entities.EnderecoEntity;
 import com.devsoft.rgdi_store.entities.EnderecoTipo;
 
 public interface EnderecoRepository extends JpaRepository<EnderecoEntity, Long> {
+	
 	List<EnderecoEntity> findAllByClienteId(Long clienteId);
 	Optional<EnderecoEntity> findByClienteAndTipo(ClienteEntity cliente, EnderecoTipo tipo);    
 }

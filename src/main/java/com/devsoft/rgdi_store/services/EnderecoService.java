@@ -22,6 +22,15 @@ public class EnderecoService {
         this.enderecoRepository = enderecoRepository;
     }
 
+    @Transactional(readOnly = true)
+    public List<EnderecoEntity> findAll() {
+        return enderecoRepository.findAll();
+    }
+    
+    public Optional<EnderecoEntity> findById(Long id) {
+        return enderecoRepository.findById(id);
+    }
+    
     @Transactional
     public void saveEndereco(ClienteEntity cliente, EnderecoEntity novoEndereco) {
         novoEndereco.setCliente(cliente);
