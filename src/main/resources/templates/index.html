@@ -8,11 +8,13 @@
     <body>       
         <header class="bg-dark py-5" layout:fragment="header">
             <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h3 class="fw-bolder">Seja Bem Vindo</h3>
-                    <!--
-                    <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
-                     -->
+                <div class="text-center text-white flex-inline">
+                    <h3 class="fw-bolder">Seja Bem Vindo (a)</h3>
+                    <div th:if="${isClient}">
+		              <span><i class="fa-solid fa-caret-right"></i></span>
+		              <span class="mr-3" th:text="${userName}">Visitante</span>	        
+		              <span><i class="fa-solid fa-caret-left"></i></span>
+		        	</div>
                 </div>
             </div>
         </header>
