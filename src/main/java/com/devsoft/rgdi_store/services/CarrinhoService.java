@@ -26,7 +26,7 @@ public class CarrinhoService {
     private HttpSession session;
 
     // Recupera o carrinho da sessão ou cria um novo se não existir
-    private Map<Long, Integer> getCarrinho() {
+    public Map<Long, Integer> getCarrinho() {
         @SuppressWarnings("unchecked")
         Map<Long, Integer> carrinho = (Map<Long, Integer>) session.getAttribute("carrinho");
 
@@ -111,6 +111,11 @@ public class CarrinhoService {
 
     private void zerarFrete() {
         session.setAttribute("frete", 0.0);  // Define o valor do frete como zero (Double)
+    }
+    
+    public void limparSessaoCompra() {
+        session.removeAttribute("carrinho");
+        session.removeAttribute("frete");
     }
 }
 

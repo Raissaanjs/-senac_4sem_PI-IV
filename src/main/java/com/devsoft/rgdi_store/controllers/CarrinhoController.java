@@ -87,7 +87,7 @@ public class CarrinhoController {
     @PostMapping("/carrinho/adicionar")
     public String adicionarProdutoAoCarrinho(@RequestParam("produtoId") Long produtoId) {
         carrinhoService.adicionarProduto(produtoId);  // Chama o serviço para adicionar o produto
-        return "redirect:/carrinho"; // Redireciona para a página do carrinho
+        return "redirect:/"; // Redireciona para a página do carrinho
     }
     
     // Método para alterar a quantidade de um produto no carrinho
@@ -130,5 +130,9 @@ public class CarrinhoController {
     public String removerProdutoDoCarrinho(@RequestParam("produtoId") Long produtoId) {
         carrinhoService.removerProduto(produtoId);  // Chama o serviço para remover o produto
         return "redirect:/carrinho";  // Redireciona para a página do carrinho
-    }
+    } 
+    
+    
+    
+    
 }
