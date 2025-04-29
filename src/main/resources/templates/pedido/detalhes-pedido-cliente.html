@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net/thymeleaf/layout"
+	layout:decorate="~{fragments/layoutcliente}">
+<head>
+    <title>RGDI Store - Pedido do Cliente</title>
+</head>
+<body>
+    <header layout:fragment="header">
+        <div class="px-4 px-lg-5 ">
+          <div class="text-center text-white flex-inline">
+              <h3 class="fw-bolder">Pedido do (a) Cliente</h3>
+              <div th:if="${isClient}">
+              <span><i class="fa-solid fa-caret-right"></i></span>
+              <span class="mr-3" th:text="${userName}">Visitante</span>		        
+              <span><i class="fa-solid fa-caret-left"></i></span>
+        	  </div>
+          </div>
+        </div>
+    </header>
+    <section class="layout-content" layout:fragment="corpo">
+    	<nav class="navbar navbar-expand-md bg-light">
+			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<i class="fa-solid fa-caret-right"></i>
+						<span>Detalhes do Pedido</span>
+					</li>
+				</ul>
+			</div>
+		</nav>
+	    <div class="container-fluid">
+	    	<div th:if="${erro != null}" class="alert alert-danger">
+			    <span th:text="${erro}"></span>
+			</div>
+
+		    <div class="row">
+				<div>
+		            <p><strong>Status:</strong> <span th:text="${pedido.status.descricao}"></span></p>
+		            <p><strong>Data do Pedido:</strong>
+		            <span th:text="${pedido.dataCompra != null ? pedido.dataCompra.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy')) : ''}"></span>
+					</p>
+		            <p><strong>Total do Pedido:</strong> R$ <span th:text="${#numbers.formatDecimal(pedido.valorTotal, 1, 2)}"></span></p>
+		            
+		            <h4>Itens do Pedido</h4>
+		            <table class="table">
+		                <thead>
+		                    <tr>
+		                        <th>Produto</th>
+		                        <th>Quantidade</th>
+		                        <th>Preço Unitário</th>
+		                        <th>Total</th>
+		                    </tr>
+		                </thead>
+		                <tbody>
+		                    <tr th:each="item : ${pedido.itensPedido}">
+		                        <td th:text="${item.produto.nome}"></td>
+		                        <td th:text="${item.qtProduto}"></td>
+		                        <td>R$ <span th:text="${#numbers.formatDecimal(item.vlUnitario, 1, 2)}"></span></td>
+		                        <td>R$ <span th:text="${#numbers.formatDecimal(item.vlTotalPedido, 1, 2)}"></span></td>
+		                    </tr>
+		                </tbody>
+		            </table>
+		        </div>
+		
+		        <a th:href="@{/clientes/meus-pedidos}" class="btn btn-secondary button-default">Voltar</a>	        
+		
+		    </div>
+		</div>
+	</section>
+
+</body>
+</html>		

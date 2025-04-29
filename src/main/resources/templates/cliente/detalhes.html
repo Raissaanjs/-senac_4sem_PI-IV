@@ -11,8 +11,9 @@
           <div class="text-center text-white flex-inline">
               <h3 class="fw-bolder">Detalhes do Cliente</h3>
               <div th:if="${isClient}">
-              <span>-> </span>
+              <span><i class="fa-solid fa-caret-right"></i></span>
               <span class="mr-3" th:text="${userName}">Visitante</span>		        
+              <span><i class="fa-solid fa-caret-left"></i></span>
         	  </div>
           </div>
         </div>
@@ -30,16 +31,16 @@
 		</nav>
 	    <div class="container-fluid">
 	    	<div th:if="${param.sucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
-		    Endereço salvo com sucesso!
+		    Dados salvos com sucesso!
 		    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
-		</div>
+			</div>
 
 		    <div class="row">
 		
 		        <!-- COLUNA 1: DADOS DO CLIENTE -->
-		         <div class="col-12 col-lg-4 mb-4">
+		         <div class="col-12 col-lg-5 mb-4">
 		            <div class="d-flex justify-content-between align-items-center mb-2">
-		                <h5 class="mb-2">DADOS BÁSICOS</h5>
+		                <h5 class="mb-2"><i class="fa-solid fa-user"></i> DADOS BÁSICOS</h5>
 		            </div>
 		            <div class="card mb-4">
 		                <div class="card-header bg-secondary text-white">
@@ -52,8 +53,12 @@
 		                    <p><strong>Nascimento:</strong> 
 		                        <span th:text="${#dates.format(cliente.dataNascimento, 'dd/MM/yyyy')}">01/01/2000</span></p>
 		                    <p><strong>Gênero:</strong> <span th:text="${cliente.genero}">MASCULINO</span></p>
-		                    <a th:href="@{'/clientes/editar/' + ${cliente.id}}" class="btn btn-outline-primary mt-3">
-		                        ✏️ Editar
+		                    
+		                    <a th:href="@{/clientes/editar}" class="btn btn-outline-primary mt-3">
+		                        <i class="fa-solid fa-user-pen"></i> Editar Dados
+		                    </a>
+		                    <a th:href="@{/clientes/alterpass}" class="btn btn-outline-primary mt-3">
+		                        <i class="fa-solid fa-unlock-keyhole"></i> Alterar Senha
 		                    </a>
 		                </div>
 		            </div>
@@ -62,7 +67,7 @@
 		        <!-- COLUNA 2: ENDEREÇOS -->
 		        <div class="col-12 col-lg-6 mb-4">
 		        	<div class="d-flex justify-content-between align-items-center mb-2">
-		                <h5 class="mb-0">ENDEREÇOS</h5>
+		                <h5 class="mb-0"><i class="fa-solid fa-address-card"></i> ENDEREÇOS</h5>
 		                <a class="btn btn-success btn-sm" th:href="@{/clientes/enderecos/novo}">
 		                    <i class="fa fa-plus"></i> Adicionar Endereço
 		                </a>
