@@ -7,7 +7,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,15 +26,19 @@ import com.devsoft.rgdi_store.repositories.ProdutoImagensRepository;
 @Service
 public class ProdutoImagensService {
 	
-    @Autowired
-    private ProdutoImagensRepository produtoImagensRepository;
+    private final ProdutoImagensRepository produtoImagensRepository;
+    private final ProdutoRepository produtoRepository;
+    private final UploadConfig uploadConfig;
     
-    @Autowired
-    private ProdutoRepository produtoRepository;
     
-    @Autowired
-    private UploadConfig uploadConfig;
-    
+    public ProdutoImagensService(ProdutoImagensRepository produtoImagensRepository,
+    								ProdutoRepository produtoRepository,
+    								UploadConfig uploadConfig) {
+    	this.produtoImagensRepository = produtoImagensRepository;
+    	this.produtoRepository = produtoRepository;
+    	this.uploadConfig = uploadConfig;
+    }
+
     public List<ProdutoImagens> findAllIndexImagens() {
         return produtoImagensRepository.findAll(); // Aqui usamos o método findAll do repositório
     }
@@ -76,7 +79,7 @@ public class ProdutoImagensService {
     @Transactional(readOnly = true)
     public List<ProdutoImagensDto> buscarImagensPorProdutoId(Long id) {
         ProdutoEntity produto = produtoRepository.findById(id).orElseThrow(() -> new RuntimeException("Produto não encontrado"));
-        List<ProdutoImagens> imagens = produto.getProdutoImagens(); // Assume que Produto tem o método getProdutoImagens
+        List<ProdutoImagens> imagens = produto.getProduto_imagens(); // Assume que Produto tem o método getProdutoImagens
         return imagens.stream()
                 .map(imagem -> new ProdutoImagensDto(imagem.getNome(), imagem.isPrincipal())) // Mapeia para o DTO
                 .collect(Collectors.toList());
@@ -88,7 +91,7 @@ public class ProdutoImagensService {
     public List<ProdutoImagensDto> buscarImagemPrincipalPorProdutoId(Long id) {
         ProdutoEntity produto = produtoRepository.findById(id).orElseThrow(() -> new RuntimeException("Produto não encontrado"));
         
-        List<ProdutoImagens> imagemPrincipal = produto.getProdutoImagens().stream()
+        List<ProdutoImagens> imagemPrincipal = produto.getProduto_imagens().stream()
                 .filter(ProdutoImagens::isPrincipal) // Filtra apenas as imagens principais
                 .collect(Collectors.toList());
 

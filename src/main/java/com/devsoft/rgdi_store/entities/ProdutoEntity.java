@@ -33,8 +33,11 @@ public class ProdutoEntity {
     
     // 'orphanRemoval' Apagará no DB algum item que não conte na lista
     @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    //@JsonIgnore
-    private List<ProdutoImagens> produtoImagens;
+    private List<ProdutoImagens> produto_imagens;
+    
+    // Relacionamento com ItemPedido: Um produto pode ser parte de vários itens de pedido
+    @OneToMany(mappedBy = "produto")
+    private List<ItensPedidoEntity> itens_pedido;
     
     
     // Construtor padrão
@@ -42,30 +45,18 @@ public class ProdutoEntity {
     	this.status = true; // Define o status como true por padrão
     }
 
-    // Construtor com parâmetros
-    public ProdutoEntity(Long id, String nome, double preco, int quantidade, String descricao, int avaliacao,
-			boolean status, List<ProdutoImagens> produtoImagens) {
-		super();
-		this.id = id;
-		this.nome = nome;
-		this.preco = preco;
-		this.quantidade = quantidade;
-		this.descricao = descricao;
-		this.avaliacao = avaliacao;
-		this.status = status;
-		this.produtoImagens = produtoImagens;
-	}
-    
+    // Construtor com alguns parmetros
     public ProdutoEntity(Long id, String nome, double preco) {
 		this.id = id;
 		this.nome = nome;
 		this.preco = preco;
 	}
+    
 
-	// Getters e Setters
+	// Getters e Setters	
 	public Long getId() {
 		return id;
-	}	
+	}
 
 	public void setId(Long id) {
 		this.id = id;
@@ -110,22 +101,31 @@ public class ProdutoEntity {
 	public void setAvaliacao(int avaliacao) {
 		this.avaliacao = avaliacao;
 	}
-	
+
 	public boolean isStatus() {
 		return status;
 	}
 
 	public void setStatus(boolean status) {
 		this.status = status;
-	}	
-	
-	public List<ProdutoImagens> getProdutoImagens() {
-		return produtoImagens;
 	}
 
-	public void setProdutoImagens(List<ProdutoImagens> produtoImagens) {
-		this.produtoImagens = produtoImagens;
+	public List<ProdutoImagens> getProduto_imagens() {
+		return produto_imagens;
 	}
+
+	public void setProduto_imagens(List<ProdutoImagens> produto_imagens) {
+		this.produto_imagens = produto_imagens;
+	}
+
+	public List<ItensPedidoEntity> getItens_pedido() {
+		return itens_pedido;
+	}
+
+	public void setItens_pedido(List<ItensPedidoEntity> itens_pedido) {
+		this.itens_pedido = itens_pedido;
+	}
+	
 
 	@Override
 	public int hashCode() {
