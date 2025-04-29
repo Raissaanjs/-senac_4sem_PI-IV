@@ -18,6 +18,7 @@
     <!-- Custom styles for this template -->
     <link th:href="@{/css/style.css}" rel="stylesheet" />
     <link th:href="@{/css/_position.css}" rel="stylesheet" />
+    <link th:href="@{/css/style-button.css}" rel="stylesheet" />
 </head>
 <body>
     <header>
@@ -57,7 +58,7 @@
                	 <!-- Exibe o nome do usuário --> 					 
 			    <form th:action="@{/clientes/logout}" method="post" onsubmit="return confirm('Tem certeza que deseja sair?');" th:if="${isClient}">
 			        <button type="submit" class="btn btn-dark">			        
-				        <i class="fa-solid fa-right-from-bracket"></i> <strong>Sair</strong>
+				        <i class="fa-solid fa-person-walking-dashed-line-arrow-right"></i> <strong>Sair</strong>
 				    </button>
 			    </form>
 			</div>
@@ -83,6 +84,11 @@
 		            <li class="nav-item">
 		                <a class="nav-link" th:href="@{/clientes/detalhes-cliente}">
 		                    <i class="fa-solid fa-plus"></i> <span>Meus Dados</span>
+		                </a>
+		            </li>
+		            <li class="nav-item">
+		                <a class="nav-link" th:href="@{/clientes/meus-pedidos}">
+		                    <i class="fa-solid fa-plus"></i> <span>Meus Pedidos</span>
 		                </a>
 		            </li>
 		        </ul>

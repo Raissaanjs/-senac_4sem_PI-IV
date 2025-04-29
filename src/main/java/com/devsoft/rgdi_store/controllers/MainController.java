@@ -72,5 +72,16 @@ public class MainController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName(); // Retorna o nome do usuário
     }
+    
+    // Controle de sessão expirada
+    @GetMapping("/clientes/sessao-expirada")
+    public String sessaoExpiradaCliente() {
+        return "cliente/sessao-expirada-cliente"; // nome do template HTML
+    }
+
+    @GetMapping("/sessao-expirada")
+    public String sessaoExpiradaAdmin() {
+        return "admin/sessao_expirada"; // nome do template HTML
+    }
 }
 

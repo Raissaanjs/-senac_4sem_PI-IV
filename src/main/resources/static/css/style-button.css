@@ -1,0 +1,10 @@
+.button-page-success{
+	display: inline-block !important;
+	width: auto !important;
+}
+
+.button-default{
+	display: inline-block !important;
+	width: auto !important;
+	margin-left: 0.5rem;
+}
