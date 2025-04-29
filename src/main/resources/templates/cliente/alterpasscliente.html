@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net/thymeleaf/layout"
+	layout:decorate="~{fragments/layoutcliente}">
+<head>
+    <title>RGDI Store - Cadastro de Cliente</title>
+</head>
+<body>
+	<header layout:fragment="header">
+        <div class="px-4 px-lg-5 ">
+          <div class="text-center text-white flex-inline">
+              <h3 class="fw-bolder">Editar Cadastro</h3>
+              <div th:if="${isClient}">
+              <span><i class="fa-solid fa-caret-right"></i></span>
+              <span class="mr-3" th:text="${userName}">Visitante</span>
+              <span><i class="fa-solid fa-caret-left"></i></span>		        
+        	  </div>
+          </div>
+        </div>
+    </header>
+    <section class="layout-content" layout:fragment="corpo">
+    	<nav class="navbar navbar-expand-md bg-light">
+			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<i class="fa-solid fa-caret-right"></i>
+						<span>Alterar Senha do Cliente</span>
+					</li>
+				</ul>
+			</div>
+		</nav>	    
+	    <div th:if="${error}" class="alert alert-danger" role="alert">
+		    <p th:text="${error}"></p>
+		</div>
+	    <div class="container formcadastro" id="cadastro">
+	    	<div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+			    <span th:text="${erro}"></span>
+			    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+			</div>
+	        <form th:action="@{/clientes/updatepass}" th:object="${alterarSenhaDTO}" method="post">
+		        <div class="row">
+		        	<div class="mb-3 col-md-3">
+	                    <label for="senhaAtual">Senha Atual</label>
+	                    <input type="password" class="form-control" id="senhaAtual" name="senhaAtual" required aria-required="true"
+	                           th:classappend="${#fields.hasErrors('senhaAtual')} ? 'is-invalid'" th:value="*{senhaAtual}" />
+	                    <div class="invalid-feedback" th:text="${#fields.errors('senhaAtual')}"></div>
+	                </div>
+	            </div>
+	            <div class="row">
+	                <div class="mb-3 col-md-3">
+	                    <label for="novaSenha">Nova Senha</label>
+	                    <input type="password" class="form-control" id="novaSenha" name="novaSenha" required aria-required="true"
+	                           th:classappend="${#fields.hasErrors('novaSenha')} ? 'is-invalid'" th:value="*{novaSenha}" />
+	                    <div class="invalid-feedback" th:text="${#fields.errors('novaSenha')}"></div>
+	                </div>
+	           </div>
+	           <div class="row">	
+	                <div class="mb-3 col-md-3">
+	                    <label for="confirmaSenha">Confirma Senha</label>
+	                    <input type="password" class="form-control" id="confirmaSenha" name="confirmaSenha" required aria-required="true"
+	                    	   th:classappend="${confirmaSenhaError != null} ? 'is-invalid'" />
+	                    <div class="invalid-feedback" th:text="${confirmaSenhaError}"></div>
+	                </div>
+	            </div>	
+		        <button type="submit" class="btn btn-primary">Alterar</button>
+		        <a th:href="@{/clientes/detalhes-cliente}" class="btn btn-secondary ms-2">Cancelar</a>
+	    	</form>
+       </div>
+	</section>
+
+</body>
+</html>		

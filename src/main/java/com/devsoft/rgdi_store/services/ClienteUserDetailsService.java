@@ -34,9 +34,10 @@ public class ClienteUserDetailsService implements UserDetailsService {
         );
 
         return new CustomClienteDetails(
-            cliente.getEmail(),
-            cliente.getSenha(),
-            authorities
-        );
+        	    cliente.getEmail(),
+        	    cliente.getSenha(),
+        	    cliente.getNome(), // aqui vai o nome do cliente
+        	    authorities
+        	);
     }
 }

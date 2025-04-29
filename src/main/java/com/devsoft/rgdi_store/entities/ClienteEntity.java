@@ -4,41 +4,43 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "tb_cliente")
-public class ClienteEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;    
-    private String nome;
-    private Date dataNascimento;
-    @Enumerated(EnumType.STRING) // Armazena o nome do enum (e.g., "MASCULINO", "FEMININO", etc)
-    private ClienteGenero genero;
-    @Column(unique = true)
-    private String cpf;
-    @Column(unique = true)
-    private String email;
-    private String senha;
-    @Enumerated(EnumType.STRING) // Armazena o nome do enum (e.g., "ADMIN", "ESTOQ")
-    private UserGroup grupo;
-    
-    // 'orphanRemoval' Apagará no DB algum item que não conte na lista
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<EnderecoEntity> enderecos;
+	@Entity
+	@Table(name = "tb_cliente")
+	public class ClienteEntity {
 	
+	    @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private Long id;    
+	    private String nome;
+	    private Date dataNascimento;
+	    @Enumerated(EnumType.STRING) // Armazena o nome do enum (e.g., "MASCULINO", "FEMININO", etc)
+	    private ClienteGenero genero;
+	    @Column(unique = true)
+	    private String cpf;
+	    @Column(unique = true)
+	    private String email;
+	    private String senha;
+	    @Enumerated(EnumType.STRING) // Armazena o nome do enum (e.g., "ADMIN", "ESTOQ")
+	    private UserGroup grupo;
+	    
+	    // 'orphanRemoval' Apagará no DB algum item que não conte na lista
+	    @OneToMany(mappedBy = "cliente")
+	    private List<EnderecoEntity> enderecos;
+		
+	    // O mappedBy = "cliente" indica que o lado Pedido (a propriedade cliente)
+	    // é quem controla a relação e onde a chave estrangeira vai ser armazenada
+	    @OneToMany(mappedBy = "cliente")
+	    private List<PedidoEntity> pedidos;
     
     public ClienteEntity() {
 	}		
@@ -65,10 +67,9 @@ public class ClienteEntity {
 		this.email = email;
 		this.senha = senha;
 	}
-    
+    	
 	
-	
-    //Demais Getters and Setters
+    //Getters and Setters
     public Long getId() {
 		return id;
 	}	
