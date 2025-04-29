@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" data-bs-theme="dark" class="h-100">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">       
+	<title>Sessão Encerrada - Admin</title>
+	<link th:href="@{/image/favicon.png}" rel="icon" />
+	
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" >
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+	<link th:href="@{/css/style.css}" rel="stylesheet"/>
+	<link th:href="@{/css/formlogin.css}" rel="stylesheet"/>
+	
+  </head>
+  <body class="d-flex align-items-center py-4 h-100">
+		<main class="m-auto">		    
+			<div class="container">
+				<div class="row justify-content-center">
+		            <div class="col-md-6">
+		                <div class="alert alert-warning" role="alert">
+		                    <h4 class="alert-heading">Sessão Expirada!</h4>
+		                    <p>Sua sessão foi encerrada devido à inatividade ou você foi desconectado.</p>
+		                    <hr>
+		                    <p class="mb-0">Por favor, <a th:href="@{/login}" class="alert-link">faça login novamente</a> para continuar.</p>
+		                </div>
+		            </div>
+		        </div>
+   			 </div>			  
+	  	</main>
+	 
+<script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+<!-- jQuery Mask Plugin -->
+<script src="/webjars/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+<script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+
+
+</body>
+</html>
+
+

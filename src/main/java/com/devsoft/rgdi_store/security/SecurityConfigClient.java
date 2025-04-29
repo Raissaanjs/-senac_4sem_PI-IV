@@ -11,25 +11,27 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.devsoft.rgdi_store.controllers.handlers.CustomNoAuthenticatedHandlerCliente;
 import com.devsoft.rgdi_store.services.ClienteUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfigClient {
-
-    private final CustomNoAuthenticatedHandlerCliente customNoAuthenticatedHandlerCliente;
+public class SecurityConfigClient {	
+    
     private final ClienteUserDetailsService clienteUserDetailsService;
     private final PasswordEncoder passwordEncoder;
+    public final SessionExpiredFilter sessionExpiredFilter;
 
-    public SecurityConfigClient(CustomNoAuthenticatedHandlerCliente clienteInativoHandler,
-                                ClienteUserDetailsService clienteUserDetailsService,
-                                PasswordEncoder passwordEncoder) {
-        this.customNoAuthenticatedHandlerCliente = clienteInativoHandler;
+    public SecurityConfigClient(ClienteUserDetailsService clienteUserDetailsService,
+                                PasswordEncoder passwordEncoder,
+                                SessionExpiredFilter sessionExpiredFilter) {
         this.clienteUserDetailsService = clienteUserDetailsService;
         this.passwordEncoder = passwordEncoder;
+        this.sessionExpiredFilter = sessionExpiredFilter;
     }
+    
+   
 
     @Bean
     @Order(1)
@@ -49,6 +51,7 @@ public class SecurityConfigClient {
         
     	
         http.securityMatcher("/clientes/**")  // Aplica segurança apenas para rotas de cliente
+        	.addFilterBefore(sessionExpiredFilter, UsernamePasswordAuthenticationFilter.class) // Filtro para controle de Sessão
             .authorizeHttpRequests(auth -> auth        		
         		.requestMatchers("/clientes/login").permitAll()
         		.requestMatchers("/clientes/cadastrar/**", "/clientes/salvar-cliente/**" 
@@ -59,13 +62,17 @@ public class SecurityConfigClient {
         				"/clientes/salvar-endereco-entrega/**").permitAll()
 	            .requestMatchers("/clientes/admin/**").hasAnyAuthority("ROLE_CLIENT")
 	            .requestMatchers("/clientes/detalhes/**", "/clientes/endereco/mudar-principal/**").hasAnyAuthority("ROLE_CLIENT")
+	            .requestMatchers("/clientes/editar/**", "/clientes/update/**").hasAnyAuthority("ROLE_CLIENT")
+	            .requestMatchers("/clientes/alterpass/**", "/clientes/updatepass/**").hasAnyAuthority("ROLE_CLIENT")
+	            .requestMatchers("/clientes/pagamento-resumo", "/clientes/pagamento-processar").hasAnyAuthority("ROLE_CLIENT")
+	            .requestMatchers("clientes/pedidos/**","clientes/meus-pedidos/**").hasAnyAuthority("ROLE_CLIENT")
                 .anyRequest().authenticated()  // Qualquer outra rota do cliente requer autenticação
             )
             .formLogin(form -> form
                 .loginPage("/clientes/login")  // Página de login personalizada para cliente
                 .usernameParameter("email")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/clientes/admin", false) // Vai para o último endpoint acessado, senão vai para "/clientes/admin"
+                .defaultSuccessUrl("/clientes/meus-pedidos", false) // Vai para o último endpoint acessado, senão vai para "/clientes/meus-pedidos"
             )
             .logout(logout -> logout
                 .logoutUrl("/clientes/logout")  // URL de logout do cliente
@@ -77,20 +84,17 @@ public class SecurityConfigClient {
             .sessionManagement(session -> session
         		.sessionFixation(sessionFixation -> sessionFixation.migrateSession())  // Cria uma nova sessão após o login
             	.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-            	.invalidSessionUrl("/clientes/login?invalid=true") // URL para redirecionar quando a sessão for inválida
                 .maximumSessions(1) // Define quantos usuários podem estar logados ao mesmo tempo
                 .maxSessionsPreventsLogin(false) // Permite que a última sessão expirada seja reautenticada
                 
             )
             .exceptionHandling(exceptions -> exceptions
-                .authenticationEntryPoint(customNoAuthenticatedHandlerCliente)
                 .accessDeniedPage("/clientes/error/error-no-perm-cliente")
             )
             .csrf(csrf -> csrf.disable())  // Desabilita CSRF para facilitar testes no Postman
             .headers(headers -> headers.frameOptions().sameOrigin());
 
         return http.build();
-    }    
-    
+    } 
 }
 

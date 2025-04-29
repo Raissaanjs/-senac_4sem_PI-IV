@@ -1,4 +1,4 @@
-package com.devsoft.rgdi_store.controllers.handlers;
+package com.devsoft.rgdi_store.handlers;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

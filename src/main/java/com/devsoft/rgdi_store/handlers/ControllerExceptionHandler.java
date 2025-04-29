@@ -1,4 +1,4 @@
-package com.devsoft.rgdi_store.controllers.handlers;
+package com.devsoft.rgdi_store.handlers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

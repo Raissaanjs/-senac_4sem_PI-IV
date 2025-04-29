@@ -8,16 +8,23 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class CustomClienteDetails implements UserDetails {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-    private String username;
+    private String username; // email
     private String password;
     private List<GrantedAuthority> authorities;
 
-    public CustomClienteDetails(String username, String password, List<GrantedAuthority> authorities) {
+    private String nome; // novo campo para o nome do cliente
+
+    public CustomClienteDetails(String username, String password, String nome, List<GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
+        this.nome = nome;
         this.authorities = authorities;
+    }
+
+    public String getNome() {
+        return nome;
     }
 
     @Override
@@ -55,3 +62,4 @@ public class CustomClienteDetails implements UserDetails {
         return true;
     }
 }
+

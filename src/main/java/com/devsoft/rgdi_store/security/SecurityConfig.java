@@ -13,24 +13,24 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.devsoft.rgdi_store.controllers.handlers.CustomNoAuthenticatedHandler;
 import com.devsoft.rgdi_store.services.AdminUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
-
-	private final CustomNoAuthenticatedHandler customNoAuthenticatedHandler;
+public class SecurityConfig {	
+	
     private final AdminUserDetailsService adminUserDetailsService;
     private final PasswordEncoder passwordEncoder;
+    public final SessionExpiredFilter sessionExpiredFilter;
 
-    public SecurityConfig(CustomNoAuthenticatedHandler usuarioInativoHandler,
-                          AdminUserDetailsService adminUserDetailsService,
-                          PasswordEncoder passwordEncoder) {
-        this.customNoAuthenticatedHandler = usuarioInativoHandler;
+    public SecurityConfig(AdminUserDetailsService adminUserDetailsService,
+                          PasswordEncoder passwordEncoder,
+                          SessionExpiredFilter sessionExpiredFilter) {
         this.adminUserDetailsService = adminUserDetailsService;
         this.passwordEncoder = passwordEncoder;
+        this.sessionExpiredFilter = sessionExpiredFilter;
     }
     
 	   
@@ -52,15 +52,17 @@ public class SecurityConfig {
 		
 	    
 	    http
-	        .authorizeHttpRequests(auth -> auth
+	    	.addFilterBefore(sessionExpiredFilter, UsernamePasswordAuthenticationFilter.class) // Filtro para controle de Sessão
+    		.authorizeHttpRequests(auth -> auth
+    			.requestMatchers("/clientes/sessao-expirada", "/sessao-expirada").permitAll()
 	        	.requestMatchers("/", "/css/**", "/js/**", "/image/**", "/webjars/**", "/upload/**", "/uploads/**",
 	        			"/list", "/auth").permitAll()
-        		.requestMatchers("/produtos/loja/**", "/produto-imagens/imagem-principal/**" ,
-            			"/produto-imagens/detalhes/**", "/produtos/detalhes/**","/carrinho/**").permitAll()
+	    		.requestMatchers("/produtos/loja/**", "/produto-imagens/imagem-principal/**" ,
+	        			"/produto-imagens/detalhes/**", "/produtos/detalhes/**","/carrinho/**").permitAll()
 	            .requestMatchers("/login").permitAll()
 	            .requestMatchers("/error-login", "/error-user-inat",
-        				"/access-denied", "/error-no-perm", "/error-no-auth").permitAll()
-	            .requestMatchers("/usuarios/**", "/username/**").hasAuthority("ROLE_ADMIN")
+	    				"/access-denied", "/error-no-perm", "/error-no-auth").permitAll()
+	            .requestMatchers("/usuarios/**", "/username/**").hasAnyAuthority("ROLE_ADMIN")
 	            .requestMatchers("/produtos/listar/**","/produtos/detalhes/**" ,"/produtos/update/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers(HttpMethod.PUT, "/produtos/*/status").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers("/produtos/**").hasAnyAuthority("ROLE_ADMIN")	            
@@ -86,18 +88,17 @@ public class SecurityConfig {
 	        .sessionManagement(session -> session
         		.sessionFixation(sessionFixation -> sessionFixation.migrateSession())
         		.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-        		.invalidSessionUrl("/login?invalid=true")
 	            .maximumSessions(1)
 	            .maxSessionsPreventsLogin(false)
 	        )
 	        .exceptionHandling(exceptions -> exceptions
-	            .authenticationEntryPoint(customNoAuthenticatedHandler)
 	            .accessDeniedPage("/error-no-perm")
 	        )
 	        .csrf(csrf -> csrf.disable()) // Desabilita CSRF para facilitar testes no Postman
 	        .headers(headers -> headers.frameOptions().sameOrigin());
 
 	    return http.build();    	
-    }	
+    }
+	
 	
 }
