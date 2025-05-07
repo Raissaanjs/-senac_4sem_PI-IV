@@ -71,7 +71,7 @@
 	
 	        <div id="enderecoEntregaSection">
 	            <h4>Endereço de Entrega</h4>
-	            <form th:action="@{/clientes/salvar-endereco-entrega}" method="POST">
+	            <form th:action="@{/clientes/noauth/endereco-inicial/entrega}" method="POST">
 	                <input type="hidden" name="clienteId" th:value="${clienteId}" />
 	                <div class="form-check mb-3">
 	                    <input type="checkbox" class="form-check-input" id="copiarEndereco" onclick="copiarEnderecoFaturamento()">

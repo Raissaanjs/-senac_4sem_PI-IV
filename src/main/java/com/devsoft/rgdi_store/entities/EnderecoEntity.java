@@ -140,6 +140,13 @@ public class EnderecoEntity {
 		this.cliente = cliente;
 	}
 	
+	public List<PedidoEntity> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<PedidoEntity> pedidos) {
+		this.pedidos = pedidos;
+	}
 
 	@Override
 	public int hashCode() {
@@ -157,6 +164,19 @@ public class EnderecoEntity {
 			return false;
 		EnderecoEntity other = (EnderecoEntity) obj;
 		return Objects.equals(id, other.id);
+	}
+	
+	// Usado para a lógica dos endereços
+	public boolean mesmoConteudo(EnderecoEntity outro) {
+	    if (outro == null) return false;
+
+	    return Objects.equals(this.logradouro, outro.getLogradouro()) &&
+	           Objects.equals(this.numero, outro.getNumero()) &&
+	           Objects.equals(this.complemento, outro.getComplemento()) &&
+	           Objects.equals(this.bairro, outro.getBairro()) &&
+	           Objects.equals(this.localidade, outro.getLocalidade()) &&
+	           Objects.equals(this.uf, outro.getUf()) &&
+	           Objects.equals(this.cep, outro.getCep());
 	}
 	
 }

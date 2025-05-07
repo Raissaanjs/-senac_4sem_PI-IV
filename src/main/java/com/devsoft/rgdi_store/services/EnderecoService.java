@@ -10,16 +10,30 @@ import org.springframework.transaction.annotation.Transactional;
 import com.devsoft.rgdi_store.entities.ClienteEntity;
 import com.devsoft.rgdi_store.entities.EnderecoEntity;
 import com.devsoft.rgdi_store.entities.EnderecoTipo;
+import com.devsoft.rgdi_store.exceptions.EnderecoDuplicadoException;
+import com.devsoft.rgdi_store.exceptions.all.ClienteNaoEncontradoException;
+import com.devsoft.rgdi_store.repositories.ClienteRepository;
 import com.devsoft.rgdi_store.repositories.EnderecoRepository;
-import com.devsoft.rgdi_store.services.exceptions.EnderecoDuplicadoException;
+import com.devsoft.rgdi_store.repositories.PedidoRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class EnderecoService {
 
     private final EnderecoRepository enderecoRepository;
+    private final ClienteService clienteService;
+    private final ClienteRepository clienteRepository;
+    private final PedidoRepository pedidoRepository;
 
-    public EnderecoService(EnderecoRepository enderecoRepository) {
+    public EnderecoService(EnderecoRepository enderecoRepository,
+    						ClienteService clienteService,
+    						ClienteRepository clienteRepository,
+    						PedidoRepository pedidoRepository) {
         this.enderecoRepository = enderecoRepository;
+        this.clienteService = clienteService;
+        this.clienteRepository = clienteRepository;
+        this.pedidoRepository = pedidoRepository;
     }
 
     @Transactional(readOnly = true)
@@ -30,68 +44,67 @@ public class EnderecoService {
     public Optional<EnderecoEntity> findById(Long id) {
         return enderecoRepository.findById(id);
     }
+
     
+ // Método principal para salvar o endereço
     @Transactional
-    public void saveEndereco(ClienteEntity cliente, EnderecoEntity novoEndereco) {
-        novoEndereco.setCliente(cliente);
+    public void saveEndereco(ClienteEntity cliente, EnderecoEntity endereco) {
+        endereco.setCliente(cliente);
 
-        if (novoEndereco.getTipo() == EnderecoTipo.FATURAMENTO) {
-            handleFaturamento(cliente, novoEndereco);
-        } else if (novoEndereco.getTipo() == EnderecoTipo.ENTREGA) {
-            handleEntrega(cliente, novoEndereco);
+        if (endereco.getTipo() == EnderecoTipo.FATURAMENTO) {
+            handleFaturamento(cliente, endereco);
+        } else if (endereco.getTipo() == EnderecoTipo.ENTREGA) {
+            handleEntrega(cliente, endereco);
         }
     }
 
+    // Método para cadastrar novo endereço de FATURAMENTO
     private void handleFaturamento(ClienteEntity cliente, EnderecoEntity novoEndereco) {
-        Optional<EnderecoEntity> atualFaturamento = enderecoRepository.findByClienteAndTipo(cliente, EnderecoTipo.FATURAMENTO);
+        Optional<EnderecoEntity> enderecoExistente = enderecoRepository.findByClienteAndTipo(cliente, EnderecoTipo.FATURAMENTO);
 
-        if (atualFaturamento.isPresent()) {
-            EnderecoEntity antigo = atualFaturamento.get();
+        enderecoExistente.ifPresent(endAntigo -> {
+            if (isEnderecoDuplicadoFaturamento(cliente, novoEndereco)) {
+                // Endereço FATURAMENTO idêntico já existe — mostra mensagem e não salva
+                throw new EnderecoDuplicadoException("Já existe um endereço de FATURAMENTO idêntico cadastrado.");
+            } else {
+                // Verifica se já existe um endereço de ENTREGA igual ao FATURAMENTO antigo
+                boolean existeEntregaIgual = isEnderecoDuplicadoEntrega(cliente, endAntigo);
 
-            // 1. Muda tipo para ENTREGA e força flush no banco
-            antigo.setTipo(EnderecoTipo.ENTREGA);
-            enderecoRepository.saveAndFlush(antigo); // 🔥 Isso é crucial!
+                if (existeEntregaIgual) {
+                    // Se já existe ENTREGA idêntico, remove o FATURAMENTO antigo
+                    enderecoRepository.delete(endAntigo);
+                } else {
+                    // Caso contrário, transforma o FATURAMENTO atual em ENTREGA
+                    endAntigo.setTipo(EnderecoTipo.ENTREGA);
+                    enderecoRepository.save(endAntigo);
+                }
+            }
+        });
 
-            // 2. Busca duplicado atualizado diretamente do banco
-            Optional<EnderecoEntity> duplicado = enderecoRepository.findAllByClienteId(cliente.getId()).stream()
-                .filter(e -> e.getTipo() == EnderecoTipo.ENTREGA && !e.getId().equals(antigo.getId()))
-                .filter(e -> isEnderecoIgual(e, antigo))
-                .findFirst();
-
-            duplicado.ifPresent(enderecoRepository::delete);
-        }
-
-        // 3. Agora é seguro salvar como FATURAMENTO
+        // Salva o novo como FATURAMENTO
         enderecoRepository.save(novoEndereco);
     }
 
 
-    private void handleEntrega(ClienteEntity cliente, EnderecoEntity novoEndereco) {
-        if (isEnderecoDuplicado(cliente, novoEndereco)) {
-            throw new EnderecoDuplicadoException("Já existe um endereço de ENTREGA idêntico cadastrado.");
+    // Método para cadastrar novo endereço de ENTREGA
+    private void handleEntrega(ClienteEntity cliente, EnderecoEntity endereco) {
+        // Verifica se já existe um endereço ENTREGA idêntico
+        if (isEnderecoDuplicadoEntrega(cliente, endereco)) {
+        	throw new EnderecoDuplicadoException("Já existe um endereço de ENTREGA idêntico cadastrado.");
+
         }
 
-        enderecoRepository.save(novoEndereco);
+        // Se não houver duplicidade, salva o novo endereço de ENTREGA
+        enderecoRepository.save(endereco);
     }
+    
 
-    private boolean isEnderecoDuplicado(ClienteEntity cliente, EnderecoEntity endereco) {
-        return cliente.getEnderecos().stream()
-            .filter(e -> e.getTipo() == EnderecoTipo.ENTREGA)
-            .anyMatch(e -> isEnderecoIgual(e, endereco));
-    }
-
-    private boolean isEnderecoIgual(EnderecoEntity e1, EnderecoEntity e2) {
-        return e1.getCep().equals(e2.getCep()) &&
-               e1.getLogradouro().equals(e2.getLogradouro()) &&
-               e1.getNumero().equals(e2.getNumero()) &&
-               Objects.equals(e1.getComplemento(), e2.getComplemento()) &&
-               e1.getBairro().equals(e2.getBairro()) &&
-               e1.getLocalidade().equals(e2.getLocalidade()) &&
-               e1.getUf().equals(e2.getUf());
-    }
-
+    //OK
     @Transactional
     public void tornarPrincipal(Long clienteId, Long novoPrincipalId) {
+        ClienteEntity cliente = clienteRepository.findById(clienteId)
+            .orElseThrow(() -> new ClienteNaoEncontradoException("Cliente com ID " + clienteId + " não encontrado"));
+
         List<EnderecoEntity> enderecos = enderecoRepository.findAllByClienteId(clienteId);
 
         EnderecoEntity atualPrincipal = enderecos.stream()
@@ -102,25 +115,86 @@ public class EnderecoService {
         EnderecoEntity novoPrincipal = enderecos.stream()
             .filter(e -> e.getId().equals(novoPrincipalId))
             .findFirst()
-            .orElseThrow(() -> new RuntimeException("Endereço de entrega não encontrado"));
+            .orElseThrow(() -> new EntityNotFoundException("Endereço com ID " + novoPrincipalId + " não encontrado"));
 
-        if (atualPrincipal != null) {
-            atualPrincipal.setTipo(EnderecoTipo.ENTREGA);
-            enderecoRepository.save(atualPrincipal);
+        // Troca o antigo FATURAMENTO para ENTREGA (caso necessário)
+        if (atualPrincipal != null && !atualPrincipal.getId().equals(novoPrincipalId)) {
+            boolean duplicado = isEnderecoDuplicadoEntrega(cliente, atualPrincipal);
 
-            Optional<EnderecoEntity> duplicado = enderecos.stream()
-                .filter(e -> e.getTipo() == EnderecoTipo.ENTREGA && !e.getId().equals(atualPrincipal.getId()))
-                .filter(e -> isEnderecoIgual(e, atualPrincipal))
-                .findFirst();
-
-            duplicado.ifPresent(enderecoRepository::delete);
+            if (!duplicado) {
+                atualPrincipal.setTipo(EnderecoTipo.ENTREGA);
+                enderecoRepository.save(atualPrincipal);
+            } else {
+                // Se já existe ENTREGA idêntico, remove o FATURAMENTO antigo
+                enderecoRepository.delete(atualPrincipal);
+            }
         }
 
-        novoPrincipal.setTipo(EnderecoTipo.FATURAMENTO);
-        enderecoRepository.save(novoPrincipal);
+        // Se o novo endereço já é FATURAMENTO, não precisa mudar
+        if (novoPrincipal.getTipo() == EnderecoTipo.FATURAMENTO) {
+            return;
+        }
+
+        // Se tiver pedidos vinculados, duplicar o endereço
+        if (hasPedidosVinculados(novoPrincipal)) {
+            EnderecoEntity copia = new EnderecoEntity();
+            copia.setCliente(cliente);
+            copia.setTipo(EnderecoTipo.FATURAMENTO);
+            copia.setCep(novoPrincipal.getCep());
+            copia.setLogradouro(novoPrincipal.getLogradouro());
+            copia.setNumero(novoPrincipal.getNumero());
+            copia.setComplemento(novoPrincipal.getComplemento());
+            copia.setBairro(novoPrincipal.getBairro());
+            copia.setLocalidade(novoPrincipal.getLocalidade());
+            copia.setUf(novoPrincipal.getUf());
+
+            enderecoRepository.save(copia);
+        } else {
+            novoPrincipal.setTipo(EnderecoTipo.FATURAMENTO);
+            enderecoRepository.save(novoPrincipal);
+        }
     }
+
+    
+    // ========== MÉTODOS AUXILIARES ==========
+    public ClienteEntity buscarClienteComEnderecos(Long clienteId) {
+        return clienteService.findByIdComEnderecos(clienteId);
+    }
+    
+    private boolean hasPedidosVinculados(EnderecoEntity endereco) {
+        return pedidoRepository.existsByEndereco(endereco);
+    }
+    
+    // Verifica se já existe um endereço duplicado para o tipo FATURAMENTO
+    private boolean isEnderecoDuplicadoFaturamento(ClienteEntity cliente, EnderecoEntity endereco) {
+        return cliente.getEnderecos().stream()
+            .filter(e -> e.getTipo() == EnderecoTipo.FATURAMENTO)
+            .anyMatch(e ->
+                Objects.equals(e.getCep(), endereco.getCep()) &&
+                Objects.equals(e.getLogradouro(), endereco.getLogradouro()) &&
+                Objects.equals(e.getNumero(), endereco.getNumero()) &&
+                Objects.equals(e.getComplemento(), endereco.getComplemento()) &&
+                Objects.equals(e.getBairro(), endereco.getBairro()) &&
+                Objects.equals(e.getLocalidade(), endereco.getLocalidade()) &&
+                Objects.equals(e.getUf(), endereco.getUf())
+            );
+    }
+    
+    // Verifica se já existe um endereço duplicado para o tipo ENTREGA
+    private boolean isEnderecoDuplicadoEntrega(ClienteEntity cliente, EnderecoEntity endereco) {
+        return cliente.getEnderecos().stream()
+            .filter(e -> e.getTipo() == EnderecoTipo.ENTREGA)
+            .anyMatch(e ->
+                e.getCep().equals(endereco.getCep()) &&
+                e.getLogradouro().equals(endereco.getLogradouro()) &&
+                e.getNumero().equals(endereco.getNumero()) &&
+                Objects.equals(e.getComplemento(), endereco.getComplemento()) &&
+                e.getBairro().equals(endereco.getBairro()) &&
+                e.getLocalidade().equals(endereco.getLocalidade()) &&
+                e.getUf().equals(endereco.getUf())
+            );
+    }
+    
+
 }
-
-
-
 

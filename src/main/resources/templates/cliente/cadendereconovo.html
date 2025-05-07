@@ -23,8 +23,9 @@
 			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item active">
-						<i class="fa-solid fa-caret-right"></i>
-						<span>Novo Endereço</span>
+						<i class="fa-solid fa-caret-right"></i> <span>Meus Dados</span>
+						<i class="fa-solid fa-caret-right"></i> <span>Dados do Cliente</span>
+						<i class="fa-solid fa-caret-right"></i> <span>Adicionar Novo Endereço</span>
 					</li>
 				</ul>
 			</div>
@@ -35,7 +36,7 @@
 			    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
 			</div>
 
-	        <form th:action="@{/clientes/enderecos/salvar}" method="post" th:object="${endereco}">
+	        <form th:action="@{/clientes/auth/endereco/meusdados/salvar}" method="post" th:object="${endereco}">
 	            <input type="hidden" name="clienteId" th:value="${clienteId}" />
 	            
 	            <div class="row">
@@ -90,7 +91,8 @@
 	                </div>
 	            </div>
 	
-	            <button type="submit" class="btn btn-primary">Salvar</button>
+	            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+	            <a th:href="@{/clientes/auth/detalhes-cliente}" class="btn btn-secondary ms-2">Cancelar</a>
 	        </form>
 	    </div>
 	</section>
