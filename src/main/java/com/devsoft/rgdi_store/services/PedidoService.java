@@ -1,42 +1,58 @@
 package com.devsoft.rgdi_store.services;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.devsoft.rgdi_store.dto.ItemCarrinhoDTO;
 import com.devsoft.rgdi_store.entities.ClienteEntity;
 import com.devsoft.rgdi_store.entities.ItensPedidoEntity;
 import com.devsoft.rgdi_store.entities.PedidoEntity;
 import com.devsoft.rgdi_store.entities.PedidoStatus;
 import com.devsoft.rgdi_store.entities.ProdutoEntity;
-import com.devsoft.rgdi_store.repositories.ItensPedidoRepository;
+import com.devsoft.rgdi_store.exceptions.all.CarrinhoVazioException;
+import com.devsoft.rgdi_store.exceptions.all.EstoqueInsuficienteException;
+import com.devsoft.rgdi_store.exceptions.all.PedidoNaoEncontradoException;
 import com.devsoft.rgdi_store.repositories.PedidoRepository;
-import com.devsoft.rgdi_store.services.exceptions.All.PedidoNaoEncontradoException;
+import com.devsoft.rgdi_store.repositories.ProdutoRepository;
 
 @Service
 public class PedidoService {
 
-	private final PedidoRepository pedidoRepository;
-	private final ItensPedidoRepository itensPedidoRepository;
-	private final CarrinhoService carrinhoService;
-	
-	public PedidoService(PedidoRepository pedidoRepository, ItensPedidoRepository itensPedidoRepository, 
-						CarrinhoService carrinhoService) {
-		this.pedidoRepository = pedidoRepository;
-		this.itensPedidoRepository = itensPedidoRepository;
-		this.carrinhoService = carrinhoService;
-	}
-	
-
-	@Transactional(readOnly = true)
+    private final PedidoRepository pedidoRepository;
+    private final CarrinhoService carrinhoService;
+    private final ProdutoRepository produtoRepository;
+    
+    public PedidoService(PedidoRepository pedidoRepository, 
+                        CarrinhoService carrinhoService,
+                        ProdutoRepository produtoRepository) {
+        this.pedidoRepository = pedidoRepository;
+        this.carrinhoService = carrinhoService;
+        this.produtoRepository = produtoRepository;
+    }
+    
+    @Transactional(readOnly = true)
     public List<PedidoEntity> findAll() {
         return pedidoRepository.findAll();
     }
+    
+    // Paginação Pedidos Admin
+    public Page<PedidoEntity> listarPedidosPaginados(Pageable pageable) {
+        return pedidoRepository.findAll(pageable);
+    }
+    
+    public Page<PedidoEntity> buscarPorIntervaloDeDatas(LocalDate inicio, LocalDate fim, Pageable pageable) {
+        return pedidoRepository.findByDataCompraBetween(inicio, fim, pageable);
+    }
+
+
 
     @Transactional(readOnly = true)
     public Optional<PedidoEntity> findById(Long id) {
@@ -49,93 +65,65 @@ public class PedidoService {
     }
 
     @Transactional
-    public PedidoEntity save(PedidoEntity pedido) {
-        if (pedido.getStatus() == null) {
-            pedido.setStatus(PedidoStatus.PAGO);
-        }
+    public PedidoEntity finalizarPedido(PedidoEntity pedido, List<ItemCarrinhoDTO> itensCarrinho) {
 
-        // Garante que cada item saiba qual pedido pertence
-        if (pedido.getItensPedido() != null) {
-            for (ItensPedidoEntity item : pedido.getItensPedido()) {
-                item.setPedido(pedido);
-            }
-        }
-
-        return pedidoRepository.save(pedido);
-    }
-    
-    @Transactional
-    public PedidoEntity criarPedidoComItens(PedidoEntity pedido) {
-        List<ProdutoEntity> produtosCarrinho = carrinhoService.getItens();
-        Map<Long, Integer> carrinho = carrinhoService.getCarrinho();
-
-        // Proteção contra pedido com carrinho vazio ou sessão expirada
-        if (produtosCarrinho == null || produtosCarrinho.isEmpty() || carrinho == null || carrinho.isEmpty()) {
-            throw new IllegalStateException("Carrinho vazio. Não é possível finalizar o pedido.");
+        // Proteção contra pedido com carrinho vazio
+        if (itensCarrinho == null || itensCarrinho.isEmpty()) {
+            throw new CarrinhoVazioException("Carrinho vazio. Não é possível finalizar o pedido.");
         }
 
         BigDecimal valorTotalPedido = BigDecimal.ZERO;
         List<ItensPedidoEntity> itensPedido = new ArrayList<>();
 
-        for (ProdutoEntity produto : produtosCarrinho) {
+        // Processa os itens do carrinho
+        for (ItemCarrinhoDTO itemCarrinho : itensCarrinho) {
+            ProdutoEntity produto = itemCarrinho.getProduto();
+            int quantidade = itemCarrinho.getQuantidade();
+
+            // Atualiza o estoque do produto
+            int novaQuantidade = produto.getQuantidade() - quantidade;
+            if (novaQuantidade < 0) {
+                throw new EstoqueInsuficienteException("Estoque insuficiente para o produto: " + produto.getNome());
+            }
+            produto.setQuantidade(novaQuantidade);
+            produtoRepository.save(produto);  // Atualiza o estoque no banco de dados
+
+            // Criação do item de pedido
             ItensPedidoEntity item = new ItensPedidoEntity();
             item.setProduto(produto);
-
-            int quantidade = carrinho.getOrDefault(produto.getId(), 1); // Garante uma quantidade padrão
             item.setQtProduto(quantidade);
+            item.setVlUnitario(produto.getPreco());
+            item.setVlTotalPedido(produto.getPreco().multiply(BigDecimal.valueOf(quantidade)));
+            item.setPedido(pedido);  // Relaciona o item com o pedido
 
-            BigDecimal precoUnitario = BigDecimal.valueOf(produto.getPreco());
-            BigDecimal totalItem = precoUnitario.multiply(BigDecimal.valueOf(quantidade));
-
-            item.setVlUnitario(precoUnitario);
-            item.setVlTotalPedido(totalItem);
-            item.setPedido(pedido);
-
+            // Adiciona o item à lista de itens do pedido
             itensPedido.add(item);
-            valorTotalPedido = valorTotalPedido.add(totalItem);
+
+            // Soma o total do pedido
+            valorTotalPedido = valorTotalPedido.add(item.getVlTotalPedido()); //alterei o GET do Itens pedidos
         }
 
-        // Soma o frete (se existir)
+        // Soma o frete ao valor total do pedido
         if (pedido.getFrete() != null) {
             valorTotalPedido = valorTotalPedido.add(pedido.getFrete());
         }
 
+        // Atualiza o valor total do pedido
         pedido.setValorTotal(valorTotalPedido);
+
+        // Associa os itens ao pedido (o CascadeType.ALL vai salvar os itens automaticamente)
         pedido.setItensPedido(itensPedido);
 
+        // Salva o pedido no banco de dados
         PedidoEntity pedidoSalvo = pedidoRepository.save(pedido);
 
-        // Salva os itens do pedido (se não tiver cascade)
-        for (ItensPedidoEntity item : itensPedido) {
-            itensPedidoRepository.save(item);
-        }
-
-        // Limpa carrinho da sessão
+        // Limpa o carrinho da sessão
         carrinhoService.limparSessaoCompra();
 
         return pedidoSalvo;
     }
-
-    @Transactional
-    public PedidoEntity update(Long id, PedidoEntity pedidoAtualizado) {
-        return pedidoRepository.findById(id).map(pedido -> {
-            pedido.setTipo(pedidoAtualizado.getTipo());
-            pedido.setFrete(pedidoAtualizado.getFrete());
-            pedido.setValorTotal(pedidoAtualizado.getValorTotal());
-            pedido.setStatus(pedidoAtualizado.getStatus());
-            pedido.setCliente(pedidoAtualizado.getCliente());
-            pedido.setEndereco(pedidoAtualizado.getEndereco());
-            pedido.setItensPedido(pedidoAtualizado.getItensPedido());
-            return pedidoRepository.save(pedido);
-        }).orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
-    }
-
-    @Transactional
-    public void delete(Long id) {
-        pedidoRepository.deleteById(id);
-    }
     
-    //Atualiza Status
+    // Atualiza o status do pedido
     @Transactional
     public void updateStatus(Long id, PedidoStatus novoStatus) {
         PedidoEntity pedido = pedidoRepository.findById(id)
@@ -143,5 +131,5 @@ public class PedidoService {
         pedido.setStatus(novoStatus);
         pedidoRepository.save(pedido);
     }
-
 }
+

@@ -36,7 +36,7 @@ public class PedidoEntity {
 	@Column(name = "valor_total", precision = 10, scale = 2)
 	private BigDecimal valorTotal;
 	@Enumerated(EnumType.STRING)
-	@Column(name = "status")
+	@Column(nullable = false)
 	private PedidoStatus status;
 	
 	// Muitos pedidos pertencem a um cliente
@@ -59,7 +59,7 @@ public class PedidoEntity {
 	
 	// Construtor padrão
 	public PedidoEntity() {
-		super();
+		this.status = PedidoStatus.PENDENTE_PAGAMENTO;
 	}
 
 

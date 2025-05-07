@@ -1,14 +1,12 @@
 package com.devsoft.rgdi_store.entities;
 
 public enum PedidoStatus {
-    PENDENTE_PAGAMENTO("Pendente de Pagamento"),
-    PAGO("Pagamento Aprovado"),
-    EM_SEPARACAO("Em Separação"),
-    ENVIADO("Enviado"),
-    ENTREGUE("Entregue"),
-    CANCELADO("Cancelado"),
-    DEVOLVIDO("Devolvido"),
-    REEMBOLSADO("Reembolsado");
+    PENDENTE_PAGAMENTO("Aguardando pagamento"),
+    PAGTO_REJEITADO("Pagamento rejeitado"),
+    PAGTO_SUCESSO("Pagamento com sucesso"),
+    AGUARDANDO_RETIRA("Aguardando retirada"),
+    ENVIADO("Em trânsito"),
+    ENTREGUE("Entregue");
 
     private final String descricao;
 

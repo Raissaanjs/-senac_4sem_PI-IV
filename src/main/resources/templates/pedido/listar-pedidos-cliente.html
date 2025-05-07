@@ -23,15 +23,19 @@
 			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item active">
-						<i class="fa-solid fa-caret-right"></i>
-						<span>Lista dos Pedidos</span>
+						<i class="fa-solid fa-caret-right"></i> <span>Meus Pedidos</span>
 					</li>
 				</ul>
 			</div>
 		</nav>
 	    <div class="container-fluid">
-	    	<div th:if="${erro != null}" class="alert alert-danger">
-			    <span th:text="${erro}"></span>
+	    	<div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+	            <span th:text="${erro}"></span>
+	            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+	        </div>
+			<div th:if="${sucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
+			    <span th:text="${sucesso}"></span>
+			    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
 			</div>
 
 		    <div>
@@ -43,16 +47,16 @@
 		                </div>
 		                <div class="card-body">
 		                    <div class="row">
-			                    <div class="col-sm-5">
+			                    <div class="col-sm-4">
 			                    <p><strong>Data do Pedido:</strong> <span th:text="${pedido.dataCompra != null ? pedido.dataCompra.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy')) : ''}">
 			                    </span></p>
 			                    </div>
 			                    <div class="col-sm-5">
-			                    <p><strong>Total do Pedido:</strong> R$ <span th:text="${#numbers.formatDecimal(pedido.valorTotal, 1, 2)}"></span></p>
+			                    <p><strong>Valor Total do Pedido:</strong> R$ <span th:text="${#numbers.formatDecimal(pedido.valorTotal, 1, 2)}"></span></p>
 			                    </div>
-			                    <div class="col-sm-2">
+			                    <div class="col-sm-3">
 			                    <!-- Link para detalhes do pedido -->
-			                    <a th:href="@{/clientes/meus-pedidos/detalhes/{id}(id=${pedido.id})}" class="btn btn-primary">Ver Detalhes</a>
+			                    <a th:href="@{/clientes/auth/meus-pedidos/detalhes/{id}(id=${pedido.id})}" class="btn btn-primary"><i class="fa-solid fa-circle-info"></i> Mais Detalhe</a>
 			                    </div>
 		                    </div>
 		                </div>

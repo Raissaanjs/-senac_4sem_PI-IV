@@ -62,11 +62,11 @@ public class ItensPedidoEntity {
 	public void setVlUnitario(BigDecimal vlUnitario) {
 		this.vlUnitario = vlUnitario;
 	}
-
+	
 	public BigDecimal getVlTotalPedido() {
 		return vlTotalPedido;
 	}
-
+	
 	public void setVlTotalPedido(BigDecimal vlTotalPedido) {
 		this.vlTotalPedido = vlTotalPedido;
 	}
