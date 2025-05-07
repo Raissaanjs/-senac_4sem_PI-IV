@@ -1,4 +1,4 @@
-package com.devsoft.rgdi_store.services;
+package com.devsoft.rgdi_store.authentication;
 
 import java.util.List;
 
@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.devsoft.rgdi_store.authentication.CustomClienteDetails;
 import com.devsoft.rgdi_store.entities.ClienteEntity;
 import com.devsoft.rgdi_store.repositories.ClienteRepository;
 

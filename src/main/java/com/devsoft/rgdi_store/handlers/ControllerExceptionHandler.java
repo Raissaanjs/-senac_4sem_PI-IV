@@ -7,17 +7,17 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.devsoft.rgdi_store.services.exceptions.DataIntegrityViolationException;
-import com.devsoft.rgdi_store.services.exceptions.DatabaseException;
-import com.devsoft.rgdi_store.services.exceptions.FieldValidationException;
-import com.devsoft.rgdi_store.services.exceptions.ResourceNotFoundException;
-import com.devsoft.rgdi_store.services.exceptions.All.ConfirmPassNullException;
-import com.devsoft.rgdi_store.services.exceptions.All.CpfExistsException;
-import com.devsoft.rgdi_store.services.exceptions.All.EmailDivergException;
-import com.devsoft.rgdi_store.services.exceptions.All.EmailExistsException;
-import com.devsoft.rgdi_store.services.exceptions.All.InvalidCpfException;
-import com.devsoft.rgdi_store.services.exceptions.All.InvalidPassException;
-import com.devsoft.rgdi_store.services.exceptions.All.NameValidationException;
+import com.devsoft.rgdi_store.exceptions.DataIntegrityViolationException;
+import com.devsoft.rgdi_store.exceptions.DatabaseException;
+import com.devsoft.rgdi_store.exceptions.FieldValidationException;
+import com.devsoft.rgdi_store.exceptions.ResourceNotFoundException;
+import com.devsoft.rgdi_store.exceptions.all.ConfirmPassNullException;
+import com.devsoft.rgdi_store.exceptions.all.CpfExistsException;
+import com.devsoft.rgdi_store.exceptions.all.EmailDivergException;
+import com.devsoft.rgdi_store.exceptions.all.EmailExistsException;
+import com.devsoft.rgdi_store.exceptions.all.InvalidCpfException;
+import com.devsoft.rgdi_store.exceptions.all.InvalidPassException;
+import com.devsoft.rgdi_store.exceptions.all.NameValidationException;
 import com.devsoft.rgdi_store.validation.base.CustomError;
 import com.devsoft.rgdi_store.validation.base.ValidationError;
 

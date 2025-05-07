@@ -1,14 +1,14 @@
 package com.devsoft.rgdi_store.validation.cliente;
 
 import com.devsoft.rgdi_store.entities.ClienteEntity;
+import com.devsoft.rgdi_store.exceptions.all.ConfirmPassNullException;
+import com.devsoft.rgdi_store.exceptions.all.CpfExistsException;
+import com.devsoft.rgdi_store.exceptions.all.EmailDivergException;
+import com.devsoft.rgdi_store.exceptions.all.EmailExistsException;
+import com.devsoft.rgdi_store.exceptions.all.InvalidCpfException;
+import com.devsoft.rgdi_store.exceptions.all.InvalidPassException;
+import com.devsoft.rgdi_store.exceptions.all.NameValidationException;
 import com.devsoft.rgdi_store.repositories.ClienteRepository;
-import com.devsoft.rgdi_store.services.exceptions.All.ConfirmPassNullException;
-import com.devsoft.rgdi_store.services.exceptions.All.CpfExistsException;
-import com.devsoft.rgdi_store.services.exceptions.All.EmailDivergException;
-import com.devsoft.rgdi_store.services.exceptions.All.EmailExistsException;
-import com.devsoft.rgdi_store.services.exceptions.All.InvalidCpfException;
-import com.devsoft.rgdi_store.services.exceptions.All.InvalidPassException;
-import com.devsoft.rgdi_store.services.exceptions.All.NameValidationException;
 import com.devsoft.rgdi_store.validation.base.ConfirmPassValidationNull;
 import com.devsoft.rgdi_store.validation.base.CpfValidator;
 import com.devsoft.rgdi_store.validation.base.EmailValidator;
@@ -19,7 +19,7 @@ public class ClienteValidationSaveService {
 
     // Método principal para validar todos os campos do cliente
     public static void validateCliente(ClienteEntity cliente, ClienteRepository repository, String confirmaSenha) {
-        //validateName(cliente.getNome());
+        validateName(cliente.getNome());
         validateCpf(cliente.getCpf(), repository);
         validateEmail(cliente.getEmail(), repository);
         validatePassword(cliente.getSenha(), confirmaSenha);

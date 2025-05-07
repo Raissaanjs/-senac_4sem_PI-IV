@@ -1,4 +1,4 @@
-package com.devsoft.rgdi_store.services.exceptions.All;
+package com.devsoft.rgdi_store.exceptions.all;
 
 public class EmailDivergException extends RuntimeException {
    
