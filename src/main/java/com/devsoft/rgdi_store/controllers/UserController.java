@@ -33,14 +33,14 @@ import org.springframework.security.core.Authentication;
 
 import com.devsoft.rgdi_store.dto.UserDto;
 import com.devsoft.rgdi_store.entities.UserGroup;
+import com.devsoft.rgdi_store.exceptions.all.ConfirmPassNullException;
+import com.devsoft.rgdi_store.exceptions.all.EmailDivergException;
+import com.devsoft.rgdi_store.exceptions.all.EmailExistsException;
+import com.devsoft.rgdi_store.exceptions.all.InvalidCpfException;
+import com.devsoft.rgdi_store.exceptions.all.InvalidPassException;
+import com.devsoft.rgdi_store.exceptions.all.NameValidationException;
 import com.devsoft.rgdi_store.repositories.UserRepository;
 import com.devsoft.rgdi_store.services.UserService;
-import com.devsoft.rgdi_store.services.exceptions.All.ConfirmPassNullException;
-import com.devsoft.rgdi_store.services.exceptions.All.EmailDivergException;
-import com.devsoft.rgdi_store.services.exceptions.All.EmailExistsException;
-import com.devsoft.rgdi_store.services.exceptions.All.InvalidCpfException;
-import com.devsoft.rgdi_store.services.exceptions.All.InvalidPassException;
-import com.devsoft.rgdi_store.services.exceptions.All.NameValidationException;
 import com.devsoft.rgdi_store.validation.base.ValidationGroups;
 import com.devsoft.rgdi_store.validation.user.UserValidationSaveService;
 

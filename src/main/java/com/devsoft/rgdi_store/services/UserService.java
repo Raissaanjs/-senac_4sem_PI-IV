@@ -12,8 +12,8 @@ import com.devsoft.rgdi_store.authentication.PasswordUtils;
 import com.devsoft.rgdi_store.dto.UserDto;
 import com.devsoft.rgdi_store.dto.UserMapper;
 import com.devsoft.rgdi_store.entities.UserEntity;
+import com.devsoft.rgdi_store.exceptions.ResourceNotFoundException;
 import com.devsoft.rgdi_store.repositories.UserRepository;
-import com.devsoft.rgdi_store.services.exceptions.ResourceNotFoundException;
 import com.devsoft.rgdi_store.validation.user.UserValidationSaveService;
 
 import jakarta.persistence.EntityNotFoundException;

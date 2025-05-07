@@ -12,7 +12,11 @@
 	
   </head>
   <body class="d-flex align-items-center py-4 h-100">
-		<main class="m-auto">		    
+		<main class="m-auto">
+			<div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+			    <span th:text="${erro}"></span>
+			    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+			</div>		    
 			<!-- Formulário de Login -->
 			<form class="form form-login" action="/login" method="post">
                 <h2>Login</h2>
@@ -21,7 +25,7 @@
 					<input type="password" class="form-input" name="password" id="password" placeholder="Senha" required>
 
                 </div>
-                <button type="submit" class="btn btn-primary" >Entrar</button>
+                <button type="submit" class="btn btn-primary w-100" >Entrar</button>
             </form>		  
 	  	</main>
 	 
