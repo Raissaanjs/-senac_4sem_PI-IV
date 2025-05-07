@@ -23,50 +23,67 @@
 			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item active">
-						<i class="fa-solid fa-caret-right"></i>
-						<span>Detalhes do Pedido</span>
+						<i class="fa-solid fa-caret-right"></i> <span>Meus Pedidos</span>
+						<i class="fa-solid fa-caret-right"></i> <span>Detalhes do Pedido</span>
 					</li>
 				</ul>
 			</div>
 		</nav>
 	    <div class="container-fluid">
-	    	<div th:if="${erro != null}" class="alert alert-danger">
-			    <span th:text="${erro}"></span>
+			<div th:if="${erro != null}" class="alert alert-danger">
+				<span th:text="${erro}"></span>
+			</div>		
+			<div>				
+				<h3 class="mb-4 pb-2 custom-border">Detalhes do Pedido <span th:text="'#' + ${pedido.id}"></span></h3>
+	            
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Produto</th>
+							<th>Qt</th>
+							<th>Vl Unitário</th>
+							<th>Vl Total</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item : ${pedido.itensPedido}">
+							<td th:text="${item.produto.nome}"></td>
+							<td th:text="${item.qtProduto}"></td>
+							<td>R$ <span th:text="${#numbers.formatDecimal(item.vlUnitario, 1, 2)}"></span></td>
+							<td>R$ <span th:text="${#numbers.formatDecimal(item.vlTotalPedido, 1, 2)}"></span></td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="3" class="text-end"><strong>Subtotal</strong></td>
+							<td th:text="'R$ ' + ${#numbers.formatDecimal(subtotal, 1, 2)}"></td>
+						</tr>
+						<tr>
+							<td colspan="3" class="text-end"><strong>Frete</strong></td>
+							<td th:text="'R$ ' + ${#numbers.formatDecimal(frete, 1, 2)}"></td>
+						</tr>
+						<tr>
+							<td colspan="3" class="text-end"><strong>Total</strong></td>
+							<td th:text="'R$ ' + ${#numbers.formatDecimal(total, 1, 2)}"></td>
+						</tr>
+					</tfoot>
+				</table>
+				
+				<!-- Endereço -->
+				<div class="mt-4">
+					<h5>Endereço</h5>
+					<p th:text="${enderecoSelecionado.logradouro + ', ' + enderecoSelecionado.numero + ' - ' + enderecoSelecionado.bairro +
+					 ' - ' +enderecoSelecionado.localidade + ' - ' + enderecoSelecionado.uf + ' - CEP ' + enderecoSelecionado.cep}"></p>
+				</div>
+	
+				<!-- Forma de pagamento -->
+				<div class="mt-4">
+					<h5>Forma de Pagamento</h5>
+					<p th:text="${pedido.tipo.descricao}"></p>
+				</div>
 			</div>
-
-		    <div class="row">
-				<div>
-		            <p><strong>Status:</strong> <span th:text="${pedido.status.descricao}"></span></p>
-		            <p><strong>Data do Pedido:</strong>
-		            <span th:text="${pedido.dataCompra != null ? pedido.dataCompra.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy')) : ''}"></span>
-					</p>
-		            <p><strong>Total do Pedido:</strong> R$ <span th:text="${#numbers.formatDecimal(pedido.valorTotal, 1, 2)}"></span></p>
-		            
-		            <h4>Itens do Pedido</h4>
-		            <table class="table">
-		                <thead>
-		                    <tr>
-		                        <th>Produto</th>
-		                        <th>Quantidade</th>
-		                        <th>Preço Unitário</th>
-		                        <th>Total</th>
-		                    </tr>
-		                </thead>
-		                <tbody>
-		                    <tr th:each="item : ${pedido.itensPedido}">
-		                        <td th:text="${item.produto.nome}"></td>
-		                        <td th:text="${item.qtProduto}"></td>
-		                        <td>R$ <span th:text="${#numbers.formatDecimal(item.vlUnitario, 1, 2)}"></span></td>
-		                        <td>R$ <span th:text="${#numbers.formatDecimal(item.vlTotalPedido, 1, 2)}"></span></td>
-		                    </tr>
-		                </tbody>
-		            </table>
-		        </div>
-		
-		        <a th:href="@{/clientes/meus-pedidos}" class="btn btn-secondary button-default">Voltar</a>	        
-		
-		    </div>
-		</div>
+			
+		</div> <!-- fim do container -->
 	</section>
 
 </body>

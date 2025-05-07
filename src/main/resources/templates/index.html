@@ -12,7 +12,7 @@
                     <h3 class="fw-bolder">Seja Bem Vindo (a)</h3>
                     <div th:if="${isClient}">
 		              <span><i class="fa-solid fa-caret-right"></i></span>
-		              <span class="mr-3" th:text="${userName}">Visitante</span>	        
+		              <a class="mr-3 link-cliente-usernme" th:text="${userName}" th:href="@{/clientes/auth/admin}">Visitante</a>
 		              <span><i class="fa-solid fa-caret-left"></i></span>
 		        	</div>
                 </div>
@@ -20,10 +20,21 @@
         </header>
         <!-- Section-->
         <section class="py-5" layout:fragment="corpo">
-            <div class="container px-4 px-lg-5 mt-5">
-                
+        	<div class="container ps-5">
+        	<nav class="navbar navbar-expand-md bg-light">
+				<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+					<ul class="navbar-nav mr-auto">
+						<li class="nav-item active">
+							<i class="fa-solid fa-caret-right"></i> <span>Home</span>			                    
+						</li>
+					</ul>
+				</div>
+			</nav>
+			</div>
+            <div class="container px-4 px-lg-5 mt-5">                
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                     <div class="col mb-5" th:each="prod, iterStat : ${produtos}">
+                		<!-- th:if="${prod.status}" só lista produto ativo -->
+                     <div class="col mb-5" th:each="prod, iterStat : ${produtos}" th:if="${prod.status}">
                 		<div class="card h-100">
 					    <!-- Product image-->					   
 					    
@@ -63,7 +74,11 @@
 						    <div class="text-center">
 						        <form th:action="@{/carrinho/adicionar}" method="post">
 						            <input type="hidden" name="produtoId" th:value="${prod.id}" />
-						            <button type="submit" class="btn btn-outline-dark mt-auto">Comprar</button>
+						            <button type="submit" class="btn btn-outline-dark mt-auto"
+									        th:id="'btnComprar_' + ${prod.id}"
+									        th:attr="data-quantidade=${prod.quantidade}">
+									    Comprar
+									</button>
 						        </form>
 						    </div>
 						</div>
@@ -110,19 +125,17 @@
 			                </div>
 			            </div>
 			            <div class="modal-footer">
-	                        <form th:action="@{/carrinho/adicionar}" method="post">
-	                            <input type="hidden" name="produtoId" id="modalProdutoId" />
-	                            <button type="submit" class="btn btn-success mt-auto">Comprar</button>
-	                        </form>
-	                        <button type="button" class="btn btn-secondary mt-auto" data-bs-dismiss="modal">Fechar</button>
-	                    </div>
-			            
+			                <form th:action="@{/carrinho/adicionar}" method="post">
+			                    <input type="hidden" name="produtoId" id="modalProdutoId" />
+			                    <button type="submit" class="btn btn-success mt-auto" id="modalComprarBtn">Comprar</button>
+			                </form>
+			                <!-- id="modalSemEstoqueBtn" javaScript que muda botão de produto sem estoque -->
+			                <button type="button" class="btn btn-secondary mt-auto" id="modalSemEstoqueBtn" disabled style="display: none;">Sem Estoque</button>
+			                <button type="button" class="btn btn-secondary mt-auto" data-bs-dismiss="modal">Fechar</button>
+			            </div>
 			        </div>
 			    </div>
 			</div>
-            
-            <!-- Navegação de páginas -->
-			
         </section>
     </body>
 </html>

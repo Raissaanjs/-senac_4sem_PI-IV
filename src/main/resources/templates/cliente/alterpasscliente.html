@@ -23,8 +23,9 @@
 			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item active">
-						<i class="fa-solid fa-caret-right"></i>
-						<span>Alterar Senha do Cliente</span>
+						<i class="fa-solid fa-caret-right"></i> <span>Meus Dados</span>
+						<i class="fa-solid fa-caret-right"></i> <span>Dados do Cliente</span>
+						<i class="fa-solid fa-caret-right"></i> <span>Alterar Senha</span>
 					</li>
 				</ul>
 			</div>
@@ -37,7 +38,7 @@
 			    <span th:text="${erro}"></span>
 			    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
 			</div>
-	        <form th:action="@{/clientes/updatepass}" th:object="${alterarSenhaDTO}" method="post">
+	        <form th:action="@{/clientes/auth/updatepass}" th:object="${alterarSenhaDTO}" method="post">
 		        <div class="row">
 		        	<div class="mb-3 col-md-3">
 	                    <label for="senhaAtual">Senha Atual</label>
@@ -62,8 +63,8 @@
 	                    <div class="invalid-feedback" th:text="${confirmaSenhaError}"></div>
 	                </div>
 	            </div>	
-		        <button type="submit" class="btn btn-primary">Alterar</button>
-		        <a th:href="@{/clientes/detalhes-cliente}" class="btn btn-secondary ms-2">Cancelar</a>
+		        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Alterar</button>
+		        <a th:href="@{/clientes/auth/detalhes-cliente}" class="btn btn-secondary ms-2">Cancelar</a>
 	    	</form>
        </div>
 	</section>
