@@ -1,5 +1,6 @@
 package com.devsoft.rgdi_store.entities;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,7 +24,7 @@ public class ProdutoEntity {
     private Long id;
     @Size(max=200, message="Tamanho máximo de 200 caracteres")
     private String nome;
-    private double preco;
+    private BigDecimal preco;
     private int quantidade;
     
     @Column(columnDefinition = "TEXT")
@@ -46,7 +47,7 @@ public class ProdutoEntity {
     }
 
     // Construtor com alguns parmetros
-    public ProdutoEntity(Long id, String nome, double preco) {
+    public ProdutoEntity(Long id, String nome, BigDecimal preco) {
 		this.id = id;
 		this.nome = nome;
 		this.preco = preco;
@@ -70,11 +71,11 @@ public class ProdutoEntity {
 		this.nome = nome;
 	}
 
-	public double getPreco() {
+	public BigDecimal getPreco() {
 		return preco;
 	}
 
-	public void setPreco(double preco) {
+	public void setPreco(BigDecimal preco) {
 		this.preco = preco;
 	}
 

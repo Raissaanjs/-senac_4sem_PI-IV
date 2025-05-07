@@ -1,10 +1,12 @@
 package com.devsoft.rgdi_store.dto;
 
+import java.math.BigDecimal;
+
 public class ProdutoDto {
 	
 	private Long id;    
 	private String nome;
-    private double preco;
+    private BigDecimal preco;
     private int quantidade;
     private String descricao;    
     private int avaliacao;
@@ -12,7 +14,7 @@ public class ProdutoDto {
     
     public ProdutoDto() {}
     
-    public ProdutoDto(Long id, String nome, double preco, int quantidade, String descricao, int avaliacao,
+    public ProdutoDto(Long id, String nome, BigDecimal preco, int quantidade, String descricao, int avaliacao,
 			boolean status) {
 		super();
 		this.id = id;
@@ -43,11 +45,11 @@ public class ProdutoDto {
         this.nome = nome;
     }
 
-    public double getPreco() {
+    public BigDecimal getPreco() {
         return preco;
     }
 
-    public void setPreco(double preco) {
+    public void setPreco(BigDecimal preco) {
         this.preco = preco;
     }
 

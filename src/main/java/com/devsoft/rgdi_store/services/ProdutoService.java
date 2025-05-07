@@ -3,7 +3,6 @@ package com.devsoft.rgdi_store.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,16 +13,20 @@ import org.springframework.transaction.annotation.Transactional;
 import com.devsoft.rgdi_store.dto.ProdutoDto;
 import com.devsoft.rgdi_store.dto.ProdutoMapper;
 import com.devsoft.rgdi_store.entities.ProdutoEntity;
+import com.devsoft.rgdi_store.exceptions.ResourceNotFoundException;
 import com.devsoft.rgdi_store.repositories.ProdutoRepository;
-import com.devsoft.rgdi_store.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ProdutoService {
-
-    @Autowired
-    private ProdutoRepository repository;
+   
+    private final ProdutoRepository repository;
+    
+    public ProdutoService(ProdutoRepository repository) {
+    	this.repository = repository;
+    }
+    
     
     public List<ProdutoEntity> findAllIndex() {
         return repository.findAll(); // Aqui usamos o método findAll do repositório
@@ -40,6 +43,11 @@ public class ProdutoService {
   	    // Usa o UserMapper para a conversão de UserEntity para UserDto
   	    return result.map(ProdutoMapper::toDto);
   	}
+  	
+  	public Page<ProdutoEntity> findAllPaginado(Pageable pageable) {
+  	    return repository.findAll(pageable);
+  	}
+
   	
   	//Busca todos os registros
   	@Transactional(readOnly = true)

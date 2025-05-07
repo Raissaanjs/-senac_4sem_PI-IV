@@ -19,8 +19,8 @@ import com.devsoft.rgdi_store.dto.ProdutoImagensDto;
 import com.devsoft.rgdi_store.dto.ProdutoImagensMapper;
 import com.devsoft.rgdi_store.entities.ProdutoEntity;
 import com.devsoft.rgdi_store.entities.ProdutoImagens;
+import com.devsoft.rgdi_store.exceptions.ResourceNotFoundException;
 import com.devsoft.rgdi_store.repositories.ProdutoRepository;
-import com.devsoft.rgdi_store.services.exceptions.ResourceNotFoundException;
 import com.devsoft.rgdi_store.repositories.ProdutoImagensRepository;
 
 @Service

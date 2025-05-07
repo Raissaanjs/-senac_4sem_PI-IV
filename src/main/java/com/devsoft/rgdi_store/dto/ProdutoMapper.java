@@ -3,6 +3,8 @@ package com.devsoft.rgdi_store.dto;
 import com.devsoft.rgdi_store.entities.ProdutoEntity;
 import com.devsoft.rgdi_store.repositories.ProdutoRepository;
 
+import java.math.BigDecimal;
+
 public class ProdutoMapper {
 
     // Converte Entity para Dto (mapeamento completo)
@@ -10,19 +12,19 @@ public class ProdutoMapper {
         if (entity == null) {
             return null;
         }
-        
+
+        // Retorna um DTO com o preço já sendo um BigDecimal
         return new ProdutoDto(
             entity.getId(),
             entity.getNome(),
-            entity.getPreco(),
+            entity.getPreco(),  // O preco já é BigDecimal
             entity.getQuantidade(),
             entity.getDescricao(),
             entity.getAvaliacao(),
             entity.isStatus()
         );
     }
-    
-    
+
     // Converte UserDto para UserEntity
     public static ProdutoEntity toEntity(ProdutoDto dto) {
         if (dto == null) {
@@ -32,15 +34,15 @@ public class ProdutoMapper {
         ProdutoEntity entity = new ProdutoEntity();
         entity.setId(dto.getId());
         entity.setNome(dto.getNome());
-        entity.setPreco(dto.getPreco());
+        entity.setPreco(dto.getPreco());  // O preco é passado como BigDecimal
         entity.setQuantidade(dto.getQuantidade());
         entity.setDescricao(dto.getDescricao());
         entity.setAvaliacao(dto.getAvaliacao());
         entity.setStatus(dto.isStatus());
-        
+
         return entity;
     }
-    
+
     public static void updateProductFromDto(ProdutoDto dto, ProdutoEntity entity, ProdutoRepository repository) {
         if (dto == null || entity == null) {
             return; // Caso o dto ou entidade sejam null, simplesmente retorna
@@ -51,8 +53,8 @@ public class ProdutoMapper {
             entity.setNome(dto.getNome());
         }
 
-        // Atualiza o preço
-        if (dto.getPreco() >= 0) {
+        // Atualiza o preço usando BigDecimal (verificação do valor)
+        if (dto.getPreco() != null && dto.getPreco().compareTo(BigDecimal.ZERO) >= 0) {
             entity.setPreco(dto.getPreco());
         }
 
@@ -70,6 +72,6 @@ public class ProdutoMapper {
         if (dto.getAvaliacao() >= 1 && dto.getAvaliacao() <= 5) {
             entity.setAvaliacao(dto.getAvaliacao());
         }        
-      
     }
 }
+
