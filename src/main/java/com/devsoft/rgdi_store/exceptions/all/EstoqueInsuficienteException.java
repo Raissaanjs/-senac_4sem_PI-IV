@@ -1,10 +1,10 @@
 package com.devsoft.rgdi_store.exceptions.all;
 
-public class PedidoNaoEncontradoException extends RuntimeException {
+public class EstoqueInsuficienteException extends RuntimeException {
    
 	private static final long serialVersionUID = 1L;
 
-	public PedidoNaoEncontradoException(String message) {
+	public EstoqueInsuficienteException(String message) {
         super(message);
     }
 }

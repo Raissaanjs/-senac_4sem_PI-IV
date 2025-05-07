@@ -1,4 +1,4 @@
-package com.devsoft.rgdi_store.services.exceptions;
+package com.devsoft.rgdi_store.exceptions;
 
 import java.util.List;
 

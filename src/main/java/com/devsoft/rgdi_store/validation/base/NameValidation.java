@@ -1,6 +1,6 @@
 package com.devsoft.rgdi_store.validation.base;
 
-import com.devsoft.rgdi_store.services.exceptions.All.NameValidationException;
+import com.devsoft.rgdi_store.exceptions.all.NameValidationException;
 
 public class NameValidation {
 
