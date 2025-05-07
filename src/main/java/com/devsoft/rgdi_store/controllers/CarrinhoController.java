@@ -1,10 +1,10 @@
 package com.devsoft.rgdi_store.controllers;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.devsoft.rgdi_store.dto.ItemCarrinhoDTO;
 import com.devsoft.rgdi_store.dto.ProdutoImagensDto;
 import com.devsoft.rgdi_store.entities.ProdutoEntity;
 import com.devsoft.rgdi_store.services.CarrinhoService;
@@ -31,32 +32,36 @@ public class CarrinhoController {
     	this.produtoImagensService = produtoImagensService; 
     }    
     
-    @Autowired
-    private HttpSession session; // Injetar a sessão    
-
     // Método para exibir o carrinho
     @GetMapping("/carrinho")
-    public String exibirCarrinho(Model model) {
-        List<ProdutoEntity> itensCarrinho = carrinhoService.getItens(); // Recupera os itens do carrinho
+    public String exibirCarrinho(Model model, HttpSession session) {
+        // Recupera os itens do carrinho (já com a quantidade e os detalhes dos produtos)
+        List<ItemCarrinhoDTO> itensCarrinho = carrinhoService.getItens(); 
 
         // Calcular o subtotal
-        double subtotal = 0.0;
-        for (ProdutoEntity produto : itensCarrinho) {
-            subtotal += produto.getPreco() * produto.getQuantidade();  // Calcula o total para cada item
+        BigDecimal subtotal = BigDecimal.ZERO;
+        for (ItemCarrinhoDTO item : itensCarrinho) {
+            // O preço já está dentro do ProdutoDto dentro de ItemCarrinhoDTO
+            BigDecimal precoUnitario = item.getProduto().getPreco();
+            int quantidade = item.getQuantidade();
+
+            // Calcula o total para cada item
+            subtotal = subtotal.add(precoUnitario.multiply(BigDecimal.valueOf(quantidade)));
         }
 
-        // Recuperar o valor do frete da sessão
-        Double valorFrete = (Double) session.getAttribute("frete");
+        // Recuperar o valor do frete da sessão (alterado para BigDecimal)
+        BigDecimal valorFrete = (BigDecimal) session.getAttribute("frete");
         if (valorFrete == null) {
-            valorFrete = 0.0;
+            valorFrete = BigDecimal.ZERO;  // Se for nulo, atribui zero
         }
 
         // Calcular o total final (subtotal + frete)
-        double total = subtotal + valorFrete;
+        BigDecimal total = subtotal.add(valorFrete);
 
         // Criar um mapa de imagens principais para cada produto no carrinho
         Map<Long, ProdutoImagensDto> imagensPrincipais = new HashMap<>();
-        for (ProdutoEntity produto : itensCarrinho) {
+        for (ItemCarrinhoDTO item : itensCarrinho) {
+            ProdutoEntity produto = item.getProduto(); // Obtém a entidade Produto
             List<ProdutoImagensDto> imagens = produtoImagensService.buscarImagemPrincipalPorProdutoId(produto.getId());
             if (!imagens.isEmpty()) {
                 imagensPrincipais.put(produto.getId(), imagens.get(0)); // Adiciona a primeira imagem principal
@@ -64,7 +69,7 @@ public class CarrinhoController {
         }
 
         // Passa os dados para o modelo
-        model.addAttribute("itensCarrinho", itensCarrinho);
+        model.addAttribute("itensCarrinho", itensCarrinho);  // Passa a lista de ItemCarrinhoDTO
         model.addAttribute("imagensPrincipais", imagensPrincipais);
         model.addAttribute("subtotal", subtotal);  // Passa o subtotal para a visão
         model.addAttribute("total", total);  // Passa o total final para a visão
@@ -73,6 +78,7 @@ public class CarrinhoController {
 
         return "carrinho";  // Retorna o template do carrinho
     }
+
 
     //Usado para verificar o carrinho ao clicar em Finalizar Compra
     @GetMapping("carrinho/verificar")
@@ -103,36 +109,34 @@ public class CarrinhoController {
         
     // Método para selecionar o frete
     @PostMapping("/carrinho/frete")
-    public String selecionarFrete(@RequestParam("tipoFrete") String tipoFrete) {
+    public String selecionarFrete(@RequestParam("tipoFrete") String tipoFrete, HttpSession session) {
         // Definir o valor do frete com base na opção selecionada
-        double valorFrete = 0.0;
+        BigDecimal valorFrete = BigDecimal.ZERO;  // Usando BigDecimal ao invés de Double
 
         switch (tipoFrete) {
             case "correios":
-                valorFrete = 10.0;  // Exemplo de valor para frete municipal
+                valorFrete = new BigDecimal("10.0");  // Exemplo de valor para frete municipal
                 break;
             case "fedex":
-                valorFrete = 20.0;  // Exemplo de valor para frete estadual
+                valorFrete = new BigDecimal("20.0");  // Exemplo de valor para frete estadual
                 break;
             case "loggi":
-                valorFrete = 50.0;  // Exemplo de valor para frete nacional
+                valorFrete = new BigDecimal("50.0");  // Exemplo de valor para frete nacional
                 break;
         }
 
-        // Armazenar o valor do frete na sessão como Double
+        // Armazenar o valor do frete na sessão como BigDecimal
         session.setAttribute("frete", valorFrete);
 
         return "redirect:/carrinho"; // Redireciona para a página do carrinho
     }
+
     
     // Método para remover um produto do carrinho
     @PostMapping("/carrinho/remover")
     public String removerProdutoDoCarrinho(@RequestParam("produtoId") Long produtoId) {
         carrinhoService.removerProduto(produtoId);  // Chama o serviço para remover o produto
         return "redirect:/carrinho";  // Redireciona para a página do carrinho
-    } 
-    
-    
-    
+    }
     
 }

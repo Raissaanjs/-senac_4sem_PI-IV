@@ -8,18 +8,21 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.devsoft.rgdi_store.dto.ItemCarrinhoDTO;
 import com.devsoft.rgdi_store.entities.ProdutoEntity;
 import com.devsoft.rgdi_store.repositories.ProdutoRepository;
 
 import jakarta.servlet.http.HttpSession;
 
+import java.math.BigDecimal;
+
 @Service
 public class CarrinhoService {
 
     private final ProdutoRepository produtoRepository;
-    
+
     public CarrinhoService(ProdutoRepository produtoRepository) {
-    	this.produtoRepository = produtoRepository; 
+        this.produtoRepository = produtoRepository; 
     }	
 
     @Autowired
@@ -78,19 +81,21 @@ public class CarrinhoService {
     }
 
     // Retorna os itens no carrinho, com a quantidade de cada produto
-    public List<ProdutoEntity> getItens() {
+    public List<ItemCarrinhoDTO> getItens() {
         Map<Long, Integer> carrinho = getCarrinho();
-        List<ProdutoEntity> itensCarrinho = new ArrayList<>();
+        List<ItemCarrinhoDTO> itensCarrinho = new ArrayList<>();
 
         for (Map.Entry<Long, Integer> entry : carrinho.entrySet()) {
             ProdutoEntity produto = produtoRepository.findById(entry.getKey())
                     .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
-            produto.setQuantidade(entry.getValue());
-            itensCarrinho.add(produto);
+            
+            int quantidade = entry.getValue();
+            itensCarrinho.add(new ItemCarrinhoDTO(produto, quantidade));
         }
 
         return itensCarrinho;
     }
+
 
     // Limpa o carrinho da sessão
     public void limparCarrinho() {
@@ -110,12 +115,21 @@ public class CarrinhoService {
     }
 
     private void zerarFrete() {
-        session.setAttribute("frete", 0.0);  // Define o valor do frete como zero (Double)
+        session.setAttribute("frete", BigDecimal.ZERO);  // Altere para BigDecimal
     }
-    
+
     public void limparSessaoCompra() {
         session.removeAttribute("carrinho");
         session.removeAttribute("frete");
     }
+
+    // Calcula o valor total do carrinho
+    public BigDecimal calcularTotalCarrinho() {
+        List<ItemCarrinhoDTO> itensCarrinho = getItens();
+        return itensCarrinho.stream()
+                .map(item -> item.getProduto().getPreco().multiply(BigDecimal.valueOf(item.getQuantidade())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add); // Soma os totais
+    }
 }
+
 

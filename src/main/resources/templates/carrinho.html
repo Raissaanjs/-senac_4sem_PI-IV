@@ -11,19 +11,32 @@
                 <div class="text-center text-white flex-inline">
                     <h3 class="fw-bolder">Seu Carrinho</h3>
                     <div th:if="${isClient}">
-		               <span><i class="fa-solid fa-caret-right"></i></span>
-		              <span class="mr-3" th:text="${userName}">Visitante</span>	
+		              <span><i class="fa-solid fa-caret-right"></i></span>
+		              <a class="mr-3 link-cliente-usernme" th:text="${userName}" th:href="@{/clientes/auth/admin}">Visitante</a>
 		              <span><i class="fa-solid fa-caret-left"></i></span>	        
 		        	</div>
                 </div>
             </div>
         </header>        
         <!-- Section-->
-        <section class="py-5" layout:fragment="corpo">        	
-		    <div class="container px-4 px-lg-5 mt-5">
-			    <div th:if="${erro != null}" class="alert alert-danger">
-				    <span th:text="${erro}"></span>
+        <section class="py-5" layout:fragment="corpo">
+        	<div class="container ps-5">
+        	<nav class="navbar navbar-expand-md bg-light">
+				<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+					<ul class="navbar-nav mr-auto">
+						<li class="nav-item active">
+							<i class="fa-solid fa-caret-right"></i> <span>Home</span>
+							<i class="fa-solid fa-caret-right"></i> <span>Carrinho</span>			                    
+						</li>
+					</ul>
 				</div>
+			</nav>
+			</div>
+		    <div class="container pb-3 px-4 px-lg-5 mt-5">
+		        <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+		            <span th:text="${erro}"></span>
+		            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+		        </div>
 		        <div class="col-sm-12">
 		            <table class="table table-hover">
 		                <thead>
@@ -41,35 +54,38 @@
 		                            <div class="media">
 		                                <div class="media-body">
 		                                    <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-		                                        <img class="card-img-top" th:src="@{${imagensPrincipais[item.id].url}}" alt="Imagem do Produto" style="height:50px; width: 75px; object-fit: cover;">
-		                                        <span th:text="${item.nome}">Nome</span>
+		                                        <!-- Imagem do produto -->
+		                                        <img class="card-img-top" th:src="@{${imagensPrincipais[item.produto.id].url}}" 
+		                                             alt="Imagem do Produto" style="height:50px; width: 75px; object-fit: cover;">
+		                                        <!-- Nome do produto -->
+		                                        <span th:text="${item.produto.nome}">Nome</span>
 		                                    </div>
 		                                </div>
 		                            </div>
 		                        </td>
 		                        <td class="col-sm-1 col-md-1 text-center">
 		                            <form th:action="@{/carrinho/alterarQuantidade}" method="post" style="display: inline;">
-		                                <input type="hidden" name="produtoId" th:value="${item.id}" />
+		                                <input type="hidden" name="produtoId" th:value="${item.produto.id}" />
 		                                <input type="hidden" name="quantidade" value="decrease" />
 		                                <button type="submit" class="btn btn-sm btn-outline-secondary">-</button>
 		                            </form>
 		                            <span th:text="${item.quantidade}">Quantidade</span>
 		                            <form th:action="@{/carrinho/alterarQuantidade}" method="post" style="display: inline;">
-		                                <input type="hidden" name="produtoId" th:value="${item.id}" />
+		                                <input type="hidden" name="produtoId" th:value="${item.produto.id}" />
 		                                <input type="hidden" name="quantidade" value="increase" />
 		                                <button type="submit" class="btn btn-sm btn-outline-secondary">+</button>
 		                            </form>
 		                        </td>
-		                        <td class="col-sm-1 col-md-1 text-center">R$ <strong th:text="${#numbers.formatDecimal(item.preco, 1, 2)}">$4.87</strong></td>
-		                        <td class="col-sm-1 col-md-1 text-center">R$ <strong th:text="${#numbers.formatDecimal(item.preco * item.quantidade, 1, 2)}">$14.61</strong></td>
+		                        <td class="col-sm-1 col-md-1 text-center">R$ <strong th:text="${#numbers.formatDecimal(item.produto.preco, 1, 2)}">$4.87</strong></td>
+		                        <td class="col-sm-1 col-md-1 text-center">R$ <strong th:text="${#numbers.formatDecimal(item.produto.preco * item.quantidade, 1, 2)}">$14.61</strong></td>
 		                        <td class="col-sm-1 col-md-1">
-								    <form th:action="@{/carrinho/remover}" method="post">
-								        <input type="hidden" name="produtoId" th:value="${item.id}" />
-								        <button type="submit" class="btn btn-danger w-100">
-								            <span class="glyphicon glyphicon-remove"></span> Remove
-								        </button>
-								    </form>
-								</td>
+		                            <form th:action="@{/carrinho/remover}" method="post">
+		                                <input type="hidden" name="produtoId" th:value="${item.produto.id}" />
+		                                <button type="submit" class="btn btn-danger w-100">
+		                                    <span class="glyphicon glyphicon-remove"></span> Remove
+		                                </button>
+		                            </form>
+		                        </td>
 		                    </tr>
 		                    <tr style="vertical-align: middle;">
 		                        <td>   </td>
@@ -82,7 +98,7 @@
 		                        <td>   </td>
 		                        <td><h5>Frete</h5></td>
 		                        <td class="text-center" colspan="2">
-		                        	<h5>R$ <strong id="freteValor" th:text="${#numbers.formatDecimal(frete, 1, 2)}">$0.00</strong></h5>
+		                            <h5>R$ <strong id="freteValor" th:text="${#numbers.formatDecimal(frete, 1, 2)}">$0.00</strong></h5>
 		                        </td>
 		                    </tr>
 		                    <tr style="vertical-align: middle;">
@@ -102,7 +118,7 @@
 		                                    <option value="fedex">FedEx</option>
 		                                    <option value="loggi">Loggi</option>
 		                                </select>
-		                                <button type="submit" class="btn btn-primary mt-3">Escolher Frete</button>
+		                                <button id="botaoFrete" type="submit" class="btn btn-primary mt-3 w-100">Escolher Frete</button>
 		                            </form>
 		                        </td>
 		                    </tr>
@@ -124,5 +140,6 @@
 		        </div>
 		    </div>
 		</section>
+
     </body>
 </html>
