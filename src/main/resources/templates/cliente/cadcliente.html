@@ -19,19 +19,18 @@
         </div>
     </header>
     <section class="layout-content" layout:fragment="corpo">	
-	    <!-- Formulário de Cadastro de Cliente -->
+	    <!-- Formulário de Cadastro de Cliente -->	    
+	    <div class="container formcadastro" id="cadastro">
 	    <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
 		    <span th:text="${erro}"></span>
 		    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
 		</div>
-	    <div class="container formcadastro" id="cadastro">
-	        <form th:action="@{/clientes/salvar-cliente}" th:object="${cliente}" method="POST">
+	        <form th:action="@{/clientes/noauth/salvar-cliente}" th:object="${cliente}" method="POST">
             <div class="row">
                 <div class="mb-3 col-md-6">
                     <label for="nome">Nome</label>
                     <input type="text" class="form-control" id="nome" name="nome"
                            th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid'" th:value="*{nome}" required />
-                    <div class="invalid-feedback" th:text="${#fields.errors('nome')}"></div>
                 </div>
             </div>
             <div class="row">
@@ -40,14 +39,12 @@
                     <input type="text" class="form-control" id="cpf" name="cpf" required aria-required="true"
                            th:classappend="${#fields.hasErrors('cpf')} ? 'is-invalid'" th:value="*{cpf}" 
                            data-mask="00000000000" data-mask-reverse="true"/>
-                    <div class="invalid-feedback" th:text="${#fields.errors('cpf')}"></div>
                 </div>
 
                 <div class="mb-3 col-md-2">
                     <label for="dataNascimento">Dt Nascimento</label>
                     <input type="date" class="form-control" id="dataNascimento" name="dataNascimento"
                            th:classappend="${#fields.hasErrors('dataNascimento')} ? 'is-invalid'" th:value="*{dataNascimento}" />
-                    <div class="invalid-feedback" th:text="${#fields.errors('dataNascimento')}"></div>
                 </div>
 
                 <div class="mb-3 col-md-2">
@@ -58,7 +55,6 @@
                         <option value="FEMININO">Feminino</option>
                         <option value="OUTRO">Outro</option>
                     </select>
-                    <div class="invalid-feedback" id="grupoError" style="display: none;"></div>
                 </div>
             </div>
 
@@ -67,7 +63,6 @@
                     <label for="email">Email</label>
                     <input type="email" class="form-control" id="email" name="email" required aria-required="true"
                            th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" th:value="*{email}" />
-                    <div class="invalid-feedback" th:text="${#fields.errors('email')}"></div>
                 </div>
             </div>
 
@@ -76,19 +71,17 @@
                     <label for="senha">Senha</label>
                     <input type="password" class="form-control" id="senha" name="senha" required aria-required="true"
                            th:classappend="${#fields.hasErrors('senha')} ? 'is-invalid'" th:value="*{senha}" />
-                    <div class="invalid-feedback" th:text="${#fields.errors('senha')}"></div>
                 </div>
 
                 <div class="mb-3 col-md-3">
                     <label for="confirmaSenha">Confirma Senha</label>
                     <input type="password" class="form-control" id="confirmaSenha" name="confirmaSenha" required aria-required="true"
                     	   th:classappend="${confirmaSenhaError != null} ? 'is-invalid'" />
-                    <div class="invalid-feedback" th:text="${confirmaSenhaError}"></div>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Continuar</button>
-            <button type="reset" class="btn btn-secondary">Limpar</button>
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-arrow-right"></i> Continuar</button>
+            <button type="reset" class="btn btn-secondary"><i class="fa-solid fa-broom-wide"></i> Limpar</button>
         </form>
        </div>
 	</section>

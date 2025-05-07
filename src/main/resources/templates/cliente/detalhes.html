@@ -23,16 +23,20 @@
 			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item active">
-						<i class="fa-solid fa-caret-right"></i>
-						<span>Dados do Cliente</span>
+						<i class="fa-solid fa-caret-right"></i> <span>Meus Dados</span>
+						<i class="fa-solid fa-caret-right"></i> <span>Dados do Cliente</span>
 					</li>
 				</ul>
 			</div>
 		</nav>
 	    <div class="container-fluid">
-	    	<div th:if="${param.sucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
-		    Dados salvos com sucesso!
+	    	<div th:if="${sucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
+		    	<span th:text="${sucesso}"></span>
 		    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+			</div>
+			<div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+			    <span th:text="${erro}"></span>
+			    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
 			</div>
 
 		    <div class="row">
@@ -54,10 +58,10 @@
 		                        <span th:text="${#dates.format(cliente.dataNascimento, 'dd/MM/yyyy')}">01/01/2000</span></p>
 		                    <p><strong>Gênero:</strong> <span th:text="${cliente.genero}">MASCULINO</span></p>
 		                    
-		                    <a th:href="@{/clientes/editar}" class="btn btn-outline-primary mt-3">
-		                        <i class="fa-solid fa-user-pen"></i> Editar Dados
+		                    <a th:href="@{/clientes/auth/editar}" class="btn btn-outline-primary mt-3">
+		                        <i class="fa-solid fa-user-pen"></i> Alterar Dados
 		                    </a>
-		                    <a th:href="@{/clientes/alterpass}" class="btn btn-outline-primary mt-3">
+		                    <a th:href="@{/clientes/auth/alterpass}" class="btn btn-outline-primary mt-3">
 		                        <i class="fa-solid fa-unlock-keyhole"></i> Alterar Senha
 		                    </a>
 		                </div>
@@ -68,7 +72,7 @@
 		        <div class="col-12 col-lg-6 mb-4">
 		        	<div class="d-flex justify-content-between align-items-center mb-2">
 		                <h5 class="mb-0"><i class="fa-solid fa-address-card"></i> ENDEREÇOS</h5>
-		                <a class="btn btn-success btn-sm" th:href="@{/clientes/enderecos/novo}">
+		                <a class="btn btn-success btn-sm" th:href="@{/clientes/auth/endereco/meusdados/novo}">
 		                    <i class="fa fa-plus"></i> Adicionar Endereço
 		                </a>
 		            </div>
@@ -76,7 +80,7 @@
 		            <!-- Endereço de Faturamento (Principal) -->
 		            <div class="card mb-4" th:if="${enderecoFaturamento != null}">
 		                <div class="card-header bg-success text-white">
-		                    <strong>Principal</strong>
+		                    <strong th:text="${enderecoFaturamento.tipo.descricao}">Fatur</strong>
 		                </div>
 		                <div class="card-body">
 		                    <p th:text="${enderecoFaturamento.logradouro + ', ' + enderecoFaturamento.numero}">Rua</p>
@@ -90,11 +94,10 @@
 		            <div th:each="endereco : ${enderecosEntrega}">
 		                <div class="card mb-4">
 		                    <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
-		                        <span>Secundário</span>
-		                        <form th:action="@{'/clientes/endereco/mudar-principal/' + ${cliente.id} + '/' + ${endereco.id}}" method="post">		                            
+		                        <span th:text="${endereco.tipo.descricao}">Entrega</span>
+		                        <form th:action="@{'/clientes/auth/endereco/mudar-principal/' + ${cliente.id} + '/' + ${endereco.id}}" method="post">		                            
 		                            <button type="submit" class="btn btn-sm btn-outline-light">
-		                                Mudar para Principal
-		                            </button>
+		                            <i class="fa-solid fa-up-down"></i> Mudar para Faturamento</button>
 		                        </form>
 		                    </div>
 		                    <div class="card-body">

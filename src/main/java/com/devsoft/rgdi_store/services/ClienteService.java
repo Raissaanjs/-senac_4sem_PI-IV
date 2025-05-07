@@ -7,11 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.devsoft.rgdi_store.authentication.PasswordUtils;
 import com.devsoft.rgdi_store.entities.ClienteEntity;
-import com.devsoft.rgdi_store.entities.EnderecoEntity;
-import com.devsoft.rgdi_store.entities.EnderecoTipo;
+import com.devsoft.rgdi_store.exceptions.all.ClienteNaoEncontradoException;
+import com.devsoft.rgdi_store.exceptions.all.InvalidPassException;
 import com.devsoft.rgdi_store.repositories.ClienteRepository;
-import com.devsoft.rgdi_store.services.exceptions.All.ClienteNaoEncontradoException;
-import com.devsoft.rgdi_store.services.exceptions.All.InvalidPassException;
 import com.devsoft.rgdi_store.validation.cliente.ClienteValidationSaveService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -20,63 +18,44 @@ import jakarta.persistence.EntityNotFoundException;
 public class ClienteService {
 
 	//Injetando dependências
-    private final ClienteRepository repository;
-    private final EnderecoService enderecoService;
+    private final ClienteRepository clienteRepository;
     private final PasswordUtils passwordUtils;
 
-    public ClienteService(ClienteRepository repository, PasswordUtils passwordUtils, EnderecoService enderecoService) {
-        this.repository = repository;
+    public ClienteService(ClienteRepository repository, PasswordUtils passwordUtils) {
+        this.clienteRepository = repository;
         this.passwordUtils = passwordUtils;
-        this.enderecoService = enderecoService;
     }
     
     @Transactional(readOnly = true)
     public List<ClienteEntity> findAll() {
-        return repository.findAll();
+        return clienteRepository.findAll();
     }
 
     @Transactional
     public ClienteEntity findClienteById(Long clienteId) {
-        return repository.findById(clienteId)
+        return clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new ClienteNaoEncontradoException("Cliente não encontrado"));
     }
     
+    public ClienteEntity findByIdComEnderecos(Long id) {
+        return clienteRepository.findByIdComEnderecos(id)
+                .orElseThrow(() -> new ClienteNaoEncontradoException("Cliente não encontrado com ID: " + id));
+    }
     
     @Transactional
     public ClienteEntity saveClienteOnly(ClienteEntity cliente, String confirmaSenha) {
         // Validação do cliente (pode ser simplificada aqui se já foi feita no controller)
-        ClienteValidationSaveService.validateCliente(cliente, repository, confirmaSenha);
+        ClienteValidationSaveService.validateCliente(cliente, clienteRepository, confirmaSenha);
 
         // Criptografando a senha
         cliente.setSenha(passwordUtils.encrypt(cliente.getSenha()));
-        return repository.save(cliente);
-    }    
-    
-    //salva endereço individual
-    @Transactional
-    public void saveEndereco(Long clienteId, EnderecoEntity endereco) {
-        ClienteEntity cliente = repository.findById(clienteId)
-                .orElseThrow(() -> new ClienteNaoEncontradoException("Cliente não encontrado"));
-        endereco.setCliente(cliente);
-        enderecoService.saveEndereco(cliente, endereco);
-    }
-
-    @Transactional
-    public void saveEnderecos(Long clienteId, EnderecoEntity enderecoFaturamento, EnderecoEntity enderecoEntrega) {
-        ClienteEntity cliente = repository.findById(clienteId)
-                .orElseThrow(() -> new ClienteNaoEncontradoException("Cliente não encontrado"));
-
-        enderecoFaturamento.setTipo(EnderecoTipo.FATURAMENTO);
-        enderecoEntrega.setTipo(EnderecoTipo.ENTREGA);
-
-        enderecoService.saveEndereco(cliente, enderecoFaturamento);
-        enderecoService.saveEndereco(cliente, enderecoEntrega);
-    }
+        return clienteRepository.save(cliente);
+    }  
 
     @Transactional
     public ClienteEntity update(Long id, ClienteEntity novo) {
         try {
-            ClienteEntity original = repository.getReferenceById(id);
+            ClienteEntity original = clienteRepository.getReferenceById(id);
             
             if (original == null) {
                 throw new ClienteNaoEncontradoException("Cliente não encontrado para atualização");
@@ -89,7 +68,7 @@ public class ClienteService {
             original.setDataNascimento(novo.getDataNascimento());
             original.setGenero(novo.getGenero());
 
-            return repository.save(original);
+            return clienteRepository.save(original);
         } catch (EntityNotFoundException e) {
             throw new ClienteNaoEncontradoException("Cliente não encontrado para update");
         }
@@ -98,7 +77,7 @@ public class ClienteService {
     @Transactional
     public ClienteEntity alterPassword(Long id, String senhaAtual, String novaSenha, String confirmaSenha) {
         try {
-            ClienteEntity original = repository.getReferenceById(id);
+            ClienteEntity original = clienteRepository.getReferenceById(id);
 
             if (original == null) {
                 throw new ClienteNaoEncontradoException("Cliente não encontrado para atualização");
@@ -115,7 +94,7 @@ public class ClienteService {
             // Criptografa nova senha e atualiza
             original.setSenha(passwordUtils.encrypt(novaSenha));
 
-            return repository.save(original);
+            return clienteRepository.save(original);
         } catch (EntityNotFoundException e) {
             throw new ClienteNaoEncontradoException("Cliente não encontrado para update");
         }
