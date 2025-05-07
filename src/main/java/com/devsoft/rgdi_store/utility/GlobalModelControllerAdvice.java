@@ -34,19 +34,29 @@ public class GlobalModelControllerAdvice {
         String nomeExibicao = "Visitante";
 
         if (authentication != null) {
+        	model.addAttribute("logado", "Sim"); // filtra usuário Logado
+        	
             Object principal = authentication.getPrincipal();
-
-            // Se for admin (usuário)
+            
+            // Se for usuário (Admin/Estoque)
             if (principal instanceof CustomUserDetails userDetails) {
+            	String emailLogado = userDetails.getUsername();
+            	
                 nomeExibicao = userRepository.findByEmail(userDetails.getUsername())
                         .map(UserEntity::getNome)
                         .orElse("Usuário");
+                
+                model.addAttribute("userEmailLogado", emailLogado); // ← aqui
 
             // Se for cliente
             } else if (principal instanceof CustomClienteDetails clienteDetails) {
-                nomeExibicao = clienteRepository.findByEmail(clienteDetails.getUsername())
+            	String emailLogado = clienteDetails.getUsername();
+            	
+            	nomeExibicao = clienteRepository.findByEmail(clienteDetails.getUsername())
                         .map(ClienteEntity::getNome)
                         .orElse("Cliente");
+            	
+            	model.addAttribute("clinteEmailLogado", emailLogado);
             }
 
             // Nome do usuário/cliente
@@ -73,6 +83,7 @@ public class GlobalModelControllerAdvice {
 
         } else {
             // Usuário não autenticado
+        	model.addAttribute("logado", "Não"); // filtra usuário não Logado
             model.addAttribute("userName", "Guest");
             model.addAttribute("userGroup", "Visitante");
             model.addAttribute("isAdmin", false);

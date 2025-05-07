@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.devsoft.rgdi_store.services.AdminUserDetailsService;
+import com.devsoft.rgdi_store.authentication.AdminUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
@@ -63,11 +63,13 @@ public class SecurityConfig {
 	            .requestMatchers("/error-login", "/error-user-inat",
 	    				"/access-denied", "/error-no-perm", "/error-no-auth").permitAll()
 	            .requestMatchers("/usuarios/**", "/username/**").hasAnyAuthority("ROLE_ADMIN")
-	            .requestMatchers("/produtos/listar/**","/produtos/detalhes/**" ,"/produtos/update/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
+	            .requestMatchers("/produtos/listar/**","/produtos/detalhes/**",
+	            		"/produtos/update/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers(HttpMethod.PUT, "/produtos/*/status").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
-	            .requestMatchers("/produtos/**").hasAnyAuthority("ROLE_ADMIN")	            
+	            .requestMatchers("/pedidos/admin/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers("/admin").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers("/front-adm").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
+	            .requestMatchers("/produtos/**").hasAnyAuthority("ROLE_ADMIN")
 	            .requestMatchers("/produto-imagens/**").hasAnyAuthority("ROLE_ADMIN")
 	            .anyRequest().authenticated() // Qualquer outra rota requer autenticação
 	        )
@@ -77,6 +79,7 @@ public class SecurityConfig {
 	            .usernameParameter("email")
 	            .passwordParameter("password")
 	            .defaultSuccessUrl("/front-adm", false) // Vai para o último endpoint acessado senão, vai para "/front-adm"
+	            .failureUrl("/login?error=true")
 	        )
 	        .logout(logout -> logout
 	            .logoutUrl("/logout")

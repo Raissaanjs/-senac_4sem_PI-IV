@@ -274,3 +274,22 @@ a.navbar-brand.navbar-brand-custom{
   --bs-text-opacity: 1;
   color: rgba(var(--bs-white-rgb), var(--bs-text-opacity)) !important;
 }
+
+
+/*link no username cliente*/
+.link-cliente-usernme{
+	text-decoration: none;
+	color: #fff;
+	font-weight: normal;
+}
+
+.custom-border {
+  border-bottom: 2px solid #212529; /* azul Bootstrap */
+}
+
+/*desabilita linha do*/
+.disabled-row {
+    pointer-events: none;      /* impede clique em botões/links */
+    opacity: 0.6;              /* aparência mais apagada */
+    background-color: #f9f9f9; /* cor sutil para indicar inativo */
+}

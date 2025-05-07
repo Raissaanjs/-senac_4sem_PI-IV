@@ -13,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.devsoft.rgdi_store.services.ClienteUserDetailsService;
+import com.devsoft.rgdi_store.authentication.ClienteUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
@@ -30,8 +30,7 @@ public class SecurityConfigClient {
         this.passwordEncoder = passwordEncoder;
         this.sessionExpiredFilter = sessionExpiredFilter;
     }
-    
-   
+       
 
     @Bean
     @Order(1)
@@ -53,26 +52,18 @@ public class SecurityConfigClient {
         http.securityMatcher("/clientes/**")  // Aplica segurança apenas para rotas de cliente
         	.addFilterBefore(sessionExpiredFilter, UsernamePasswordAuthenticationFilter.class) // Filtro para controle de Sessão
             .authorizeHttpRequests(auth -> auth        		
-        		.requestMatchers("/clientes/login").permitAll()
-        		.requestMatchers("/clientes/cadastrar/**", "/clientes/salvar-cliente/**" 
-    				).permitAll()
+        		.requestMatchers("/clientes/noauth/**").permitAll()
         		.requestMatchers("/clientes/error/**").permitAll()
-        		.requestMatchers("/clientes/cadastrar-enderecos/**", "/clientes/cadastrar-endereco/**",
-        				"/clientes/salvar-enderecos/**", "/clientes/salvar-endereco-faturamento-inicial/**",
-        				"/clientes/salvar-endereco-entrega/**").permitAll()
-	            .requestMatchers("/clientes/admin/**").hasAnyAuthority("ROLE_CLIENT")
-	            .requestMatchers("/clientes/detalhes/**", "/clientes/endereco/mudar-principal/**").hasAnyAuthority("ROLE_CLIENT")
-	            .requestMatchers("/clientes/editar/**", "/clientes/update/**").hasAnyAuthority("ROLE_CLIENT")
-	            .requestMatchers("/clientes/alterpass/**", "/clientes/updatepass/**").hasAnyAuthority("ROLE_CLIENT")
-	            .requestMatchers("/clientes/pagamento-resumo", "/clientes/pagamento-processar").hasAnyAuthority("ROLE_CLIENT")
-	            .requestMatchers("clientes/pedidos/**","clientes/meus-pedidos/**").hasAnyAuthority("ROLE_CLIENT")
+        		.requestMatchers("/clientes/login").permitAll()
+	            .requestMatchers("/clientes/auth/**").hasAnyAuthority("ROLE_CLIENT")
                 .anyRequest().authenticated()  // Qualquer outra rota do cliente requer autenticação
             )
             .formLogin(form -> form
                 .loginPage("/clientes/login")  // Página de login personalizada para cliente
                 .usernameParameter("email")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/clientes/meus-pedidos", false) // Vai para o último endpoint acessado, senão vai para "/clientes/meus-pedidos"
+                .defaultSuccessUrl("/clientes/auth/meus-pedidos", false) // Vai para o último endpoint acessado, senão vai para "/clientes/meus-pedidos"
+                .failureUrl("/clientes/login?error=true")
             )
             .logout(logout -> logout
                 .logoutUrl("/clientes/logout")  // URL de logout do cliente

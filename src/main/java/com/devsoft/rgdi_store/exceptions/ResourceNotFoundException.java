@@ -1,4 +1,4 @@
-package com.devsoft.rgdi_store.services.exceptions;
+package com.devsoft.rgdi_store.exceptions;
 
 //"RuntimeException" não exige a nível de compilação inserir try/ Catch
 public class ResourceNotFoundException extends RuntimeException{
