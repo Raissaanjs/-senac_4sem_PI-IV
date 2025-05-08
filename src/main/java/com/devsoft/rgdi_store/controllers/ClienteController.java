@@ -66,9 +66,7 @@ public class ClienteController {
     public String cadastrarCliente(Model model) {
         model.addAttribute("cliente", new ClienteEntity());
         return "/cliente/cadcliente";
-    }    
-
- 	
+    } 	
  	
  	@PostMapping("/noauth/salvar-cliente")
     public String salvarCliente(@ModelAttribute("cliente") ClienteEntity cliente,
