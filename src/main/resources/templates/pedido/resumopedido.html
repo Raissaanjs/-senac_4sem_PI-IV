@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net/thymeleaf/layout"
+	layout:decorate="~{fragments/layoutcliente}">
+<head>
+  <title>RGDI Store Loja - Resumo do Pedido</title>
+</head>
+    <body>
+    	<header layout:fragment="header">
+	        <div class="px-4 px-lg-5 ">
+	          <div class="text-center text-white flex-inline">
+	              <h3 class="fw-bolder">Resumo Pedido</h3>
+	              <div th:if="${isClient}">
+	              <span><i class="fa-solid fa-caret-right"></i></span>
+	              <span class="mr-3" th:text="${userName}">Visitante</span>		        
+	              <span><i class="fa-solid fa-caret-left"></i></span>
+	        	  </div>
+	          </div>
+	        </div>
+	    </header>        
+        <!-- Section-->
+        <section class="layout-content" layout:fragment="corpo">
+		    <nav class="navbar navbar-expand-md bg-light">
+		        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+		            <ul class="navbar-nav mr-auto">
+		                <li class="nav-item active">
+		                	<i class="fa-solid fa-caret-right"></i> <span>Carrinho</span>  
+		                    <i class="fa-solid fa-caret-right"></i> <span>Endereços de Entrega</span>
+		                    <i class="fa-solid fa-caret-right"></i> <span>Formas de Pagamento</span>
+		                    <i class="fa-solid fa-caret-right"></i> <span>Resumo pedido</span>
+		                </li>
+		            </ul>
+		        </div>
+		    </nav>
+		    <div class="container-fluid">		
+		        <!-- Alerta de erro, se houver -->
+		        <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+		            <span th:text="${erro}"></span>
+		            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+		        </div>
+		        <!-- Formulário para processar pagamento -->
+		        <form th:action="@{/pagamentos/processar}" method="post">
+		            <!-- Campos ocultos -->
+		            <input type="hidden" name="total" th:value="${total}">
+		            <input type="hidden" name="frete" th:value="${frete}">
+		            <input type="hidden" name="subtotal" th:value="${subtotal}">
+		            <input type="hidden" name="enderecoId" th:value="${enderecoSelecionado.id}">
+		            <input type="hidden" name="formaPagamento" th:value="${formaPagamento}">
+		
+		            <h3 class="mb-4 custom-border">Resumo do Pedido</h3>
+		         
+		            <!-- Tabela de produtos -->
+		            <table class="table">
+		                <thead>
+		                    <tr>
+		                        <th>Produto</th>
+		                        <th>Qt</th>
+		                        <th>Vl Unitário</th>
+		                        <th>Vl Total</th>
+		                    </tr>
+		                </thead>
+		                <tbody>
+		                    <tr th:each="item : ${itensCarrinho}">
+							    <td th:text="${item.produto.nome}">Nome do Produto</td>
+							    <td th:text="${item.quantidade}">0</td>
+							    <td th:text="'R$ ' + ${#numbers.formatDecimal(item.produto.preco, 1, 2)}">R$ 0,00</td>							    
+							    <td th:text="'R$ ' + ${#numbers.formatDecimal(item.valorTotal, 1, 2)}">R$ 0,00</td>
+							</tr>
+
+		                </tbody>
+		                <tfoot>
+		                    <tr>
+		                        <td colspan="3" class="text-end"><strong>Subtotal</strong></td>
+		                        <td th:text="'R$ ' + ${#numbers.formatDecimal(subtotal, 1, 2)}"></td>
+		                    </tr>
+		                    <tr>
+		                        <td colspan="3" class="text-end"><strong>Frete</strong></td>
+		                        <td th:text="'R$ ' + ${#numbers.formatDecimal(frete, 1, 2)}"></td>
+		                    </tr>
+		                    <tr>
+		                        <td colspan="3" class="text-end"><strong>Total</strong></td>
+		                        <td th:text="'R$ ' + ${#numbers.formatDecimal(total, 1, 2)}"></td>
+		                    </tr>
+		                </tfoot>
+		            </table>
+		
+		            <!-- Endereço -->
+		            <div class="mt-4">
+		                <h5>Endereço</h5>
+		                <p th:text="${enderecoSelecionado.logradouro + ', ' + enderecoSelecionado.numero + ' - ' + enderecoSelecionado.bairro +
+		                 ' - ' +enderecoSelecionado.localidade + ' - ' + enderecoSelecionado.uf + ' - CEP ' + enderecoSelecionado.cep}"></p>
+		            </div>
+		
+		            <!-- Forma de pagamento -->
+		            <div class="mt-4">
+		                <h5>Forma de Pagamento</h5>
+		                <p th:text="${pedido.tipo.descricao}"></p>
+		            </div>
+		
+		            <!-- Botões -->
+		            <div class="d-flex mt-4">
+		                <a th:href="@{/pagamentos/formaspagamento(enderecoId=${enderecoSelecionado.id})}"
+		                 class="btn btn-secondary">
+
+		                    <i class="fa-solid fa-arrow-left"></i> Voltar
+		                </a>
+		                <button type="submit" class="btn btn-success">
+		                    <i class="fa-solid fa-dollar-sign"></i> Concluir Compra
+		                </button>
+		            </div>
+		        </form>
+		    </div>
+		</section>
+
+
+    </body>
+</html>

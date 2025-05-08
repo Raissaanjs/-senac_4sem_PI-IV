@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<head>
+    <title>RGDI Store - Pedido do Cliente - Admin</title>
+</head>
+<body>
+    <header layout:fragment="header">
+        <div class="px-4 px-lg-5 ">
+          <div class="text-center text-white flex-inline">
+              <h3 class="fw-bolder">Pedido do (a) Cliente</h3>
+              <div th:if="${isClient}">
+              <span><i class="fa-solid fa-caret-right"></i></span>
+              <span class="mr-3" th:text="${userName}">Visitante</span>		        
+              <span><i class="fa-solid fa-caret-left"></i></span>
+        	  </div>
+          </div>
+        </div>
+    </header>
+    <section class="layout-content" layout:fragment="corpo">
+    	<nav class="navbar navbar-expand-md bg-light">
+			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<i class="fa-solid fa-caret-right"></i> <span>Listar</span>
+						<i class="fa-solid fa-caret-right"></i> <span>Detalhes do Pedido</span>
+					</li>
+				</ul>
+			</div>
+		</nav>
+	    <div class="container">
+			<div th:if="${erro != null}" class="alert alert-danger">
+				<span th:text="${erro}"></span>
+			</div>		
+			<div>				
+				<h3 class="mb-4 pb-2 custom-border">Detalhes do Pedido <span th:text="'#' + ${pedido.id}"></span></h3>
+	            
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Produto</th>
+							<th>Qt</th>
+							<th>Vl Unitário</th>
+							<th>Vl Total</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item : ${pedido.itensPedido}">
+							<td th:text="${item.produto.nome}"></td>
+							<td th:text="${item.qtProduto}"></td>
+							<td>R$ <span th:text="${#numbers.formatDecimal(item.vlUnitario, 1, 2)}"></span></td>
+							<td>R$ <span th:text="${#numbers.formatDecimal(item.vlTotalPedido, 1, 2)}"></span></td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="3" class="text-end"><strong>Subtotal</strong></td>
+							<td th:text="'R$ ' + ${#numbers.formatDecimal(subtotal, 1, 2)}"></td>
+						</tr>
+						<tr>
+							<td colspan="3" class="text-end"><strong>Frete</strong></td>
+							<td th:text="'R$ ' + ${#numbers.formatDecimal(frete, 1, 2)}"></td>
+						</tr>
+						<tr>
+							<td colspan="3" class="text-end"><strong>Total</strong></td>
+							<td th:text="'R$ ' + ${#numbers.formatDecimal(total, 1, 2)}"></td>
+						</tr>
+					</tfoot>
+				</table>
+				
+				<!-- Endereço -->
+				<div class="mt-4">
+					<h5>Endereço</h5>
+					<p th:text="${enderecoSelecionado.logradouro + ', ' + enderecoSelecionado.numero + ' - ' + enderecoSelecionado.bairro +
+					 ' - ' +enderecoSelecionado.localidade + ' - ' + enderecoSelecionado.uf + ' - CEP ' + enderecoSelecionado.cep}"></p>
+				</div>
+	
+				<!-- Forma de pagamento -->
+				<div class="mt-4">
+					<h5>Forma de Pagamento</h5>
+					<p th:text="${pedido.tipo.descricao}"></p>
+				</div>
+				
+				<hr/>
+				
+				<a th:href="@{/pedidos/admin}" class="btn btn-secondary">Todos os Pedidos</a>
+				
+			</div>
+			
+		</div> <!-- fim do container -->
+	</section>
+
+</body>
+</html>		

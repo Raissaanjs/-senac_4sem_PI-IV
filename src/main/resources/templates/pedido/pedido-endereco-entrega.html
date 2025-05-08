@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net/thymeleaf/layout"
+	layout:decorate="~{fragments/layoutcliente}">
+<head>
+    <title>RGDI Store - Cadastro de Cliente</title>
+</head>
+<body>
+    <header layout:fragment="header">
+        <div class="px-4 px-lg-5 ">
+          <div class="text-center text-white flex-inline">
+              <h3 class="fw-bolder">Endereços de Entrega</h3>
+              <div th:if="${isClient}">
+              <span><i class="fa-solid fa-caret-right"></i></span>
+              <span class="mr-3" th:text="${userName}">Visitante</span>		        
+              <span><i class="fa-solid fa-caret-left"></i></span>
+        	  </div>
+          </div>
+        </div>
+    </header>
+    <section class="layout-content" layout:fragment="corpo">
+	    <nav class="navbar navbar-expand-md bg-light">
+	        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+	            <ul class="navbar-nav mr-auto">
+	                <li class="nav-item active">
+	                	<i class="fa-solid fa-caret-right"></i> <span>Carrinho</span>  
+	                    <i class="fa-solid fa-caret-right"></i> <span>Endereços de Entrega</span>
+	                </li>
+	            </ul>
+	        </div>
+	    </nav>
+	
+	    <div class="container-fluid">
+	        <div th:if="${sucesso}" class="alert alert-success d-flex justify-content-between align-items-center" role="alert">
+			    <span th:text="${sucesso}"></span>
+			    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+			</div>
+	
+	        <div class="row">
+	            <div class="col-12 col-lg-8 mb-4">
+	                <div class="d-flex justify-content-between align-items-center mb-2">
+	                    <h5 class="mb-0"><i class="fa-solid fa-address-card"></i> ENDEREÇOS DE ENTREGA</h5>
+	                    <a class="btn btn-success btn-sm" th:href="@{/enderecos/auth/endereco-entrega/pedido/novo}">
+	                        <i class="fa fa-plus"></i> Adicionar Endereço
+	                    </a>
+	                    <a class="btn btn-secondary btn-sm" th:href="@{/carrinho}">
+	                        <i class="fa-solid fa-arrow-left"></i> Voltar
+	                    </a>
+	                </div>
+	
+	                <!-- Formulário POST com os radios e botão -->
+	               <form th:action="@{/pagamentos/formaspagamento}" method="get">
+	                    <div th:each="endereco, stat : ${enderecosEntrega}">
+	                        <div class="card mb-4">
+	                            <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+	                                <span>Entrega</span>
+	                                <input type="radio"
+	                                       name="enderecoId"
+	                                       th:id="'endereco-' + ${endereco.id}"
+	                                       th:value="${endereco.id}"
+	                                       th:checked="${stat.index == 0}" />
+	                            </div>
+	                            <div class="card-body">
+	                                <p th:text="${endereco.logradouro + ', ' + endereco.numero}">Rua</p>
+	                                <p th:text="${endereco.bairro + ' - ' + endereco.localidade + '/' + endereco.uf}">Cidade/UF</p>
+	                                <p th:text="'CEP: ' + ${endereco.cep}">CEP</p>
+	                                <p th:if="${endereco.complemento != null}" th:text="'Complemento: ' + ${endereco.complemento}"></p>
+	                            </div>
+	                        </div>
+	                    </div>
+	
+	                    <div class="text-end">
+	                        <button type="submit" class="btn btn-primary btn-sm">
+	                            <i class="fa-solid fa-money-check-dollar"></i> Ir Para Pagamento
+	                        </button>
+	                    </div>
+	                </form>
+	            </div>
+	        </div>
+	    </div>
+	</section>
+</body>
+</html>		
