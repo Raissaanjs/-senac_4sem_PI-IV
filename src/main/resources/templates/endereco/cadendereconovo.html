@@ -36,7 +36,7 @@
 			    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
 			</div>
 
-	        <form th:action="@{/clientes/auth/endereco/meusdados/salvar}" method="post" th:object="${endereco}">
+	        <form th:action="@{/enderecos/auth/meusdados/salvar}" method="post" th:object="${endereco}">
 	            <input type="hidden" name="clienteId" th:value="${clienteId}" />
 	            
 	            <div class="row">
