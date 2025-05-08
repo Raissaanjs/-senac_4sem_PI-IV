@@ -72,7 +72,7 @@
 		        <div class="col-12 col-lg-6 mb-4">
 		        	<div class="d-flex justify-content-between align-items-center mb-2">
 		                <h5 class="mb-0"><i class="fa-solid fa-address-card"></i> ENDEREÇOS</h5>
-		                <a class="btn btn-success btn-sm" th:href="@{/clientes/auth/endereco/meusdados/novo}">
+		                <a class="btn btn-success btn-sm" th:href="@{/enderecos/auth/meusdados/novo}">
 		                    <i class="fa fa-plus"></i> Adicionar Endereço
 		                </a>
 		            </div>
@@ -95,7 +95,7 @@
 		                <div class="card mb-4">
 		                    <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
 		                        <span th:text="${endereco.tipo.descricao}">Entrega</span>
-		                        <form th:action="@{'/clientes/auth/endereco/mudar-principal/' + ${cliente.id} + '/' + ${endereco.id}}" method="post">		                            
+		                        <form th:action="@{'/enderecos/auth/mudar-principal/' + ${cliente.id} + '/' + ${endereco.id}}" method="post">		                            
 		                            <button type="submit" class="btn btn-sm btn-outline-light">
 		                            <i class="fa-solid fa-up-down"></i> Mudar para Faturamento</button>
 		                        </form>

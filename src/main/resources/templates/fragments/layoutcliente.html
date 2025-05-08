@@ -90,7 +90,7 @@
 		                </a>
 		            </li>
 		            <li class="nav-item" th:if="${isClient}">
-		                <a class="nav-link" th:href="@{/clientes/auth/meus-pedidos}">
+		                <a class="nav-link" th:href="@{/pedidos/clientes/meus-pedidos}">
 		                    <i class="fa-solid fa-basket-shopping"></i> <span>Meus Pedidos</span>
 		                </a>
 		            </li>
@@ -118,6 +118,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>    
     <script th:src="@{/js/viaCep.js}"></script>
-    <script th:src="@{/js/copiaEnderecoFaturamento.js}"></script>
+    <script th:src="@{/js/cadastroEnderecoInicial.js}"></script>
 </body>
 </html>

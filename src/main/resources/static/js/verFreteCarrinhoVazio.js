@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
-                window.location.href = '/clientes/auth/endereco-entrega/listar';
+                window.location.href = '/enderecos/auth/endereco-entrega/listar';
             })
             .catch(error => {
                 console.error('Erro ao verificar o carrinho:', error);
