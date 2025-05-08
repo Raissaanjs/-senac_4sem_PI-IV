@@ -53,8 +53,7 @@ public class SecurityConfig {
 	    
 	    http
 	    	.addFilterBefore(sessionExpiredFilter, UsernamePasswordAuthenticationFilter.class) // Filtro para controle de Sessão
-    		.authorizeHttpRequests(auth -> auth
-    			.requestMatchers("/clientes/sessao-expirada", "/sessao-expirada").permitAll()
+    		.authorizeHttpRequests(auth -> auth    			
 	        	.requestMatchers("/", "/css/**", "/js/**", "/image/**", "/webjars/**", "/upload/**", "/uploads/**",
 	        			"/list", "/auth").permitAll()
 	    		.requestMatchers("/produtos/loja/**", "/produto-imagens/imagem-principal/**" ,

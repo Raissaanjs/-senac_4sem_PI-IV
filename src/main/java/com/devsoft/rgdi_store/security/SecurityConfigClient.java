@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.devsoft.rgdi_store.authentication.ClienteUserDetailsService;
@@ -49,20 +50,21 @@ public class SecurityConfigClient {
         http.authenticationManager(authenticationManager);
         
     	
-        http.securityMatcher("/clientes/**")  // Aplica segurança apenas para rotas de cliente
+        http.securityMatcher("/clientes/**", "/pedidos/clientes/**", "/pagamentos/**", "/enderecos/**")  // Aplica segurança apenas para rotas de cliente
         	.addFilterBefore(sessionExpiredFilter, UsernamePasswordAuthenticationFilter.class) // Filtro para controle de Sessão
             .authorizeHttpRequests(auth -> auth        		
-        		.requestMatchers("/clientes/noauth/**").permitAll()
+        		.requestMatchers("/clientes/noauth/**", "/enderecos/noauth/**").permitAll()
         		.requestMatchers("/clientes/error/**").permitAll()
         		.requestMatchers("/clientes/login").permitAll()
 	            .requestMatchers("/clientes/auth/**").hasAnyAuthority("ROLE_CLIENT")
+	            .requestMatchers("/pedidos/clientes**","/pagamentos/**", "/enderecos/auth/**").hasAuthority("ROLE_CLIENT")
                 .anyRequest().authenticated()  // Qualquer outra rota do cliente requer autenticação
             )
             .formLogin(form -> form
                 .loginPage("/clientes/login")  // Página de login personalizada para cliente
                 .usernameParameter("email")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/clientes/auth/meus-pedidos", false) // Vai para o último endpoint acessado, senão vai para "/clientes/meus-pedidos"
+                .successHandler(clienteAuthSuccessHandler()) // Vai para o último endpoint acessado, senão vai para o @Bean
                 .failureUrl("/clientes/login?error=true")
             )
             .logout(logout -> logout
@@ -86,6 +88,14 @@ public class SecurityConfigClient {
             .headers(headers -> headers.frameOptions().sameOrigin());
 
         return http.build();
-    } 
+    }
+    
+    @Bean
+    public SavedRequestAwareAuthenticationSuccessHandler clienteAuthSuccessHandler() {
+        SavedRequestAwareAuthenticationSuccessHandler handler = new SavedRequestAwareAuthenticationSuccessHandler();
+        handler.setDefaultTargetUrl("/pedidos/clientes/meus-pedidos");
+        return handler;
+    }
+
 }
 
