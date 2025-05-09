@@ -40,7 +40,7 @@
 		                    <div class="card-body">
 		                        <div class="d-flex justify-content-center gap-4 align-items-center mb-3">
 								    <h5 class="mb-0">Pedido: <span th:text="${pedido.id}"></span></h5>
-								    <h5 class="mb-0">Valor: R$ <span th:text="${#numbers.formatDecimal(pedido.valorTotal, 1, 2)}"></span></h5>
+								    <h5 class="mb-0">Valor: R$ <span th:text="${#numbers.formatDecimal(pedido.valorTotal, 1, 'POINT', 2, 'COMMA')}"></span></h5>
 								</div>
 	
 		                        <div th:if="${erro}" class="alert alert-danger" role="alert">

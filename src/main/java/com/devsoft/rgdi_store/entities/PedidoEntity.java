@@ -59,7 +59,7 @@ public class PedidoEntity {
 	
 	// Construtor padrão
 	public PedidoEntity() {
-		this.status = PedidoStatus.PENDENTE_PAGAMENTO;
+		this.status = PedidoStatus.AGUARDANDO_PAGAMENTO;
 	}
 
 

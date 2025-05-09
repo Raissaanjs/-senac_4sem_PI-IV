@@ -49,22 +49,22 @@
 						<tr th:each="item : ${pedido.itensPedido}">
 							<td th:text="${item.produto.nome}"></td>
 							<td th:text="${item.qtProduto}"></td>
-							<td>R$ <span th:text="${#numbers.formatDecimal(item.vlUnitario, 1, 2)}"></span></td>
-							<td>R$ <span th:text="${#numbers.formatDecimal(item.vlTotalPedido, 1, 2)}"></span></td>
+							<td>R$ <span th:text="${#numbers.formatDecimal(item.vlUnitario, 1, 'POINT', 2, 'COMMA')}"></span></td>
+							<td>R$ <span th:text="${#numbers.formatDecimal(item.vlTotalPedido, 1, 'POINT', 2, 'COMMA')}"></span></td>
 						</tr>
 					</tbody>
 					<tfoot>
 						<tr>
 							<td colspan="3" class="text-end"><strong>Subtotal</strong></td>
-							<td th:text="'R$ ' + ${#numbers.formatDecimal(subtotal, 1, 2)}"></td>
+							<td th:text="'R$ ' + ${#numbers.formatDecimal(subtotal, 1, 'POINT', 2, 'COMMA')}"></td>
 						</tr>
 						<tr>
 							<td colspan="3" class="text-end"><strong>Frete</strong></td>
-							<td th:text="'R$ ' + ${#numbers.formatDecimal(frete, 1, 2)}"></td>
+							<td th:text="'R$ ' + ${#numbers.formatDecimal(frete, 1, 'POINT', 2, 'COMMA')}"></td>
 						</tr>
 						<tr>
 							<td colspan="3" class="text-end"><strong>Total</strong></td>
-							<td th:text="'R$ ' + ${#numbers.formatDecimal(total, 1, 2)}"></td>
+							<td th:text="'R$ ' + ${#numbers.formatDecimal(total, 1, 'POINT', 2, 'COMMA')}"></td>
 						</tr>
 					</tfoot>
 				</table>

@@ -76,8 +76,8 @@
 		                                <button type="submit" class="btn btn-sm btn-outline-secondary">+</button>
 		                            </form>
 		                        </td>
-		                        <td class="col-sm-1 col-md-1 text-center">R$ <strong th:text="${#numbers.formatDecimal(item.produto.preco, 1, 2)}">$4.87</strong></td>
-		                        <td class="col-sm-1 col-md-1 text-center">R$ <strong th:text="${#numbers.formatDecimal(item.produto.preco * item.quantidade, 1, 2)}">$14.61</strong></td>
+		                        <td class="col-sm-1 col-md-1 text-center">R$ <strong th:text="${#numbers.formatDecimal(item.produto.preco, 1, 'POINT', 2, 'COMMA')}">$4.87</strong></td>
+		                        <td class="col-sm-1 col-md-1 text-center">R$ <strong th:text="${#numbers.formatDecimal(item.produto.preco * item.quantidade, 1, 'POINT', 2, 'COMMA')}">$14.61</strong></td>
 		                        <td class="col-sm-1 col-md-1">
 		                            <form th:action="@{/carrinho/remover}" method="post">
 		                                <input type="hidden" name="produtoId" th:value="${item.produto.id}" />
@@ -91,21 +91,21 @@
 		                        <td>   </td>
 		                        <td>   </td>
 		                        <td><h5>Subtotal</h5></td>
-		                        <td class="text-center" colspan="2"><h5>R$ <strong th:text="${#numbers.formatDecimal(subtotal, 1, 2)}">$24.59</strong></h5></td>
+		                        <td class="text-center" colspan="2"><h5>R$ <strong th:text="${#numbers.formatDecimal(subtotal, 1, 'POINT', 2, 'COMMA')}">$24.59</strong></h5></td>
 		                    </tr>
 		                    <tr style="vertical-align: middle;">
 		                        <td>   </td>
 		                        <td>   </td>
 		                        <td><h5>Frete</h5></td>
 		                        <td class="text-center" colspan="2">
-		                            <h5>R$ <strong id="freteValor" th:text="${#numbers.formatDecimal(frete, 1, 2)}">$0.00</strong></h5>
+		                            <h5>R$ <strong id="freteValor" th:text="${#numbers.formatDecimal(frete, 1, 'POINT', 2, 'COMMA')}">$0.00</strong></h5>
 		                        </td>
 		                    </tr>
 		                    <tr style="vertical-align: middle;">
 		                        <td>   </td>
 		                        <td>   </td>
 		                        <td><h4>Total</h4></td>
-		                        <td class="text-center" colspan="2"><h4>R$ <strong th:text="${#numbers.formatDecimal(total, 1, 2)}">$31.53</strong></h4></td>
+		                        <td class="text-center" colspan="2"><h4>R$ <strong th:text="${#numbers.formatDecimal(total, 1, 'POINT', 2, 'COMMA')}">$31.53</strong></h4></td>
 		                    </tr>
 		                    <tr style="vertical-align: middle;">
 		                        <td>   </td>

@@ -52,7 +52,7 @@
 			                    </span></p>
 			                    </div>
 			                    <div class="col-sm-5">
-			                    <p><strong>Valor Total do Pedido:</strong> R$ <span th:text="${#numbers.formatDecimal(pedido.valorTotal, 1, 2)}"></span></p>
+			                    <p><strong>Valor Total do Pedido:</strong> R$ <span th:text="${#numbers.formatDecimal(pedido.valorTotal, 1, 'POINT', 2, 'COMMA')}"></span></p>
 			                    </div>
 			                    <div class="col-sm-3">
 			                    <!-- Link para detalhes do pedido -->

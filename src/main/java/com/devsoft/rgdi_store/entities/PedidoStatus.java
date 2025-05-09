@@ -1,11 +1,11 @@
 package com.devsoft.rgdi_store.entities;
 
 public enum PedidoStatus {
-    PENDENTE_PAGAMENTO("Aguardando pagamento"),
-    PAGTO_REJEITADO("Pagamento rejeitado"),
-    PAGTO_SUCESSO("Pagamento com sucesso"),
-    AGUARDANDO_RETIRA("Aguardando retirada"),
-    ENVIADO("Em trânsito"),
+    AGUARDANDO_PAGAMENTO("Aguardando pagamento"),
+    PAGAMENTO_REJEITADO("Pagamento rejeitado"),
+    PAGAMENTO_COM_SUCESSO("Pagamento com sucesso"),
+    AGUARDANDO_RETIRADA("Aguardando retirada"),
+    EM_TRANSITO("Em trânsito"),
     ENTREGUE("Entregue");
 
     private final String descricao;
