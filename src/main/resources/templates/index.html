@@ -47,7 +47,7 @@
 					            <h5 class="fw-bolder" th:text="${prod.nome}"></h5>
 					
 					            <!-- Product price-->
-					            <span>R$</span> <span class="" th:text="${#numbers.formatDecimal(prod.preco, 1, 2)}"></span>
+					            <span>R$</span> <span th:text="${#numbers.formatDecimal(prod.preco, 1, 'POINT', 2, 'COMMA')}"></span>
 					
 					            <!-- Product rating-->
 					            <div>
