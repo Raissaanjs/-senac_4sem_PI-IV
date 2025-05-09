@@ -61,7 +61,7 @@ public class SecurityConfig {
 	            .requestMatchers("/login").permitAll()
 	            .requestMatchers("/error-login", "/error-user-inat",
 	    				"/access-denied", "/error-no-perm", "/error-no-auth").permitAll()
-	            .requestMatchers("/usuarios/**", "/username/**").hasAnyAuthority("ROLE_ADMIN")
+	            .requestMatchers("/usuarios/**", "/username/**", "/h2-console/**").hasAnyAuthority("ROLE_ADMIN")
 	            .requestMatchers("/produtos/listar/**","/produtos/detalhes/**",
 	            		"/produtos/update/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers(HttpMethod.PUT, "/produtos/*/status").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
