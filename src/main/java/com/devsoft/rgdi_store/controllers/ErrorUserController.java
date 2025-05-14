@@ -2,13 +2,15 @@ package com.devsoft.rgdi_store.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/error")
 public class ErrorUserController {
 
     @GetMapping("/error-login")
     public String loginErrorPage() {
-        return "error/error-login"; // Renderiza o template error-login.html
+        return "error/error-user-login"; // Renderiza o template error-login.html
     }
            
     @GetMapping("/error-no-auth")
@@ -18,7 +20,7 @@ public class ErrorUserController {
         
     @GetMapping("/error-no-perm")
     public String errorPerm() {
-        return "error/error-access-denied"; // Renderiza o template access-denied.html
+        return "error/error-user-access-denied"; // Renderiza o template access-denied.html
     }        
     
     @GetMapping("/error-user-inat")
