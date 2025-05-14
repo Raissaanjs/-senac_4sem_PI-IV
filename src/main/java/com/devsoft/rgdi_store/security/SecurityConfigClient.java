@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.devsoft.rgdi_store.authentication.ClienteUserDetailsService;
+import com.devsoft.rgdi_store.handlers.CustomAccessDeniedHandlerCliente;
 
 @Configuration
 @EnableWebSecurity
@@ -23,13 +24,16 @@ public class SecurityConfigClient {
     private final ClienteUserDetailsService clienteUserDetailsService;
     private final PasswordEncoder passwordEncoder;
     public final SessionExpiredFilter sessionExpiredFilter;
+    private final CustomAccessDeniedHandlerCliente customAccessDeniedHandlerCliente;
 
     public SecurityConfigClient(ClienteUserDetailsService clienteUserDetailsService,
                                 PasswordEncoder passwordEncoder,
-                                SessionExpiredFilter sessionExpiredFilter) {
+                                SessionExpiredFilter sessionExpiredFilter,
+                                CustomAccessDeniedHandlerCliente customAccessDeniedHandlerCliente) {
         this.clienteUserDetailsService = clienteUserDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.sessionExpiredFilter = sessionExpiredFilter;
+        this.customAccessDeniedHandlerCliente = customAccessDeniedHandlerCliente;
     }
        
 
@@ -81,7 +85,7 @@ public class SecurityConfigClient {
                 .maxSessionsPreventsLogin(false) // Permite que a última sessão expirada seja reautenticada                
             )
             .exceptionHandling(exceptions -> exceptions
-                .accessDeniedPage("/clientes/error/error-no-perm-cliente")
+                .accessDeniedHandler(customAccessDeniedHandlerCliente)
             )
             .csrf(csrf -> csrf.disable())  // Desabilita CSRF para facilitar testes no Postman
             .headers(headers -> headers.frameOptions().sameOrigin());

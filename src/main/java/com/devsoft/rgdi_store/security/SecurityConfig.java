@@ -16,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.devsoft.rgdi_store.authentication.AdminUserDetailsService;
+import com.devsoft.rgdi_store.handlers.CustomAccessDeniedHandlerUser;
 
 @Configuration
 @EnableWebSecurity
@@ -24,13 +25,16 @@ public class SecurityConfig {
     private final AdminUserDetailsService adminUserDetailsService;
     private final PasswordEncoder passwordEncoder;
     public final SessionExpiredFilter sessionExpiredFilter;
+    private final CustomAccessDeniedHandlerUser customAccessDeniedHandlerUser;
 
     public SecurityConfig(AdminUserDetailsService adminUserDetailsService,
                           PasswordEncoder passwordEncoder,
-                          SessionExpiredFilter sessionExpiredFilter) {
+                          SessionExpiredFilter sessionExpiredFilter,
+                          CustomAccessDeniedHandlerUser customAccessDeniedHandlerUser) {
         this.adminUserDetailsService = adminUserDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.sessionExpiredFilter = sessionExpiredFilter;
+        this.customAccessDeniedHandlerUser = customAccessDeniedHandlerUser;
     }
     
 	   
@@ -59,8 +63,7 @@ public class SecurityConfig {
 	    		.requestMatchers("/produtos/loja/**", "/produto-imagens/imagem-principal/**" ,
 	        			"/produto-imagens/detalhes/**", "/produtos/detalhes/**","/carrinho/**").permitAll()
 	            .requestMatchers("/login").permitAll()
-	            .requestMatchers("/error-login", "/error-user-inat",
-	    				"/access-denied", "/error-no-perm", "/error-no-auth").permitAll()
+	            .requestMatchers("/error/**").permitAll()
 	            .requestMatchers("/usuarios/**", "/username/**", "/h2-console/**").hasAnyAuthority("ROLE_ADMIN")
 	            .requestMatchers("/produtos/listar/**","/produtos/detalhes/**",
 	            		"/produtos/update/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
@@ -94,13 +97,11 @@ public class SecurityConfig {
 	            .maxSessionsPreventsLogin(false)
 	        )
 	        .exceptionHandling(exceptions -> exceptions
-	            .accessDeniedPage("/error-no-perm")
+	        	.accessDeniedHandler(customAccessDeniedHandlerUser)
 	        )
 	        .csrf(csrf -> csrf.disable()) // Desabilita CSRF para facilitar testes no Postman
 	        .headers(headers -> headers.frameOptions().sameOrigin());
 
 	    return http.build();    	
-    }
-	
-	
+    }	
 }
