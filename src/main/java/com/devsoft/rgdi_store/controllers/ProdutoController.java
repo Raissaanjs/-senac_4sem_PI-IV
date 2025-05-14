@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -34,15 +33,18 @@ import com.devsoft.rgdi_store.services.ProdutoService;
 @RequestMapping("/produtos")
 public class ProdutoController {	
 	
-    @Autowired
-    private ProdutoService produtoService;
-    
-    @Autowired
-    private ProdutoRepository produtoRepository;
-    
-    @Autowired
-    private ProdutoImagensRepository produtoImagensRepository;
-
+	private final ProdutoService produtoService;
+	private final ProdutoRepository produtoRepository;
+	private final ProdutoImagensRepository produtoImagensRepository;
+	
+	public ProdutoController(ProdutoService produtoService,
+							 ProdutoRepository produtoRepository,
+							 ProdutoImagensRepository produtoImagensRepository) {
+		this.produtoService = produtoService;
+		this.produtoRepository = produtoRepository;
+		this.produtoImagensRepository = produtoImagensRepository;
+	}
+ 
     //Lista geral - Menu  
   	@GetMapping("/listar")
   	public String list(

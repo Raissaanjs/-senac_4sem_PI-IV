@@ -25,13 +25,11 @@ public class ProdutoService {
     
     public ProdutoService(ProdutoRepository repository) {
     	this.repository = repository;
-    }
-    
+    }    
     
     public List<ProdutoEntity> findAllIndex() {
         return repository.findAll(); // Aqui usamos o método findAll do repositório
-    }
-        
+    }        
     
     //Busca todos os registros - com paginação
   	@Transactional(readOnly = true)

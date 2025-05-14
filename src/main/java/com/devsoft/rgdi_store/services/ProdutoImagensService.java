@@ -32,8 +32,8 @@ public class ProdutoImagensService {
     
     
     public ProdutoImagensService(ProdutoImagensRepository produtoImagensRepository,
-    								ProdutoRepository produtoRepository,
-    								UploadConfig uploadConfig) {
+    							 ProdutoRepository produtoRepository,
+    							 UploadConfig uploadConfig) {
     	this.produtoImagensRepository = produtoImagensRepository;
     	this.produtoRepository = produtoRepository;
     	this.uploadConfig = uploadConfig;

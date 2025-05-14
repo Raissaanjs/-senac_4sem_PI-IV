@@ -2,7 +2,6 @@ package com.devsoft.rgdi_store.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -25,12 +24,16 @@ import com.devsoft.rgdi_store.services.ProdutoService;
 @Controller
 @RequestMapping("/produto-imagens")
 public class ProdutoImagensController {	
-	
-    @Autowired
-    private ProdutoImagensService produtoImagensService;
+   
+    private final ProdutoImagensService produtoImagensService;
+    private final ProdutoService produtoService;
     
-    @Autowired
-    private ProdutoService produtoService;
+    public ProdutoImagensController(ProdutoImagensService produtoImagensService,
+    								ProdutoService produtoService) {
+    	this.produtoImagensService = produtoImagensService;
+    	this.produtoService =produtoService; 
+    }
+  
 
     @GetMapping("/listar")
     public String list(Model model,
