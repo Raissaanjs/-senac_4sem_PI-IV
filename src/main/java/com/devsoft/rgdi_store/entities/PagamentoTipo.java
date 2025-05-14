@@ -2,7 +2,7 @@ package com.devsoft.rgdi_store.entities;
 
 public enum PagamentoTipo {
     PIX("PIX"),
-    CARTAOCREDITO("Cartao de Crédito"),
+    CARTAO_CREDITO("Cartao de Crédito"),
 	BOLETO("Boleto Bancário");
 
     private final String descricao;
