@@ -74,10 +74,6 @@
 						    <div class="text-center">
 						        <form th:action="@{/carrinho/adicionar}" method="post">
 						            <input type="hidden" name="produtoId" th:value="${prod.id}" />
-						            
-						            <!-- Token CSRF obrigatório -->
-			    					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-						            
 						            <button type="submit" class="btn btn-outline-dark mt-auto"
 									        th:id="'btnComprar_' + ${prod.id}"
 									        th:attr="data-quantidade=${prod.quantidade}">
