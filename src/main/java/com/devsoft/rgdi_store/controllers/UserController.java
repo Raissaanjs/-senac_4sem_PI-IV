@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -50,14 +49,18 @@ import jakarta.validation.groups.Default;
 @RequestMapping("/usuarios")
 public class UserController {
 	
-	@Autowired
-	private PagedResourcesAssembler<UserDto> pagedResourcesAssembler;
+	private final PagedResourcesAssembler<UserDto> pagedResourcesAssembler;
+	private final UserService userService;
+	private final UserRepository repository;
 	
-	@Autowired
-	private UserService userService;
+	public UserController(PagedResourcesAssembler<UserDto> pagedResourcesAssembler,
+						  UserService userService,
+						  UserRepository repository) {
+		this.pagedResourcesAssembler = pagedResourcesAssembler;
+		this.userService = userService;
+		this.repository = repository;
+	}
 	
-	@Autowired
-	private UserRepository repository;
 	
 	@GetMapping("/cadastrar")
 	public String register(Model model) {

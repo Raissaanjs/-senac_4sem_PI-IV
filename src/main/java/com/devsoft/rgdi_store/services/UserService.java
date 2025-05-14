@@ -1,6 +1,5 @@
 package com.devsoft.rgdi_store.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,15 +18,15 @@ import com.devsoft.rgdi_store.validation.user.UserValidationSaveService;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class UserService {
+public class UserService {	
 	
-	@Autowired
-	private UserRepository repository;	
-	
+	private final UserRepository repository;	
 	private final PasswordUtils passwordUtils;
 
-    public UserService(PasswordUtils passwordUtils) {
+    public UserService(PasswordUtils passwordUtils,
+    				   UserRepository repository) {
         this.passwordUtils = passwordUtils;
+        this.repository = repository;
     }	
 	
 	//validação para email único
