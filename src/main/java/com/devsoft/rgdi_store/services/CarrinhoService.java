@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.devsoft.rgdi_store.dto.ItemCarrinhoDTO;
@@ -20,13 +19,13 @@ import java.math.BigDecimal;
 public class CarrinhoService {
 
     private final ProdutoRepository produtoRepository;
+    private final HttpSession session;
 
-    public CarrinhoService(ProdutoRepository produtoRepository) {
-        this.produtoRepository = produtoRepository; 
+    public CarrinhoService(ProdutoRepository produtoRepository,
+    						HttpSession session) {
+        this.produtoRepository = produtoRepository;
+        this.session = session;
     }	
-
-    @Autowired
-    private HttpSession session;
 
     // Recupera o carrinho da sessão ou cria um novo se não existir
     public Map<Long, Integer> getCarrinho() {

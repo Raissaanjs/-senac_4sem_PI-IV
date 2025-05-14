@@ -67,6 +67,7 @@
 		                            <form th:action="@{/carrinho/alterarQuantidade}" method="post" style="display: inline;">
 		                                <input type="hidden" name="produtoId" th:value="${item.produto.id}" />
 		                                <input type="hidden" name="quantidade" value="decrease" />
+		                                
 		                                <button type="submit" class="btn btn-sm btn-outline-secondary">-</button>
 		                            </form>
 		                            <span th:text="${item.quantidade}">Quantidade</span>
