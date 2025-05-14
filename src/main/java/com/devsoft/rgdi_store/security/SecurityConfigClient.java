@@ -78,8 +78,7 @@ public class SecurityConfigClient {
         		.sessionFixation(sessionFixation -> sessionFixation.migrateSession())  // Cria uma nova sessão após o login
             	.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .maximumSessions(1) // Define quantos usuários podem estar logados ao mesmo tempo
-                .maxSessionsPreventsLogin(false) // Permite que a última sessão expirada seja reautenticada
-                
+                .maxSessionsPreventsLogin(false) // Permite que a última sessão expirada seja reautenticada                
             )
             .exceptionHandling(exceptions -> exceptions
                 .accessDeniedPage("/clientes/error/error-no-perm-cliente")
@@ -96,6 +95,5 @@ public class SecurityConfigClient {
         handler.setDefaultTargetUrl("/pedidos/clientes/meus-pedidos");
         return handler;
     }
-
 }
 

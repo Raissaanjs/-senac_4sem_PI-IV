@@ -56,7 +56,7 @@ public class GlobalModelControllerAdvice {
                         .map(ClienteEntity::getNome)
                         .orElse("Cliente");
             	
-            	model.addAttribute("clinteEmailLogado", emailLogado);
+            	model.addAttribute("clienteEmailLogado", emailLogado); //Alterado. Anteiror "clinteEmailLogado"
             }
 
             // Nome do usuário/cliente

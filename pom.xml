@@ -33,8 +33,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		
+		</dependency>		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -44,13 +43,14 @@
 		    <artifactId>thymeleaf-layout-dialect</artifactId>
 		    <version>3.3.0</version> <!--$NO-MVN-MAN-VER$ -->
 		</dependency>
-		<!-- usado no sec:authorize="hasRole('ADMIN')" 	
+		
+		<!-- Ativado para configuração de testes-->
 		<dependency>
 		    <groupId>org.thymeleaf.extras</groupId>
-		    <artifactId>thymeleaf-extras-springsecurity5</artifactId>
-		    <version>3.1.1.RELEASE</version>
+		    <artifactId>thymeleaf-extras-springsecurity6</artifactId>		    
 		</dependency>
-		-->	
+		<!-- Ativado para configuração de testes-->
+		
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-security</artifactId>
@@ -90,11 +90,33 @@
 	      <scope>runtime</scope>
 	    </dependency>
 	    
+	    <!--Usado para testes-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+	        <groupId>org.mockito</groupId>
+	        <artifactId>mockito-core</artifactId>
+	        <scope>test</scope>
+	    </dependency>
+	    <!--
+	    <dependency>
+		    <groupId>org.mockito</groupId>
+		    <artifactId>mockito-junit-jupiter</artifactId>
+		    <scope>test</scope>
+		</dependency>
+		-->
+	    <dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-test</artifactId>
+		    <scope>test</scope>
+		</dependency>
+		<!--Usado para testes-->
+		
+		
+		<!--Usado para Validação-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
@@ -106,7 +128,7 @@
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
 			<version>3.0.2</version> <!--$NO-MVN-MAN-VER$ -->
-		</dependency>
+		</dependency>		
 		
 		<!-- Bean Validation API Reference Implementation -->
 		<dependency>
@@ -114,6 +136,8 @@
 		    <artifactId>hibernate-validator</artifactId>
 		    <version>8.0.1.Final</version>
 		</dependency>
+		<!--Usado para Validação-->
+		
 		
 		<!--Bibliotecas tipo "jars" onde temos opções para css, js, img, icons, ..-->
 		<dependency>
@@ -156,6 +180,7 @@
 				<version>3.1.0</version><!--$NO-MVN-MAN-VER$ -->
 			</plugin>
 		</plugins>
+		
 		
 	</build>
 

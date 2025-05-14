@@ -6,9 +6,13 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CustomUserDetails implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = LoggerFactory.getLogger(CustomUserDetails.class);
 	
 	private String username;
     private String password;
@@ -25,7 +29,7 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // Logar as autoridades carregadas para depuração
-        authorities.forEach(auth -> System.out.println("CustomUserDetails - Autoridade carregada: " + auth.getAuthority()));
+    	authorities.forEach(auth -> logger.debug("(CustomUserDetails) Autoridade carregada: {}", auth.getAuthority()));
         return authorities;
     }
 
