@@ -41,10 +41,17 @@ public class EnderecoEntity {
     @OneToMany(mappedBy = "endereco")
     private List<PedidoEntity> pedidos;
 	
+    public EnderecoEntity() {
+	}
 	
-	public EnderecoEntity() {
-	}	
-		
+    // Usado nos testes
+    public EnderecoEntity(String rua, Integer num, String cidade, EnderecoTipo entrega) {
+    	rua = logradouro;
+    	num = numero;
+    	cidade = logradouro;
+    	entrega = tipo;    	
+	}
+
 	public EnderecoEntity(Long id, String cep, String logradouro, Integer numero, String complemento, String bairro,
 			String localidade, String uf, EnderecoTipo tipo, ClienteEntity cliente) {
 		this.id = id;
