@@ -32,9 +32,7 @@ import com.devsoft.rgdi_store.utility.ClienteAutenticadoHelper;
 
 @Controller
 @RequestMapping("/pedidos")
-public class PedidoController {
-	
-	
+public class PedidoController {	
    
     private final ClienteAutenticadoHelper clienteHelper;
     private final PedidoService pedidoService;
