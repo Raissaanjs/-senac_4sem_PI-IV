@@ -41,16 +41,24 @@
                         <div class="d-flex align-items-center">
 	        				<div class="me-3">
 	                        <a href="/carrinho" class="btn btn-outline-dark">
-							    <i class="bi-cart-fill me-1"></i>							    
-							    Carrinho
+							    <i class="bi-cart-fill me-2"></i>Carrinho
 							    <span class="badge bg-dark text-white ms-1 rounded-pill" th:text="${totalItens}">0</span>							    
 							</a>
 							</div>
-							<div th:if="${isClient}">
-							<a th:href="@{/clientes/login}" class="btn btn-outline-dark">
-							    <i class="bi-person-fill me-1"></i>
-							    <span class="">Login</span>
-							</a>
+							<div>
+								<!-- Quando NÃO está logado -->
+								<div th:if="${!isClient}">
+								    <a th:href="@{/clientes/login}" class="btn btn-outline-dark">
+								        <i class="bi-person-fill me-2"></i><span>Login</span>
+								    </a>
+								</div>
+								
+								<!-- Quando ESTÁ logado -->
+								<div th:if="${isClient}">
+								    <a th:href="@{/pedidos/clientes/meus-pedidos}" class="btn btn-outline-dark">
+								        <i class="fa-solid fa-box me-2"></i><span>Meus Pedidos</span>
+								    </a>
+								</div>
 							</div>
 						</div>
                     </form>
@@ -61,7 +69,7 @@
                	 <!-- Exibe o nome do usuário --> 					 
 			    <form th:action="@{/clientes/logout}" method="post" onsubmit="return confirm('Tem certeza que deseja sair?');" th:if="${isClient}">
 			        <button type="submit" class="btn btn-dark">			        
-				        <i class="fa-solid fa-person-walking-dashed-line-arrow-right"></i> <strong>Sair</strong>
+				        <i class="fa-solid fa-person-walking-dashed-line-arrow-right me-2"></i><strong>Sair</strong>
 				    </button>
 			    </form>
 			</div>

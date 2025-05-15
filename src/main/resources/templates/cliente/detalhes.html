@@ -23,8 +23,8 @@
 			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item active">
-						<i class="fa-solid fa-caret-right"></i> <span>Meus Dados</span>
-						<i class="fa-solid fa-caret-right"></i> <span>Dados do Cliente</span>
+						<i class="fa-solid fa-caret-right me-1"></i><span class="me-2">Meus Dados</span>
+						<i class="fa-solid fa-caret-right me-1"></i><span>Dados do Cliente</span>
 					</li>
 				</ul>
 			</div>
@@ -44,7 +44,7 @@
 		        <!-- COLUNA 1: DADOS DO CLIENTE -->
 		         <div class="col-12 col-lg-5 mb-4">
 		            <div class="d-flex justify-content-between align-items-center mb-2">
-		                <h5 class="mb-2"><i class="fa-solid fa-user"></i> DADOS BÁSICOS</h5>
+		                <h5 class="mb-2"><i class="fa-solid fa-user me-2"></i>DADOS BÁSICOS</h5>
 		            </div>
 		            <div class="card mb-4">
 		                <div class="card-header bg-secondary text-white">
@@ -59,10 +59,10 @@
 		                    <p><strong>Gênero:</strong> <span th:text="${cliente.genero}">MASCULINO</span></p>
 		                    
 		                    <a th:href="@{/clientes/auth/editar}" class="btn btn-outline-primary mt-3">
-		                        <i class="fa-solid fa-user-pen"></i> Alterar Dados
+		                        <i class="fa-solid fa-user-pen me-2"></i>Alterar Dados
 		                    </a>
 		                    <a th:href="@{/clientes/auth/alterpass}" class="btn btn-outline-primary mt-3">
-		                        <i class="fa-solid fa-unlock-keyhole"></i> Alterar Senha
+		                        <i class="fa-solid fa-unlock-keyhole me-2"></i>Alterar Senha
 		                    </a>
 		                </div>
 		            </div>
@@ -71,9 +71,9 @@
 		        <!-- COLUNA 2: ENDEREÇOS -->
 		        <div class="col-12 col-lg-6 mb-4">
 		        	<div class="d-flex justify-content-between align-items-center mb-2">
-		                <h5 class="mb-0"><i class="fa-solid fa-address-card"></i> ENDEREÇOS</h5>
+		                <h5 class="mb-0"><i class="fa-solid fa-address-card me-2"></i>ENDEREÇOS</h5>
 		                <a class="btn btn-success btn-sm" th:href="@{/enderecos/auth/meusdados/novo}">
-		                    <i class="fa fa-plus"></i> Adicionar Endereço
+		                    <i class="fa fa-plus me-2"></i>Adicionar Endereço
 		                </a>
 		            </div>
 		
@@ -97,7 +97,7 @@
 		                        <span th:text="${endereco.tipo.descricao}">Entrega</span>
 		                        <form th:action="@{'/enderecos/auth/mudar-principal/' + ${cliente.id} + '/' + ${endereco.id}}" method="post">		                            
 		                            <button type="submit" class="btn btn-sm btn-outline-light">
-		                            <i class="fa-solid fa-up-down"></i> Mudar para Faturamento</button>
+		                            <i class="fa-solid fa-up-down me-2"></i>Mudar para Faturamento</button>
 		                        </form>
 		                    </div>
 		                    <div class="card-body">

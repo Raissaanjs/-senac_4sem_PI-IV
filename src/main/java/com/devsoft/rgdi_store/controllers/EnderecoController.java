@@ -143,7 +143,7 @@ public class EnderecoController {
         model.addAttribute("clienteId", cliente.getId());
         model.addAttribute("endereco", novoEndereco); // O modelo receberá o objeto novoEndereco
 
-        return "cliente/cadendereconovoentrega"; // O template Thymeleaf que exibe o formulário
+        return "endereco/cadendereconovoentrega"; // O template Thymeleaf que exibe o formulário
     }
     
     @PostMapping("/auth/endereco-entrega/pedido/salvar")

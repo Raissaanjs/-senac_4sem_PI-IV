@@ -9,7 +9,7 @@
     	<header layout:fragment="header">
 	        <div class="px-4 px-lg-5 ">
 	          <div class="text-center text-white flex-inline">
-	              <h3 class="fw-bolder">Resumo Pedido</h3>
+	              <h3 class="fw-bolder">Resumo do Pedido</h3>
 	              <div th:if="${isClient}">
 	              <span><i class="fa-solid fa-caret-right"></i></span>
 	              <span class="mr-3" th:text="${userName}">Visitante</span>		        
@@ -24,10 +24,10 @@
 		        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
 		            <ul class="navbar-nav mr-auto">
 		                <li class="nav-item active">
-		                	<i class="fa-solid fa-caret-right"></i> <span>Carrinho</span>  
-		                    <i class="fa-solid fa-caret-right"></i> <span>Endereços de Entrega</span>
-		                    <i class="fa-solid fa-caret-right"></i> <span>Formas de Pagamento</span>
-		                    <i class="fa-solid fa-caret-right"></i> <span>Resumo pedido</span>
+		                	<i class="fa-solid fa-caret-right me-1"></i><span class="me-2">Carrinho</span>  
+		                    <i class="fa-solid fa-caret-right me-1"></i><span class="me-2">Endereços de Entrega</span>
+		                    <i class="fa-solid fa-caret-right me-1"></i><span class="me-2">Formas de Pagamento</span>
+		                    <i class="fa-solid fa-caret-right me-1"></i><span>Resumo do Pedido</span>
 		                </li>
 		            </ul>
 		        </div>
@@ -102,10 +102,10 @@
 		                <a th:href="@{/pagamentos/formaspagamento(enderecoId=${enderecoSelecionado.id})}"
 		                 class="btn btn-secondary">
 
-		                    <i class="fa-solid fa-arrow-left"></i> Voltar
+		                    <i class="fa-solid fa-arrow-left me-2"></i> Voltar
 		                </a>
 		                <button type="submit" class="btn btn-success">
-		                    <i class="fa-solid fa-dollar-sign"></i> Concluir Compra
+		                    <i class="fa-solid fa-dollar-sign me-2"></i>Concluir Compra
 		                </button>
 		            </div>
 		        </form>

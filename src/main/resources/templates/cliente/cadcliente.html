@@ -18,7 +18,17 @@
           </div>
         </div>
     </header>
-    <section class="layout-content" layout:fragment="corpo">	
+    <section class="layout-content" layout:fragment="corpo">
+    	<nav class="navbar navbar-expand-md bg-light">
+	        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+	            <ul class="navbar-nav mr-auto">
+	                <li class="nav-item active">
+	                    <i class="fa-solid fa-caret-right me-1"></i><span class="me-2">Cadastro</span>
+	                    <i class="fa-solid fa-caret-right me-1"></i><span>Cliente</span>
+	                </li>
+	            </ul>
+	        </div>
+	    </nav>	
 	    <!-- Formulário de Cadastro de Cliente -->	    
 	    <div class="container formcadastro" id="cadastro">
 	    <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -80,8 +90,8 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-arrow-right"></i> Continuar</button>
-            <button type="reset" class="btn btn-secondary"><i class="fa-solid fa-broom-wide"></i> Limpar</button>
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-arrow-right me-2"></i>Continuar</button>
+            <button type="reset" class="btn btn-secondary"><i class="fa-solid fa-broom me-2"></i>Limpar</button>
         </form>
        </div>
 	</section>

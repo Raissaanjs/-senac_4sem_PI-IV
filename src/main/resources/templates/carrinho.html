@@ -12,7 +12,7 @@
                     <h3 class="fw-bolder">Seu Carrinho</h3>
                     <div th:if="${isClient}">
 		              <span><i class="fa-solid fa-caret-right"></i></span>
-		              <a class="mr-3 link-cliente-usernme" th:text="${userName}" th:href="@{/clientes/auth/admin}">Visitante</a>
+		              <span class="mr-3" th:text="${userName}">Visitante</span>
 		              <span><i class="fa-solid fa-caret-left"></i></span>	        
 		        	</div>
                 </div>
@@ -25,8 +25,8 @@
 				<div class="collapse navbar-collapse" id="navbarsExampleDefault">
 					<ul class="navbar-nav mr-auto">
 						<li class="nav-item active">
-							<i class="fa-solid fa-caret-right"></i> <span>Home</span>
-							<i class="fa-solid fa-caret-right"></i> <span>Carrinho</span>			                    
+							<i class="fa-solid fa-caret-right me-1"></i><span class="me-2">Home</span>
+							<i class="fa-solid fa-caret-right me-1 "></i><span>Carrinho</span>			                    
 						</li>
 					</ul>
 				</div>
