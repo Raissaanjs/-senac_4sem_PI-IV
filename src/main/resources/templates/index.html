@@ -8,16 +8,23 @@
     <body>       
         <header class="bg-dark py-5" layout:fragment="header">
             <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white flex-inline">
-                    <h3 class="fw-bolder">Seja Bem Vindo (a)</h3>
-                    <div th:if="${isClient}">
-		              <span><i class="fa-solid fa-caret-right"></i></span>
-		              <a class="mr-3 link-cliente-usernme" th:text="${userName}" th:href="@{/clientes/auth/admin}">Visitante</a>
-		              <span><i class="fa-solid fa-caret-left"></i></span>
-		        	</div>
-                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;" class="text-white">
+				    <!-- Bloco de busca -->
+				    <div class="text-center">
+				        <form class="d-flex" method="GET" action="/produtos/loja/buscar">
+				            <input class="form-control me-2" type="search" placeholder="Buscar Produto" style="width: 20rem"
+				                aria-label="Search" name="nomeProduto" th:value="${produto}" />
+				            <button class="btn btn-success w-60" id="collapseProduto">
+				                <i class="fa-solid fa-magnifying-glass"></i>
+				            </button>
+				        </form>
+				    </div>
+				</div>
+
             </div>
         </header>
+        
+        
         <!-- Section-->
         <section class="py-5" layout:fragment="corpo">
         	<div class="container ps-5">
@@ -25,7 +32,7 @@
 				<div class="collapse navbar-collapse" id="navbarsExampleDefault">
 					<ul class="navbar-nav mr-auto">
 						<li class="nav-item active">
-							<i class="fa-solid fa-caret-right"></i> <span>Home</span>			                    
+							<i class="fa-solid fa-caret-right me-1"></i><span>Home</span>			                    
 						</li>
 					</ul>
 				</div>
@@ -33,6 +40,13 @@
 			</div>
             <div class="container px-4 px-lg-5 mt-5">                
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+               			<!-- Mensagem se a busca não retornou produtos -->
+				     <div class="text-center mt-4" th:if="${produtoNaoEncontrado}">
+				        <p class="text-danger fs-5">
+					        Ops! Não temos o produto '<span th:text="${nomeProduto != null and nomeProduto != '' ?
+					         nomeProduto : 'não especificado'}">produto</span>' no momento.
+					    </p>
+				     </div>
                 		<!-- th:if="${prod.status}" só lista produto ativo -->
                      <div class="col mb-5" th:each="prod, iterStat : ${produtos}" th:if="${prod.status}">
                 		<div class="card h-100">

@@ -60,13 +60,13 @@ public class SecurityConfig {
     		.authorizeHttpRequests(auth -> auth    			
 	        	.requestMatchers("/", "/css/**", "/js/**", "/image/**", "/webjars/**", "/upload/**", "/uploads/**",
 	        			"/list", "/auth").permitAll()
-	    		.requestMatchers("/produtos/loja/**", "/produto-imagens/imagem-principal/**" ,
-	        			"/produto-imagens/detalhes/**", "/produtos/detalhes/**","/carrinho/**").permitAll()
+	        	.requestMatchers("/carrinho/**").permitAll()
+	        	.requestMatchers("/produtos/loja/**", "/produtos/detalhes/**").permitAll()
+	    		.requestMatchers("/produto-imagens/imagem-principal/**", "/produto-imagens/detalhes/**", "/produtos/detalhes/**").permitAll()
 	            .requestMatchers("/login").permitAll()
 	            .requestMatchers("/error/**").permitAll()
 	            .requestMatchers("/usuarios/**", "/username/**", "/h2-console/**").hasAnyAuthority("ROLE_ADMIN")
-	            .requestMatchers("/produtos/listar/**","/produtos/detalhes/**",
-	            		"/produtos/update/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
+	            .requestMatchers("/produtos/listar/**", "/produtos/update/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers(HttpMethod.PUT, "/produtos/*/status").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers("/pedidos/admin/**").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")
 	            .requestMatchers("/admin").hasAnyAuthority("ROLE_ESTOQ", "ROLE_ADMIN")

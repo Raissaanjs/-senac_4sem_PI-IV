@@ -1,6 +1,8 @@
 package com.devsoft.rgdi_store.controllers;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -23,10 +25,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.devsoft.rgdi_store.dto.ProdutoDto;
+import com.devsoft.rgdi_store.dto.ProdutoImagensDto;
 import com.devsoft.rgdi_store.entities.ProdutoEntity;
 import com.devsoft.rgdi_store.entities.ProdutoImagens;
 import com.devsoft.rgdi_store.repositories.ProdutoImagensRepository;
 import com.devsoft.rgdi_store.repositories.ProdutoRepository;
+import com.devsoft.rgdi_store.services.ProdutoImagensService;
 import com.devsoft.rgdi_store.services.ProdutoService;
 
 @Controller
@@ -36,13 +40,16 @@ public class ProdutoController {
 	private final ProdutoService produtoService;
 	private final ProdutoRepository produtoRepository;
 	private final ProdutoImagensRepository produtoImagensRepository;
+	private final ProdutoImagensService produtoImagensService;
 	
 	public ProdutoController(ProdutoService produtoService,
 							 ProdutoRepository produtoRepository,
-							 ProdutoImagensRepository produtoImagensRepository) {
+							 ProdutoImagensRepository produtoImagensRepository,
+							 ProdutoImagensService produtoImagensService) {
 		this.produtoService = produtoService;
 		this.produtoRepository = produtoRepository;
 		this.produtoImagensRepository = produtoImagensRepository;
+		this.produtoImagensService = produtoImagensService;
 	}
  
     //Lista geral - Menu  
@@ -89,7 +96,7 @@ public class ProdutoController {
 	    @RequestParam(value = "nome", required = false, defaultValue = "") String nome,
 	    @PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable,
 	    Model model) {
-	    // Busca por nome ou retorna todos os usuários com paginação
+	    // Busca por nome ou retorna todos os produtos com paginação
 	    Page<ProdutoDto> produtos = (nome == null || nome.trim().isEmpty()) 
 	                                ? produtoService.findAll(pageable) 
 	                                : produtoService.findByName(nome, pageable);
@@ -99,7 +106,35 @@ public class ProdutoController {
 	    model.addAttribute("page", produtos);
 	    model.addAttribute("nome", nome); // Preserva o termo de busca no formulário	   
 	    return "produto/listproduct";
-	}  	
+	}  
+  	
+  	@GetMapping("/loja/buscar")
+  	public String buscarProdutos(@RequestParam("nomeProduto") String nomeProduto, Model model) {
+  	    List<ProdutoEntity> produtos = produtoService.findByNameList(nomeProduto);
+  	    model.addAttribute("produtos", produtos);
+  	    model.addAttribute("nomeProduto", nomeProduto);  // Garanta que o nomeProduto seja passado ao modelo
+
+  	    // Flag para exibir mensagem se nenhum produto for encontrado
+  	    if (produtos.isEmpty()) {
+  	        model.addAttribute("produtoNaoEncontrado", true);
+  	    }
+  	    
+  	    // Cria o map de imagens principais
+  	    Map<Long, ProdutoImagensDto> imagensPrincipais = new HashMap<>();
+  	    for (ProdutoEntity produto : produtos) {
+  	        List<ProdutoImagensDto> imagens = produtoImagensService.buscarImagemPrincipalPorProdutoId(produto.getId());
+
+  	        if (!imagens.isEmpty()) {
+  	            // Considera a primeira (e normalmente única) imagem principal
+  	            imagensPrincipais.put(produto.getId(), imagens.get(0));
+  	        }
+  	    }
+
+  	    model.addAttribute("imagensPrincipais", imagensPrincipais);
+
+  	    return "index";
+  	}
+
 
     // Método para exibir o formulário de criação de produto
     @GetMapping("/cadastrar")

@@ -42,11 +42,6 @@ public class ProdutoService {
   	    return result.map(ProdutoMapper::toDto);
   	}
   	
-  	public Page<ProdutoEntity> findAllPaginado(Pageable pageable) {
-  	    return repository.findAll(pageable);
-  	}
-
-  	
   	//Busca todos os registros
   	@Transactional(readOnly = true)
   	public List<ProdutoDto> buscarTodos() {
@@ -78,6 +73,11 @@ public class ProdutoService {
   	    // Converte o resultado em UserDto usando o UserMapper
   	    return result.map(ProdutoMapper::toDto);
   	}
+  	
+  	//Busca por nome com paginação
+  	public List<ProdutoEntity> findByNameList(String nome) {
+        return repository.findByNomeContainingIgnoreCase(nome); // Método que realiza a busca no banco
+    }
   	
     // Busca por id
 	@Transactional(readOnly = true)

@@ -1,5 +1,7 @@
 package com.devsoft.rgdi_store.repositories;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,5 +17,8 @@ public interface ProdutoRepository extends JpaRepository<ProdutoEntity, Long> {
     
     // Busca por nome contendo o termo (case-insensitive) com paginação
     Page<ProdutoEntity> findByNomeContainingIgnoreCase(String nome, Pageable pageable);
+    
+    // Busca por nome contendo o termo (case-insensitive) com paginação
+    List<ProdutoEntity> findByNomeContainingIgnoreCase(String nome);
 
 }
