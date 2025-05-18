@@ -36,7 +36,7 @@ public class GlobalModelControllerAdvice {
         if (authentication != null) {
         	model.addAttribute("logado", "Sim"); // filtra usuário Logado
         	
-            Object principal = authentication.getPrincipal();
+            Object principal = authentication.getPrincipal(); // principal representa o usuário autenticado
             
             // Se for usuário (Admin/Estoque)
             if (principal instanceof CustomUserDetails userDetails) {
@@ -56,7 +56,7 @@ public class GlobalModelControllerAdvice {
                         .map(ClienteEntity::getNome)
                         .orElse("Cliente");
             	
-            	model.addAttribute("clienteEmailLogado", emailLogado); //Alterado. Anteiror "clinteEmailLogado"
+            	model.addAttribute("clienteEmailLogado", emailLogado); //Alterado. Anterior "clinteEmailLogado"
             }
 
             // Nome do usuário/cliente
