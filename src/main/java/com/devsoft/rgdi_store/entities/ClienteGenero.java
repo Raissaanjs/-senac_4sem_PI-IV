@@ -1,8 +1,8 @@
 package com.devsoft.rgdi_store.entities;
 
 public enum ClienteGenero {
-    MASCULINO("Masculino"),
-    FEMININO("Feminino"),
+    HOMEM("Homem"),
+    MULHER("Mulher"),
 	OUTRO("Outro");
 
     private final String descricao;
