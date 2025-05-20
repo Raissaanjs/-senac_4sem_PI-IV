@@ -1,5 +1,6 @@
-package com.devsoft.rgdi_store.dto;
+package com.devsoft.rgdi_store.mapper;
 
+import com.devsoft.rgdi_store.dto.UserDto;
 import com.devsoft.rgdi_store.entities.UserEntity;
 import com.devsoft.rgdi_store.entities.UserGroup;
 import com.devsoft.rgdi_store.repositories.UserRepository;
