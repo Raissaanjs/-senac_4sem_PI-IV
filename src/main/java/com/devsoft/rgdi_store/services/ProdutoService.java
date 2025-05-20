@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.devsoft.rgdi_store.dto.ProdutoDto;
-import com.devsoft.rgdi_store.dto.ProdutoMapper;
 import com.devsoft.rgdi_store.entities.ProdutoEntity;
 import com.devsoft.rgdi_store.exceptions.ResourceNotFoundException;
+import com.devsoft.rgdi_store.mapper.ProdutoMapper;
 import com.devsoft.rgdi_store.repositories.ProdutoRepository;
 
 import jakarta.persistence.EntityNotFoundException;

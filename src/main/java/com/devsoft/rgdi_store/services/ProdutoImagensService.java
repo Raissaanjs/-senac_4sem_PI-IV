@@ -16,10 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.devsoft.rgdi_store.config.UploadConfig;
 import com.devsoft.rgdi_store.dto.ProdutoImagensDto;
-import com.devsoft.rgdi_store.dto.ProdutoImagensMapper;
 import com.devsoft.rgdi_store.entities.ProdutoEntity;
 import com.devsoft.rgdi_store.entities.ProdutoImagens;
 import com.devsoft.rgdi_store.exceptions.ResourceNotFoundException;
+import com.devsoft.rgdi_store.mapper.ProdutoImagensMapper;
 import com.devsoft.rgdi_store.repositories.ProdutoRepository;
 import com.devsoft.rgdi_store.repositories.ProdutoImagensRepository;
 
@@ -92,13 +92,13 @@ public class ProdutoImagensService {
         ProdutoEntity produto = produtoRepository.findById(id).orElseThrow(() -> new RuntimeException("Produto não encontrado"));
         
         List<ProdutoImagens> imagemPrincipal = produto.getProduto_imagens().stream()
-                .filter(ProdutoImagens::isPrincipal) // Filtra apenas as imagens principais
+                .filter(ProdutoImagens::isPrincipal)
                 .collect(Collectors.toList());
 
         // Mapeia para o DTO e usa a URL salva no banco de dados
         return imagemPrincipal.stream()
                 .map(imagem -> {
-                    ProdutoImagensDto dto = new ProdutoImagensDto(imagem.getNome(), imagem.isPrincipal());
+                    ProdutoImagensDto dto = new ProdutoImagensDto(imagem.getNome(), imagem.isPrincipal()); // Define a imagem principal
                     dto.setUrl(imagem.getUrl());  // Usa a URL salva no banco de dados
                     return dto;
                 })

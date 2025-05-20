@@ -115,13 +115,13 @@ public class CarrinhoController {
 
         switch (tipoFrete) {
             case "correios":
-                valorFrete = new BigDecimal("10.0");  // Exemplo de valor para frete municipal
+                valorFrete = new BigDecimal("10.0");
                 break;
             case "fedex":
-                valorFrete = new BigDecimal("20.0");  // Exemplo de valor para frete estadual
+                valorFrete = new BigDecimal("20.0");
                 break;
             case "loggi":
-                valorFrete = new BigDecimal("50.0");  // Exemplo de valor para frete nacional
+                valorFrete = new BigDecimal("50.0");
                 break;
         }
 

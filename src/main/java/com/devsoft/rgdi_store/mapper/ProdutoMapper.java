@@ -1,5 +1,6 @@
-package com.devsoft.rgdi_store.dto;
+package com.devsoft.rgdi_store.mapper;
 
+import com.devsoft.rgdi_store.dto.ProdutoDto;
 import com.devsoft.rgdi_store.entities.ProdutoEntity;
 import com.devsoft.rgdi_store.repositories.ProdutoRepository;
 

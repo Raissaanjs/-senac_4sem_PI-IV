@@ -47,12 +47,14 @@ public class PedidoController {
     }
 
 	//Pedidos CLIENTES
+    /*
     @GetMapping("/clientes/resumo-pedido")
 	public String listarPedidosCliente(Model model) {
 	    List<PedidoEntity> pedidos = pedidoService.findAll();
 	    model.addAttribute("pedidos", pedidos);
 	    return "pedido/listar-pedidos-admin"; // ex: templates/pedido/listar-admin.html
 	}
+	*/
     
     @GetMapping("/clientes/pedido-sucesso")
     public String pedidoSucesso(@RequestParam("pedidoId") Long pedidoId,

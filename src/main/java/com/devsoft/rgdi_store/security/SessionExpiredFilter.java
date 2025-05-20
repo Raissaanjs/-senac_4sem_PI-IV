@@ -26,7 +26,7 @@ public class SessionExpiredFilter extends OncePerRequestFilter {
         if (isSessionInvalid && isLoggedIn) {
             // Decide para onde redirecionar com base na URL
             if (path.startsWith("/clientes")) {
-                response.sendRedirect("/clientes/sessao-expirada");
+                response.sendRedirect("/clientes/sessao-expirada"); // testar funcionalidade
             } else {
                 response.sendRedirect("/sessao-expirada");
             }

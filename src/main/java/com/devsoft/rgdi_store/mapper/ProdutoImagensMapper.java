@@ -1,5 +1,6 @@
-package com.devsoft.rgdi_store.dto;
+package com.devsoft.rgdi_store.mapper;
 
+import com.devsoft.rgdi_store.dto.ProdutoImagensDto;
 import com.devsoft.rgdi_store.entities.ProdutoImagens;
 
 public class ProdutoImagensMapper {
