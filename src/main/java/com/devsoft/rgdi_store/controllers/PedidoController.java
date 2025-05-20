@@ -87,7 +87,8 @@ public class PedidoController {
 
         if (cliente == null) {
             // Caso o cliente não seja encontrado (por exemplo, se o cliente não está logado)
-            throw new IllegalStateException("Cliente não encontrado. Certifique-se de estar logado.");
+        	 model.addAttribute("erro", "Cliente não encontrado. Certifique-se de estar logado.");
+        	 return "pedido/listar-pedidos-cliente";
         }
 
         // Busca os pedidos do cliente logado
@@ -106,16 +107,24 @@ public class PedidoController {
 	    ClienteEntity cliente = clienteHelper.getClienteLogado(principal.getName());
 
 	    if (cliente == null) {
-	        throw new IllegalStateException("Cliente não encontrado. Certifique-se de estar logado.");
+	    	model.addAttribute("erro", "Não foi possível identificar o cliente. Por favor, faça login novamente.");
+       	 	return "pedido/listar-pedidos-cliente";
 	    }
 
-	    // Busca o pedido pelo ID
-	    PedidoEntity pedido = pedidoService.findById(id)
-	        .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado."));
+	    PedidoEntity pedido;
+	    try {
+	        // Busca o pedido pelo ID
+	        pedido = pedidoService.findById(id)
+	                .orElseThrow(() -> new IllegalArgumentException("Ops! Não encontramos o pedido que você procurava."));
+	    } catch (IllegalArgumentException e) {
+	        model.addAttribute("erro", e.getMessage());
+	        return "pedido/listar-pedidos-cliente";
+	    }
 
 	    // Verifica se o pedido pertence ao cliente logado
 	    if (!pedido.getCliente().equals(cliente)) {
-	        throw new IllegalArgumentException("Você não tem permissão para visualizar este pedido.");
+	    	model.addAttribute("erro", "Este pedido não pertence à sua conta. Verifique os dados e tente novamente.");
+       	 	return "pedido/listar-pedidos-cliente";
 	    }
 
 	    // Calcula o subtotal somando os valores totais dos itens
