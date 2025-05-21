@@ -92,7 +92,7 @@ public class CarrinhoController {
     // Método para adicionar produto ao carrinho
     @PostMapping("/carrinho/adicionar")
     public String adicionarProdutoAoCarrinho(@RequestParam("produtoId") Long produtoId) {
-        carrinhoService.adicionarProduto(produtoId);  // Chama o serviço para adicionar o produto
+        carrinhoService.adicionarProduto(produtoId); // Chama o serviço para adicionar o produto
         return "redirect:/"; // Redireciona para a página do carrinho
     }
     
@@ -100,11 +100,11 @@ public class CarrinhoController {
     @PostMapping("/carrinho/alterarQuantidade")
     public String alterarQuantidade(@RequestParam("produtoId") Long produtoId, @RequestParam("quantidade") String quantidade) {
         if ("increase".equals(quantidade)) {
-            carrinhoService.incrementarQuantidade(produtoId);  // Incrementa a quantidade do produto
+            carrinhoService.incrementarQuantidade(produtoId); // Incrementa a quantidade do produto
         } else if ("decrease".equals(quantidade)) {
-            carrinhoService.decrementarQuantidade(produtoId);  // Decrementa a quantidade do produto
+            carrinhoService.decrementarQuantidade(produtoId); // Decrementa a quantidade do produto
         }
-        return "redirect:/carrinho";  // Redireciona para a página do carrinho
+        return "redirect:/carrinho"; // Redireciona para a página do carrinho
     }
         
     // Método para selecionar o frete

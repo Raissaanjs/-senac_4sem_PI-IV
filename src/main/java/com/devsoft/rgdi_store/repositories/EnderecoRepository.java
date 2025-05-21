@@ -10,9 +10,11 @@ import com.devsoft.rgdi_store.entities.EnderecoTipo;
 
 public interface EnderecoRepository extends JpaRepository<EnderecoEntity, Long> {
 	
-	List<EnderecoEntity> findAllByClienteId(Long clienteId);
+	// Busca uma lista de endereços com parâmetro "clienteId"
+	List<EnderecoEntity> findAllByClienteId(Long clienteId); // Tipo Query: Spring Data JPA
 	
-	Optional<EnderecoEntity> findByClienteAndTipo(ClienteEntity cliente, EnderecoTipo tipo);
+	// Busca endereco com parâmetros "cliente" e "EnderecoTipo: FATURAMENTO/ ENTREGA"
+	Optional<EnderecoEntity> findByClienteAndTipo(ClienteEntity cliente, EnderecoTipo tipo); // Tipo Query: Spring Data JPA
 	
 }
 

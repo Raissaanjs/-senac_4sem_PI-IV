@@ -18,6 +18,7 @@ import com.devsoft.rgdi_store.exceptions.all.EmailExistsException;
 import com.devsoft.rgdi_store.exceptions.all.InvalidCpfException;
 import com.devsoft.rgdi_store.exceptions.all.InvalidPassException;
 import com.devsoft.rgdi_store.exceptions.all.NameValidationException;
+import com.devsoft.rgdi_store.exceptions.all.ProdutoNaoEncontradoException;
 import com.devsoft.rgdi_store.validation.base.CustomError;
 import com.devsoft.rgdi_store.validation.base.ValidationError;
 
@@ -139,6 +140,12 @@ public class ControllerExceptionHandler {
         );
 
         return ResponseEntity.status(status).body(error);
+    }
+	
+	//Trata excessão de Produto não encontrado
+	@ExceptionHandler(ProdutoNaoEncontradoException.class)
+    public ResponseEntity<String> handleProdutoNaoEncontrado(ProdutoNaoEncontradoException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 	
 	@ExceptionHandler(DataIntegrityViolationException.class)

@@ -31,12 +31,13 @@ public class ClienteService {
         return clienteRepository.findAll();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ClienteEntity findClienteById(Long clienteId) {
         return clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new ClienteNaoEncontradoException("Cliente não encontrado"));
     }
     
+    @Transactional(readOnly = true)
     public ClienteEntity findByIdComEnderecos(Long id) {
         return clienteRepository.findByIdComEnderecos(id)
                 .orElseThrow(() -> new ClienteNaoEncontradoException("Cliente não encontrado com ID: " + id));
@@ -44,57 +45,48 @@ public class ClienteService {
     
     @Transactional
     public ClienteEntity saveClienteOnly(ClienteEntity cliente, String confirmaSenha) {
-        // Validação do cliente (pode ser simplificada aqui se já foi feita no controller)
+        // Validação do cliente
         ClienteValidationSaveService.validateCliente(cliente, clienteRepository, confirmaSenha);
-
-        // Criptografando a senha
-        cliente.setSenha(passwordUtils.encrypt(cliente.getSenha()));
-        return clienteRepository.save(cliente);
+        
+        cliente.setSenha(passwordUtils.encrypt(cliente.getSenha())); // Criptografando a senha
+        return clienteRepository.save(cliente); // salva no DB
     }  
 
     @Transactional
     public ClienteEntity update(Long id, ClienteEntity novo) {
         try {
-            ClienteEntity original = clienteRepository.getReferenceById(id);
+            // Uso do lazy (Carrega preguiçosamente - quando necessário) - "getReferenceById"
+        	ClienteEntity original = clienteRepository.getReferenceById(id);
             
-            if (original == null) {
-                throw new ClienteNaoEncontradoException("Cliente não encontrado para atualização");
-            }
-            
-            // Validação apenas do nome
+            // Faz a validação apenas do nome
             ClienteValidationSaveService.validateName(novo.getNome());
             
-            original.setNome(novo.getNome());
-            original.setDataNascimento(novo.getDataNascimento());
-            original.setGenero(novo.getGenero());
+            original.setNome(novo.getNome()); // recebe o novo nome
+            original.setDataNascimento(novo.getDataNascimento()); // recebe a nova data de nascimento
+            original.setGenero(novo.getGenero()); // recebe o novo genero
 
-            return clienteRepository.save(original);
-        } catch (EntityNotFoundException e) {
-            throw new ClienteNaoEncontradoException("Cliente não encontrado para update");
+            return clienteRepository.save(original); // salva alteração no DB
+        } catch (EntityNotFoundException e) { // Gera uma Exception
+            throw new ClienteNaoEncontradoException("Cliente não encontrado para update"); // Envia uma notificação
         }
     }
     
     @Transactional
     public ClienteEntity alterPassword(Long id, String senhaAtual, String novaSenha, String confirmaSenha) {
         try {
-            ClienteEntity original = clienteRepository.getReferenceById(id);
-
-            if (original == null) {
-                throw new ClienteNaoEncontradoException("Cliente não encontrado para atualização");
-            }
+        	// Uso do lazy
+            ClienteEntity original = clienteRepository.getReferenceById(id);           
 
             // Verifica se a senha atual confere
             if (!passwordUtils.matches(senhaAtual, original.getSenha())) {
                 throw new InvalidPassException("Senha atual incorreta.");
             }
+            
+            ClienteValidationSaveService.validatePassword(novaSenha, confirmaSenha); // Valida nova senha
+            
+            original.setSenha(passwordUtils.encrypt(novaSenha)); // Criptografa nova senha e atualiza
 
-            // Valida nova senha
-            ClienteValidationSaveService.validatePassword(novaSenha, confirmaSenha);
-
-            // Criptografa nova senha e atualiza
-            original.setSenha(passwordUtils.encrypt(novaSenha));
-
-            return clienteRepository.save(original);
+            return clienteRepository.save(original); // Salva alteração no DB
         } catch (EntityNotFoundException e) {
             throw new ClienteNaoEncontradoException("Cliente não encontrado para update");
         }

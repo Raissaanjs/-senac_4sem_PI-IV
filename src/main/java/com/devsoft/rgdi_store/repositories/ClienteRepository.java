@@ -9,15 +9,16 @@ import org.springframework.data.repository.query.Param;
 import com.devsoft.rgdi_store.entities.ClienteEntity;
 
 public interface ClienteRepository extends JpaRepository<ClienteEntity, Long>{
-	//validação para email único
-	boolean existsByEmail(String email);
+	// Usado na validação para "email" único
+	boolean existsByEmail(String email); // Tipo Query: Spring Data JPA
 	
-	//validação para email único
-	boolean existsByCpf(String cpf);
+	// Usado na validação para "cpf" único
+	boolean existsByCpf(String cpf); // Tipo Query: Spring Data JPA
 	
-	// Busca por email
-    Optional<ClienteEntity> findByEmail(String email);
+	// Busca cliente com parâmetro "email"
+    Optional<ClienteEntity> findByEmail(String email); // Tipo Query: Spring Data JPA
     
-    @Query("SELECT c FROM ClienteEntity c LEFT JOIN FETCH c.enderecos WHERE c.id = :id")
+    // Busca o endereço com parâmetro "id" do cliente
+    @Query("SELECT c FROM ClienteEntity c LEFT JOIN FETCH c.enderecos WHERE c.id = :id") // Tipo Query: JPQL
     Optional<ClienteEntity> findByIdComEnderecos(@Param("id") Long id);
 }

@@ -9,15 +9,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.devsoft.rgdi_store.entities.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, Long>{
-	//validação para email único
-	boolean existsByEmail(String email);
+	// Usado na validação para email único
+	boolean existsByEmail(String email); // Tipo Query: Spring Data JPA
 	
-    // Busca todos os registros com paginação
-    Page<UserEntity> findAll(Pageable pageable);
+    // Busca todos os usuários - com paginação
+    Page<UserEntity> findAll(Pageable pageable); // Tipo Query: Spring Data JPA
 
-    // Busca por nome contendo o termo (case-insensitive) com paginação
-    Page<UserEntity> findByNomeContainingIgnoreCase(String nome, Pageable pageable);
+    // Busca usuário com parâmetro "nome" - com paginação - ignorando maiúscula ou minúscula
+    Page<UserEntity> findByNomeContainingIgnoreCase(String nome, Pageable pageable); // Tipo Query: Spring Data JPA
 
-    // Busca por email
-    Optional<UserEntity> findByEmail(String email);   
+    // Busca usuário com parâmetro "email"
+    Optional<UserEntity> findByEmail(String email); // Tipo Query: Spring Data JPA
 }

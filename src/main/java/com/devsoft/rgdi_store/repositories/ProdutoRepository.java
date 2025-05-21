@@ -12,13 +12,13 @@ import com.devsoft.rgdi_store.entities.ProdutoEntity;
 @Repository
 public interface ProdutoRepository extends JpaRepository<ProdutoEntity, Long> {
 	
-	// Busca todos os registros com paginação
-    Page<ProdutoEntity> findAll(Pageable pageable);
+	// Busca todos os produtos -  com paginação
+    Page<ProdutoEntity> findAll(Pageable pageable); // Tipo Query: Spring Data JPA
     
-    // Busca por nome contendo o termo (case-insensitive) com paginação
-    Page<ProdutoEntity> findByNomeContainingIgnoreCase(String nome, Pageable pageable);
-    
-    // Busca por nome contendo o termo (case-insensitive) com paginação
-    List<ProdutoEntity> findByNomeContainingIgnoreCase(String nome);
+    // Busca produto com parâmetro "nome" - com paginação - ignorando maiúscula ou minúscula
+    Page<ProdutoEntity> findByNomeContainingIgnoreCase(String nome, Pageable pageable); // Tipo Query: Spring Data JPA
+
+    // Busca uma lista de produtos com parâmetro "nome" - ignorando maiúscula ou minúscula
+    List<ProdutoEntity> findByNomeContainingIgnoreCase(String nome); // Tipo Query: Spring Data JPA
 
 }

@@ -64,7 +64,7 @@ public class ClienteController {
     
     @GetMapping("/noauth/cadastrar")
     public String cadastrarCliente(Model model) {
-        model.addAttribute("cliente", new ClienteEntity());
+        model.addAttribute("cliente", new ClienteEntity()); // envia um form vazio para View abaixo
         return "/cliente/cadcliente";
     } 	
  	
@@ -88,7 +88,7 @@ public class ClienteController {
             model.addAttribute("confirmaSenhaError", e.getMessage());
         }
 
-        if (result.hasErrors()) {
+        if (result.hasErrors()) { // Se encontrar erros
             model.addAttribute("cliente", cliente); // Mantém os dados preenchidos
 
             // Constrói uma mensagem geral com os erros dos campos
@@ -97,7 +97,7 @@ public class ClienteController {
                 mensagemErro.append(" ").append(erroCampo.getDefaultMessage()).append(";");
             }
 
-            model.addAttribute("erro", mensagemErro.toString());
+            model.addAttribute("erro", mensagemErro.toString()); // Envia mensagem para View abaixo
             return "cliente/cadcliente";
         }
 
@@ -107,11 +107,14 @@ public class ClienteController {
         }
 
         try {
+        	// Salva o cliente no DB
             ClienteEntity savedCliente = clienteService.saveClienteOnly(cliente, confirmaSenha);
+            // Envia o clienteId para próxima etapa
             redirectAttributes.addAttribute("clienteId", savedCliente.getId());
+            // redireciona para próxima etapa: Cadastro do endereço
             return "redirect:/enderecos/noauth/cadastrar-endereco/{clienteId}";
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "Erro ao salvar cliente. Tente novamente.");
+        } catch (Exception e) { // Se houver Exception
+            model.addAttribute("erro", "Erro ao salvar cliente. Tente novamente."); // Envia mensagem para View abaixo
             return "cliente/cadcliente";
         }
     }
@@ -123,9 +126,10 @@ public class ClienteController {
  	
  	@GetMapping("/auth/detalhes/{id}")
     public String detalhesCliente(@PathVariable Long id, Model model) {
-        ClienteEntity cliente = clienteService.findClienteById(id);
+ 		// Busca o cliente vinculado ao ID
+ 		ClienteEntity cliente = clienteService.findClienteById(id);
         
-        // 1 endereço de faturamento (pode ser o primeiro do tipo FATURAMENTO)
+        // endereço de faturamento - Apenas 1
         EnderecoEntity faturamento = cliente.getEnderecos().stream()
             .filter(e -> e.getTipo() == EnderecoTipo.FATURAMENTO)
             .findFirst()
@@ -136,40 +140,42 @@ public class ClienteController {
             .filter(e -> e.getTipo() == EnderecoTipo.ENTREGA)
             .toList();
 
-        // Adiciona ao modelo para o Thymeleaf usar
+        // Adiciona os dados ao Model para ser mostrado na View
         model.addAttribute("cliente", cliente);
         model.addAttribute("enderecoFaturamento", faturamento);
         model.addAttribute("enderecosEntrega", entregas);
-        return "cliente/detalhes"; // Retorna uma página de detalhes do cliente
+        return "cliente/detalhes"; // View que retorna a página de detalhes do cliente
     }
     
     @GetMapping("/auth/detalhes-cliente")
-    public String detalhesClienteLogado(Principal principal, Model model) {
+    public String detalhesClienteLogado(Principal principal, Model model) {    	
+    	// Recupera o cliente autenticado
     	ClienteEntity cliente = clienteHelper.getClienteLogado(principal.getName());
 
-        // 1 endereço de faturamento (pode ser o primeiro do tipo FATURAMENTO)
+        // Carrega o endereço de faturamento (pode ser o primeiro do tipo FATURAMENTO)
         EnderecoEntity faturamento = cliente.getEnderecos().stream()
             .filter(e -> e.getTipo() == EnderecoTipo.FATURAMENTO)
             .findFirst()
             .orElse(null);
 
-        // Vários de entrega
+        // Carrega o(s) endereço(s) de entrega
         List<EnderecoEntity> entregas = cliente.getEnderecos().stream()
             .filter(e -> e.getTipo() == EnderecoTipo.ENTREGA)
             .toList();
 
-        // Adiciona ao modelo para o Thymeleaf usar
+        // Adiciona os dados ao Model para ser mostrado na View
         model.addAttribute("cliente", cliente);
         model.addAttribute("enderecoFaturamento", faturamento);
         model.addAttribute("enderecosEntrega", entregas);
-        return "cliente/detalhes"; // retorna uma página de detalhes do cliente
+        return "cliente/detalhes"; // View que retorna a página de detalhes do cliente
     }     
    
     @GetMapping("/auth/editar")
     public String editarCliente(Model model, Principal principal) {
-        ClienteEntity cliente = clienteHelper.getClienteLogado(principal.getName());
+    	// Recupera o cliente autenticado
+    	ClienteEntity cliente = clienteHelper.getClienteLogado(principal.getName());
 
-        model.addAttribute("cliente", cliente);
+        model.addAttribute("cliente", cliente); // Adiciona ao Model para ser mostrado na View abaixo
         return "cliente/editcliente";
     }
 
@@ -180,17 +186,19 @@ public class ClienteController {
             RedirectAttributes redirectAttributes
     ) {
         try {
+        	// Recupera o cliente autenticado
             ClienteEntity clienteLogado = clienteHelper.getClienteLogado(principal.getName());
 
-            clienteService.update(clienteLogado.getId(), cliente);
+            clienteService.update(clienteLogado.getId(), cliente); //atualiza o cliente
 
-            redirectAttributes.addFlashAttribute("sucesso", "Dados atualizados com sucesso!");
+            // Mensagem de sucesso para o endpoint abaixo
+            redirectAttributes.addFlashAttribute("sucesso", "Dados atualizados com sucesso!"); 
             return "redirect:/clientes/auth/detalhes-cliente?sucesso";
         } catch (NameValidationException e) {
-            // Captura erro de validação do nome
-            redirectAttributes.addFlashAttribute("erro", e.getMessage());
+            redirectAttributes.addFlashAttribute("erro", e.getMessage()); // Redireciona o erro para o endpoint abaixo
             return "redirect:/clientes/auth/editar";
         } catch (ResourceNotFoundException e) {
+        	 // Redireciona o erro para o endpoint abaixo
             redirectAttributes.addFlashAttribute("erro", "Cliente não encontrado.");
             return "redirect:/clientes/login";
         }
@@ -199,11 +207,13 @@ public class ClienteController {
     @GetMapping("/auth/alterpass")
     public String editarClientePass(Model model, Principal principal) {
 
+    	// Recupera o cliente autenticado
         ClienteEntity cliente = clienteHelper.getClienteLogado(principal.getName());
 
-        model.addAttribute("cliente", cliente);
-        model.addAttribute("alterarSenhaDTO", new AlterPassDTO()); // ← importante!
-        return "cliente/alterpasscliente";
+        model.addAttribute("cliente", cliente); // Adiciona o cliente ao Model
+        // Adiciona um DTO vazio ao Model; Vincula o DTO ao form
+        model.addAttribute("alterarSenhaDTO", new AlterPassDTO());
+        return "cliente/alterpasscliente"; 
     }
 
     @PostMapping("/auth/updatepass")
@@ -213,23 +223,24 @@ public class ClienteController {
             RedirectAttributes redirectAttributes
     ) {
         try {
-
+        	// Recupera o cliente autenticado
             ClienteEntity clienteLogado = clienteHelper.getClienteLogado(principal.getName());
 
-            clienteService.alterPassword(
+            clienteService.alterPassword( // Envia para o "clienteService" os dados abaixo
                 clienteLogado.getId(),
                 alterPassDTO.getSenhaAtual(),
                 alterPassDTO.getNovaSenha(),
                 alterPassDTO.getConfirmaSenha()
             );
 
+            // Se der certo a etapa acima, envia uma "mensagem de sucesso" para o endpoint abaixo
             redirectAttributes.addFlashAttribute("sucesso", "Senha atualizada com sucesso!");
             return "redirect:/clientes/auth/detalhes-cliente";
-        } catch (InvalidPassException | ConfirmPassNullException e) {
-            redirectAttributes.addFlashAttribute("erro", e.getMessage());
+        } catch (InvalidPassException | ConfirmPassNullException e) {// Se der erro na senha/ confirmação de senha
+            redirectAttributes.addFlashAttribute("erro", e.getMessage()); // Envia a mensagem de erro para o endpoint abaixo
             return "redirect:/clientes/auth/alterpass";
-        } catch (ResourceNotFoundException e) {
-            redirectAttributes.addFlashAttribute("erro", "Cliente não encontrado.");
+        } catch (ResourceNotFoundException e) { // Se der erro na busca do cliente
+            redirectAttributes.addFlashAttribute("erro", "Cliente não encontrado."); // Envia uma mensagem para o endpoint abaixo
             return "redirect:/clientes/login";
         }
     }

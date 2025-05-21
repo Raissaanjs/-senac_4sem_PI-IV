@@ -36,7 +36,7 @@ public class PedidoController {
    
     private final ClienteAutenticadoHelper clienteHelper;
     private final PedidoService pedidoService;
-    //injeção de dependência via construtor
+    
     public PedidoController(EnderecoService enderecoService,
     						ClienteAutenticadoHelper clienteHelper,
     						PedidoService pedidoService,

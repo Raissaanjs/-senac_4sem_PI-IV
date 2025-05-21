@@ -173,6 +173,7 @@ public class PagamentoController {
             EnderecoEntity endereco = enderecoService.findById(enderecoId)
                     .orElseThrow(() -> new IllegalArgumentException("Endereço inválido."));
 
+            // Strategy
             PagamentoTipo tipoPagamento = PagamentoTipo.valueOf(formaPagamento);
 
             // Cria o pedido inicial
