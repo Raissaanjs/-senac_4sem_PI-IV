@@ -8,22 +8,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/clientes/error")
 public class ErrorClientController {
     
-	@GetMapping("/error-no-perm-cliente")
+	@GetMapping("/error-no-perm-cliente")  // Spring está gerenciando
     public String errorPermCliente() {
         return "error/error-cliente-access-denied"; // Renderiza o template access-denied.html
     }
 	
-	@GetMapping("/error-cliente-inat")
+	@GetMapping("/error-cliente-inat")  // Spring está gerenciando
     public String loginErrorClienteInative() {
         return "error/error-cliente-inative"; // Renderiza o template error-user-inative.html
     }
 	
-	@GetMapping("/error-login-cliente")
+	@GetMapping("/error-login-cliente")  // Spring está gerenciando
     public String loginErrorPageLoja() {
         return "error/error-cliente-login"; // Renderiza o template error-login.html
     }      
     
-    @GetMapping("/error-no-auth-cliente")
+    @GetMapping("/error-no-auth-cliente")  // Spring está gerenciando
     public String loginErrorAutCliente() {
         return "error/error-cliente-no-authent"; // Renderiza o template error-client-no-authent.html
     }
