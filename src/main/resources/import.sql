@@ -1,1 +1,0 @@
-INSERT INTO tb_usuario (nome, cpf, email, senha, status, grupo) VALUES ('Sabrina Rufino de Oliveira', '39025898092', 'sabrina@test.com', '$2a$12$IbljZ5w4k5zjtrmGISaOreExa4oU.J6y7UxGKBFnBSuzsdt.V9Nv.', true, 'ROLE_ADMIN') 
