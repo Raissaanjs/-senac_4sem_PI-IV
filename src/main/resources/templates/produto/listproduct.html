@@ -112,7 +112,7 @@
 				<p>Nenhum registro encontrado.</p>
 			</div>
 			
-			<!-- Modal Visualização -->
+			<!-- Modal Visualização listproduct.html -->
 			<div class="modal fade" id="viewProdModal" tabindex="-1" aria-labelledby="viewProdModalLabel" aria-hidden="true">
 			    <div class="modal-dialog">
 			        <div class="modal-content">
@@ -141,16 +141,21 @@
 			                        </div>
 			                    </div>
 			                    <div class="col-md-7">
-			                        <p><strong>Nome:</strong> <span id="prodNome"></span></p>			                        
+			                        <p><strong>Nome:</strong> <span id="prodNome"></span></p>
 			                        <p><strong>Descrição:</strong> <span id="prodDescricao"></span></p>
-			                        <p><strong>Preço:</strong> <span id="prodPreco"></span></p>
+			                        <p><strong>Preço:</strong> <span id="prodPreco"></span></p>			                        
 			                        <p><strong>Avaliação:</strong> <span id="prodAvaliacao"></span></p>
 			                    </div>
 			                </div>
 			            </div>
 			            <div class="modal-footer">
-			                <button type="button" class="btn btn-success" disabled>Comprar</button>
-			                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+			                <form th:action="@{/carrinho/adicionar}" method="post">
+			                    <input type="hidden" name="produtoId" id="modalProdutoId" />
+			                    <button type="submit" class="btn btn-success mt-auto" id="modalComprarBtn">Comprar</button>
+			                </form>
+			                <!-- id="modalSemEstoqueBtn" javaScript que muda botão de produto sem estoque -->
+			                <button type="button" class="btn btn-secondary mt-auto" id="modalSemEstoqueBtn" style="display: none;" disabled>Sem Estoque</button>
+			                <button type="button" class="btn btn-secondary mt-auto" data-bs-dismiss="modal">Fechar</button>
 			            </div>
 			        </div>
 			    </div>
