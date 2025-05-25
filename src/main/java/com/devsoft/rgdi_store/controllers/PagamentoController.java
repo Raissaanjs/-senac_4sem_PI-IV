@@ -3,6 +3,7 @@ package com.devsoft.rgdi_store.controllers;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -170,8 +171,14 @@ public class PagamentoController {
         try {
             ClienteEntity cliente = clienteHelper.getClienteLogado(principal.getName());
 
-            EnderecoEntity endereco = enderecoService.findById(enderecoId)
-                    .orElseThrow(() -> new IllegalArgumentException("Endereço inválido."));
+            // Verifica se o endereço existe de forma amigável
+            Optional<EnderecoEntity> enderecoOptional = enderecoService.findById(enderecoId);
+            if (enderecoOptional.isEmpty()) {
+                redirectAttributes.addFlashAttribute("erro", "Endereço inválido. Por favor, selecione um endereço válido.");
+                return "redirect:/clientes/auth/pagamento/formaspagamento";
+            }
+
+            EnderecoEntity endereco = enderecoOptional.get();
 
             // Strategy
             PagamentoTipo tipoPagamento = PagamentoTipo.valueOf(formaPagamento);
