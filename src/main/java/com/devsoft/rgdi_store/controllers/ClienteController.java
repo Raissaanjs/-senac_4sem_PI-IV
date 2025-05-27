@@ -52,7 +52,7 @@ public class ClienteController {
     public String loginCliente(@RequestParam(value = "error", required = false) String error,
                                Model model) {
         if (error != null) {
-            model.addAttribute("erro", "Dados inválidos. Tente novamente!");
+        	model.addAttribute("erro", "Verifique Cadastro: Email, Senha ou se está Ativo!");
         }
         return "login-cliente";
     }
@@ -62,10 +62,15 @@ public class ClienteController {
     	return "index";
     }
     
+    @GetMapping("/sessao-expirada")
+    public String sessaoExpirada() {
+    	return "sessao-expirada-admin";
+    }
+    
     @GetMapping("/noauth/cadastrar")
     public String cadastrarCliente(Model model) {
         model.addAttribute("cliente", new ClienteEntity()); // envia um form vazio para View abaixo
-        return "/cliente/cadcliente";
+        return "/cliente/cadcliente"; // View que retorna a página de cadastro do cliente
     } 	
  	
  	@PostMapping("/noauth/salvar-cliente")
@@ -97,8 +102,9 @@ public class ClienteController {
                 mensagemErro.append(" ").append(erroCampo.getDefaultMessage()).append(";");
             }
 
-            model.addAttribute("erro", mensagemErro.toString()); // Envia mensagem para View abaixo
-            return "cliente/cadcliente";
+            // Adiciona os dados ao Model para ser mostrado na View
+            model.addAttribute("erro", mensagemErro.toString());
+            return "cliente/cadcliente"; // View que retorna a página de cadastro do cliente
         }
 
         // Define o grupo de usuário, caso não tenha sido atribuído
@@ -176,7 +182,7 @@ public class ClienteController {
     	ClienteEntity cliente = clienteHelper.getClienteLogado(principal.getName());
 
         model.addAttribute("cliente", cliente); // Adiciona ao Model para ser mostrado na View abaixo
-        return "cliente/editcliente";
+        return "cliente/editcliente"; // View que retorna a página para editar cliente
     }
 
     @PostMapping("/auth/update")

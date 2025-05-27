@@ -16,7 +16,7 @@ public interface PedidoRepository extends JpaRepository<PedidoEntity, Long>{
 	// Busca uma lista de pedidos com parâmetro "cliente"
 	List<PedidoEntity> findByCliente(ClienteEntity cliente); // Tipo Query: Spring Data JPA
 	
-	// Verifica se já existe um e-mail no DB
+	// Verifica se já existe o endereço no DB
 	boolean existsByEndereco(EnderecoEntity endereco); // Tipo Query: Spring Data JPA
 
 	// Busca todos os pedidos - com paginação

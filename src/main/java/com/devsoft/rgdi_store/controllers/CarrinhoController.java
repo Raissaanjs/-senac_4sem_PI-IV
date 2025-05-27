@@ -68,15 +68,15 @@ public class CarrinhoController {
             }
         }
 
-        // Passa os dados para o modelo
+        // Adiciona os dados ao Model para ser mostrado na View
         model.addAttribute("itensCarrinho", itensCarrinho);  // Passa a lista de ItemCarrinhoDTO
         model.addAttribute("imagensPrincipais", imagensPrincipais);
-        model.addAttribute("subtotal", subtotal);  // Passa o subtotal para a visão
-        model.addAttribute("total", total);  // Passa o total final para a visão
-        model.addAttribute("totalItens", carrinhoService.getQuantidadeTotalItens());  // Adiciona a quantidade de produtos distintos ao modelo
-        model.addAttribute("frete", valorFrete);  // Passa o valor do frete para a visão
+        model.addAttribute("subtotal", subtotal);  // Passa o subtotal para a view
+        model.addAttribute("total", total);  // Passa o total final para a view
+        model.addAttribute("totalItens", carrinhoService.getQuantidadeTotalItens());  // Adiciona a quantidade de produtos distintos
+        model.addAttribute("frete", valorFrete);  // Passa o valor do frete para a view
 
-        return "carrinho";  // Retorna o template do carrinho
+        return "carrinho";  // View que retorna a página do carrinho
     }
 
 
@@ -93,7 +93,7 @@ public class CarrinhoController {
     @PostMapping("/carrinho/adicionar")
     public String adicionarProdutoAoCarrinho(@RequestParam("produtoId") Long produtoId) {
         carrinhoService.adicionarProduto(produtoId); // Chama o serviço para adicionar o produto
-        return "redirect:/"; // Redireciona para a página do carrinho
+        return "redirect:/"; // Redireciona para View que retorna a página inicial
     }
     
     // Método para alterar a quantidade de um produto no carrinho
@@ -104,7 +104,7 @@ public class CarrinhoController {
         } else if ("decrease".equals(quantidade)) {
             carrinhoService.decrementarQuantidade(produtoId); // Decrementa a quantidade do produto
         }
-        return "redirect:/carrinho"; // Redireciona para a página do carrinho
+        return "redirect:/carrinho"; // Redireciona para View que retorna a página do carrinho
     }
         
     // Método para selecionar o frete
@@ -128,7 +128,7 @@ public class CarrinhoController {
         // Armazenar o valor do frete na sessão como BigDecimal
         session.setAttribute("frete", valorFrete);
 
-        return "redirect:/carrinho"; // Redireciona para a página do carrinho
+        return "redirect:/carrinho"; // Redireciona para View que retorna a página do carrinho
     }
 
     
@@ -136,7 +136,7 @@ public class CarrinhoController {
     @PostMapping("/carrinho/remover")
     public String removerProdutoDoCarrinho(@RequestParam("produtoId") Long produtoId) {
         carrinhoService.removerProduto(produtoId);  // Chama o serviço para remover o produto
-        return "redirect:/carrinho";  // Redireciona para a página do carrinho
+        return "redirect:/carrinho";  // Redireciona para View que retorna a página do carrinho
     }
     
 }

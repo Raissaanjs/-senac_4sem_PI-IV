@@ -29,7 +29,7 @@ public class CarrinhoService {
         this.session = session;
     }	
 
-    // Recupera o carrinho da sessão ou cria um novo se não existir (Processamento na sessão)
+    // Recupera o carrinho da sessão ou cria um novo se não existir (PROCESSAMENTO NA SESSÃO)
     public Map<Long, Integer> getCarrinho() {        
     	@SuppressWarnings("unchecked") // Suprime a mensagem de Cast genérico
     	//Tenta recuperar da sessão do carrinho atual "carrinho"); Faz um cast manual para o tipo esperado
@@ -40,17 +40,17 @@ public class CarrinhoService {
             
             session.setAttribute("carrinho", carrinho); // atualiza na sessão
         }
-        return carrinho;
+        return carrinho; //Retorna o carrinho
     }
 
-    // Método para contar o número de produtos no carrinho (Processamento na sessão)
+    // Método para contar o número de produtos no carrinho (PROCESSAMENTO NA SESSÃO)
     public int getQuantidadeTotalItens() {
     	// Obtém o carrinho (produtoId, qt) da sessão
     	Map<Long, Integer> carrinho = getCarrinho();
-        return carrinho.size();
+        return carrinho.size(); //Retorna a quantidade de itens do carrinho
     }
 
-    // Adiciona um produto ao carrinho ou incrementa a quantidade se já estiver presente (Processamento na sessão)
+    // Adiciona um produto ao carrinho ou incrementa a quantidade se já estiver presente (PROCESSAMENTO NA SESSÃO)
     public void adicionarProduto(Long produtoId) {
     	// Obtém o carrinho (produtoId, qt) da sessão
     	Map<Long, Integer> carrinho = getCarrinho();
@@ -65,7 +65,7 @@ public class CarrinhoService {
         session.setAttribute("carrinho", carrinho); // atualiza na sessão
     }
 
-    // Botão(+) que incrementa a quantidade de um produto no carrinho (Processamento na sessão)
+    // Botão(+) que incrementa a quantidade de um produto no carrinho (PROCESSAMENTO NA SESSÃO)
     public void incrementarQuantidade(Long produtoId) {
     	// Obtém o carrinho (produtoId, qt) da sessão
     	Map<Long, Integer> carrinho = getCarrinho();
@@ -76,7 +76,7 @@ public class CarrinhoService {
         session.setAttribute("carrinho", carrinho); // atualiza na sessão
     }
 
-    // Botão(-) que decrementa a quantidade de um produto no carrinho (Processamento na sessão)
+    // Botão(-) que decrementa a quantidade de um produto no carrinho (PROCESSAMENTO NA SESSÃO)
     public void decrementarQuantidade(Long produtoId) {
     	// Obtém o carrinho (produtoId, qt) da sessão
     	Map<Long, Integer> carrinho = getCarrinho();
@@ -116,12 +116,12 @@ public class CarrinhoService {
     }
 
 
-    // Limpa o carrinho da sessão (Processamento na sessão)
+    // Limpa o carrinho da sessão (PROCESSAMENTO NA SESSÃO)
     public void limparCarrinho() {
         session.removeAttribute("carrinho");
     }
 
-    // Método para remover um produto do carrinho  (Processamento na sessão)
+    // Método para remover um produto do carrinho  (PROCESSAMENTO NA SESSÃO)
     public void removerProduto(Long produtoId) {
     	// Obtém o carrinho (produtoId, qt) da sessão
         Map<Long, Integer> carrinho = getCarrinho();
@@ -134,12 +134,12 @@ public class CarrinhoService {
         session.setAttribute("carrinho", carrinho); // atualiza na sessão
     }
 
-    // Zera o frete quando remove o último item do carrinho (Processamento na sessão)
+    // Zera o frete quando remove o último item do carrinho (PROCESSAMENTO NA SESSÃO)
     private void zerarFrete() {
         session.setAttribute("frete", BigDecimal.ZERO); // Define como BigDecimal com valor "0"
     }
 
-    // Limpa o carrinho ao finalizar o pedido (Processamento na sessão)
+    // Limpa o carrinho ao finalizar o pedido (PROCESSAMENTO NA SESSÃO)
     public void limparSessaoCompra() {
         session.removeAttribute("carrinho"); // limpa o carrinho
         session.removeAttribute("frete"); // limpa o frete

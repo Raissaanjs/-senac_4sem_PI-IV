@@ -15,8 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.devsoft.rgdi_store.authentication.AdminUserDetailsService;
 import com.devsoft.rgdi_store.handlers.CustomAccessDeniedHandlerUser;
+import com.devsoft.rgdi_store.services.AdminUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
@@ -42,7 +42,7 @@ public class SecurityConfig {
 	@Order(2)
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		
-		// Configura o provider localmente para esta chain
+		// AUTENTICAÇÃO - Configura o provider localmente para esta chain
 	    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 	    authProvider.setUserDetailsService(adminUserDetailsService);
 	    authProvider.setPasswordEncoder(passwordEncoder);
@@ -54,7 +54,7 @@ public class SecurityConfig {
 	    AuthenticationManager authenticationManager = authBuilder.build();
 	    http.authenticationManager(authenticationManager);
 		
-	    
+	    //AUTORIZAÇÃO
 	    http
 	    	.addFilterBefore(sessionExpiredFilter, UsernamePasswordAuthenticationFilter.class) // Filtro para controle de Sessão
     		.authorizeHttpRequests(auth -> auth    			

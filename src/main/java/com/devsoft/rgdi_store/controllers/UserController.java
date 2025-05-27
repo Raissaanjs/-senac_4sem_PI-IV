@@ -101,16 +101,15 @@ public class UserController {
 	    return "usuario/listuser";
 	}
 
-	//Lista geral - Menu  
+	//Lista os usuários - Menu Admin  
 	@GetMapping("/listar")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String list(
 	    Model model,
 	    @PageableDefault(page = 0, size = 5, sort = "id") Pageable pageable
 	) {
 	    Page<UserDto> dtoPage = userService.findAll(pageable);
 
-	    // Adiciona os resultados da página ao modelo do Thymeleaf
+	    // Adiciona os dados ao Model para ser mostrado na View
 	    model.addAttribute("usuarios", dtoPage.getContent());
 	    model.addAttribute("page", dtoPage); // Metadados da página (como total de páginas e número atual)
 
@@ -151,7 +150,7 @@ public class UserController {
 	    // Verifica se há erros de validação. Se houver manda para o Front
 	    if (result.hasErrors()) {
 	        model.addAttribute("dto", dto); // Mantém os dados preenchidos no formulário
-	        return "usuario/caduser"; // Retorna para a página do formulário
+	        return "usuario/caduser"; // View que retorna a página de cadatro de usuário
 	    }
 
 	    // Define grupo padrão caso não tenha sido selecionado
@@ -181,9 +180,10 @@ public class UserController {
 	    UserDto dto = userService.findById(id); // Busca o usuário para edição
 	    UserGroup[] grupos = UserGroup.values(); // Obtém todos os valores do enum UserGroup
 
-	    model.addAttribute("dto", dto); // Adiciona o usuário ao modelo
-	    model.addAttribute("grupos", grupos); // Adiciona a lista de grupos ao modelo
-	    return "usuario/listuser"; // Retorna o template
+	    // Adiciona os dados ao Model para ser mostrado na View
+	    model.addAttribute("dto", dto); // Adiciona o usuário
+	    model.addAttribute("grupos", grupos); // Adiciona a lista de grupos
+	    return "usuario/listuser"; // View que retorna a página lista de usuários
 	}	
 	
 	//Update - exclusivo para o MODAL/edit
@@ -205,13 +205,13 @@ public class UserController {
 	    }
 	    
 	    // Atualiza o usuário com os novos dados
-	    dto = userService.updateModal(id, dto);//retorna o update personalizado
+	    dto = userService.updateModal(id, dto); //retorna o update personalizado
 
 	    return ResponseEntity.ok(dto);
 	}
 	
 	
-	//Alterna status
+	//Altera status
 	@PutMapping("/{id}/status")
 	public ResponseEntity<UserDto> changeStatus(@PathVariable Long id) {
 	    UserDto dto = userService.changeStatus(id);

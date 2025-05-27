@@ -8,17 +8,17 @@ import java.math.BigDecimal;
 
 public class ProdutoMapper {
 
-    // Converte Entity para Dto (mapeamento completo)
+    // Converte ProdutoEntity para ProdutoDto (mapeamento completo)
     public static ProdutoDto toDto(ProdutoEntity entity) {
         if (entity == null) {
             return null;
         }
 
-        // Retorna um DTO com o preço já sendo um BigDecimal
+        // Retorna uma nova instância de Dto
         return new ProdutoDto(
             entity.getId(),
             entity.getNome(),
-            entity.getPreco(),  // O preco já é BigDecimal
+            entity.getPreco(),
             entity.getQuantidade(),
             entity.getDescricao(),
             entity.getAvaliacao(),
@@ -32,21 +32,24 @@ public class ProdutoMapper {
             return null;
         }
 
+        // Cria uma nova instância de Entity
         ProdutoEntity entity = new ProdutoEntity();
         entity.setId(dto.getId());
         entity.setNome(dto.getNome());
-        entity.setPreco(dto.getPreco());  // O preco é passado como BigDecimal
+        entity.setPreco(dto.getPreco());
         entity.setQuantidade(dto.getQuantidade());
         entity.setDescricao(dto.getDescricao());
         entity.setAvaliacao(dto.getAvaliacao());
         entity.setStatus(dto.isStatus());
 
+        // retorna a entidade
         return entity;
     }
 
+    // Atualiza o produto
     public static void updateProductFromDto(ProdutoDto dto, ProdutoEntity entity, ProdutoRepository repository) {
         if (dto == null || entity == null) {
-            return; // Caso o dto ou entidade sejam null, simplesmente retorna
+            return; // Caso o dto ou entidade sejam null, simplesmente retorna (Não faz nada)
         }
 
         // Atualiza o nome

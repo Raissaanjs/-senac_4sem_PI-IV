@@ -27,8 +27,10 @@ public class ProdutoService {
     	this.repository = repository;
     }    
     
+    // Usado no index.html
+    @Transactional(readOnly = true)
     public List<ProdutoEntity> findAllIndex() {
-        return repository.findAll(); // Aqui usamos o método findAll do repositório
+        return repository.findAll();
     }        
     
     //Busca todos os registros - com paginação
@@ -66,7 +68,7 @@ public class ProdutoService {
   	        // Se o nome estiver vazio, retorna todos os usuários paginados
   	        result = repository.findAll(pageable);
   	    } else {
-  	        // Se houver um nome para buscar, realiza a consulta com filtro
+  	        // Se houver um nome para buscar, retorna ele
   	        result = repository.findByNomeContainingIgnoreCase(nome, pageable);
   	    }
 
@@ -75,8 +77,9 @@ public class ProdutoService {
   	}
   	
   	//Busca por nome com paginação
+  	@Transactional(readOnly = true)
   	public List<ProdutoEntity> findByNameList(String nome) {
-        return repository.findByNomeContainingIgnoreCase(nome); // Método que realiza a busca no banco
+        return repository.findByNomeContainingIgnoreCase(nome);
     }
   	
     // Busca por id
@@ -97,7 +100,7 @@ public class ProdutoService {
   	        // Define o Status como ativo
   	        entity.setStatus(true);
 
-  	        // Salva no banco
+  	        // Salva no banco instantaneamente
   	        entity = repository.saveAndFlush(entity);
 
   	        // Retorna DTO convertido
@@ -113,10 +116,13 @@ public class ProdutoService {
             ProdutoEntity entity = repository.getReferenceById(id);
             ProdutoMapper.updateProductFromDto(dto, entity, repository); // Atualiza a entidade com os dados do DTO
             
-            entity = repository.saveAndFlush(entity);
+            entity = repository.saveAndFlush(entity); // Salva instantaneamente
             
-            return ProdutoMapper.toDto(entity); // Retorna DTO convertido
+            // Converte a entidade persistida em um DTO para ser retornado
+            return ProdutoMapper.toDto(entity);
+         // Captura a exceção lançada se o produto com o ID fornecido não for encontrado 
         } catch (EntityNotFoundException e) {
+        	// Gera uma exceção customizada, informando que o recurso não foi localizado
             throw new ResourceNotFoundException("Recurso não encontrado - service/update [verifique 'id'/ se está cadastrado]");
         }
     }
@@ -125,15 +131,20 @@ public class ProdutoService {
   	@Transactional
   	public ProdutoDto changeStatus(Long id) {
   	    try {
-  	        ProdutoEntity entity = repository.getReferenceById(id);
-  	        entity.setStatus(!entity.isStatus()); // Alterna o status
-  	        entity = repository.saveAndFlush(entity);
+  	    	// Referência proxy para a entidade ProdutoEntity (lazy loading)
+  	    	ProdutoEntity entity = repository.getReferenceById(id);
+  	    	
+  	        entity.setStatus(!entity.isStatus()); // Inverte o status atual do produto
+  	        
+  	        entity = repository.saveAndFlush(entity); // Salva instantaneamente
+  	        
+  	        // Converte a entidade persistida em um DTO para ser retornado
   	        return ProdutoMapper.toDto(entity);
+  	      // Captura a exceção lançada se o produto com o ID fornecido não for encontrado
   	    } catch (EntityNotFoundException e) {
+  	    	// Gera uma exceção customizada, informando que o recurso não foi localizado
   	        throw new ResourceNotFoundException("Recurso não encontrado - service/changeStatus");
   	    }
   	}
-
-  	
 }
 

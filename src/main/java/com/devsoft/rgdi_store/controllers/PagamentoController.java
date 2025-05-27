@@ -19,6 +19,7 @@ import com.devsoft.rgdi_store.entities.EnderecoEntity;
 import com.devsoft.rgdi_store.entities.PagamentoTipo;
 import com.devsoft.rgdi_store.entities.PedidoEntity;
 import com.devsoft.rgdi_store.exceptions.all.CarrinhoVazioException;
+import com.devsoft.rgdi_store.exceptions.all.EnderecoNaoEncontradoException;
 import com.devsoft.rgdi_store.exceptions.all.EstoqueInsuficienteException;
 import com.devsoft.rgdi_store.repositories.EnderecoRepository;
 import com.devsoft.rgdi_store.services.CarrinhoService;
@@ -59,14 +60,17 @@ public class PagamentoController {
                                         HttpSession session,
                                         RedirectAttributes redirectAttributes) {
 
+    	// Recupera o cliente autenticado
         clienteHelper.getClienteLogado(principal.getName());
 
         // Recupera a lista de itens do carrinho (agora usando ItemCarrinhoDTO)
         List<ItemCarrinhoDTO> itensCarrinho = carrinhoService.getItens();  // Agora retorna uma lista de ItemCarrinhoDTO
 
+        // Se o carrinho estiver vazio 
         if (itensCarrinho == null || itensCarrinho.isEmpty()) {
-            redirectAttributes.addFlashAttribute("erro", "Seu carrinho está vazio. Adicione itens antes de continuar.");
-            return "redirect:/carrinho";
+            // Envia a mensagem de erro abaixo para a View 
+        	redirectAttributes.addFlashAttribute("erro", "Seu carrinho está vazio. Adicione itens antes de continuar.");
+            return "redirect:/carrinho"; // Redireciona para View que retorna a página do carrinho 
         }
 
         // Calcular o subtotal somando o valor total de cada item
@@ -93,13 +97,13 @@ public class PagamentoController {
         // Calcular o total (subtotal + frete)
         BigDecimal total = subtotal.add(frete);
 
-        // Adicionar as informações ao modelo para a view
+        // Adiciona os dados ao Model para ser mostrado na View
         model.addAttribute("enderecoId", enderecoId);
         model.addAttribute("subtotal", subtotal);
         model.addAttribute("frete", frete);
         model.addAttribute("total", total);
 
-        return "pagamento/formaspagamento";  // Retorna a view do formulário de pagamento
+        return "pagamento/formaspagamento";  // View que retorna o formulário de pagamento
     }
 
     // Mostra o resumo do pedido
@@ -119,13 +123,17 @@ public class PagamentoController {
 
             // Busca o endereço selecionado
             EnderecoEntity endereco = enderecoRepository.findById(enderecoId)
-                    .orElseThrow(() -> new RuntimeException("Endereço não encontrado"));
+            		// Se não encontrar envia a mensagem abaixo
+                    .orElseThrow(() -> new EnderecoNaoEncontradoException("Endereço não encontrado"));
 
             // Recupera os itens do carrinho (com quantidade e preço)
             List<ItemCarrinhoDTO> itensCarrinho = carrinhoService.getItens();
+            
+            // Se o carrinho estiver vazio
             if (itensCarrinho == null || itensCarrinho.isEmpty()) {
+            	// Envia a mensagem de erro abaixo para a View
                 redirectAttributes.addFlashAttribute("erro", "Seu carrinho está vazio. Adicione itens antes de prosseguir.");
-                return "redirect:/carrinho";
+                return "redirect:/carrinho"; // Redireciona para View que retorna a página do carrinho 
             }
 
             // Cria um pedido temporário com os dados para exibição
@@ -136,7 +144,7 @@ public class PagamentoController {
             pedido.setCliente(cliente);
             pedido.setEndereco(endereco);
 
-            // Adiciona os dados ao modelo
+            // Adiciona os dados ao Model para ser mostrado na View
             model.addAttribute("pedido", pedido);
             model.addAttribute("itensCarrinho", itensCarrinho);
             model.addAttribute("subtotal", subtotal);
@@ -145,19 +153,23 @@ public class PagamentoController {
             model.addAttribute("enderecoSelecionado", endereco);
             model.addAttribute("formaPagamento", formaPagamento);
 
-            return "pedido/resumopedido";
-
+            return "pedido/resumopedido"; // View que retorna a página resumo do pedido
+            
+          // Se o carrinho estiver vazio ou não houver estoque suficiente
         } catch (CarrinhoVazioException | EstoqueInsuficienteException e) {
+        	// Envia mesagem de erro para View
             redirectAttributes.addFlashAttribute("erro", e.getMessage());
-            return "redirect:/carrinho";
+            return "redirect:/carrinho"; // Redireciona para View que retorna a página do carrinho
+            
+          // Caso haja qualquer outra exceção envia a mesagem de erro abaixo para View
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("erro", "Erro ao processar endereço: " + e.getMessage());
-            return "redirect:/carrinho";
+            return "redirect:/carrinho"; // Redireciona para View que retorna a página do carrinho
         }
     }
 
 
-	// Confirma o pedido
+	// Confirma o pagamento/ pedido
     @PostMapping("/processar")
     public String processarPagamento(@RequestParam("formaPagamento") String formaPagamento,
                                      @RequestParam("subtotal") BigDecimal subtotal,
@@ -169,18 +181,25 @@ public class PagamentoController {
                                      Model model) {
 
         try {
+        	// Recupera o cliente autenticado
             ClienteEntity cliente = clienteHelper.getClienteLogado(principal.getName());
 
             // Verifica se o endereço existe de forma amigável
             Optional<EnderecoEntity> enderecoOptional = enderecoService.findById(enderecoId);
+            // Se não encontrar
             if (enderecoOptional.isEmpty()) {
+            	// Envia mensagem abaixo para View
                 redirectAttributes.addFlashAttribute("erro", "Endereço inválido. Por favor, selecione um endereço válido.");
-                return "redirect:/clientes/auth/pagamento/formaspagamento";
+                
+                // Redireciona para View que retorna a página formas de pagamento
+                return "redirect:/clientes/auth/pagamento/formaspagamento"; 
             }
 
+            //  Retorna uma instância de EnderecoEntity
             EnderecoEntity endereco = enderecoOptional.get();
 
-            // Strategy
+            // STRATEGY
+            // Convert a String para o Enum correspondente
             PagamentoTipo tipoPagamento = PagamentoTipo.valueOf(formaPagamento);
 
             // Cria o pedido inicial
@@ -193,21 +212,26 @@ public class PagamentoController {
 
             // Recupera os itens do carrinho com quantidade
             List<ItemCarrinhoDTO> itensCarrinho = carrinhoService.getItens();
+            // Se carrinho estiver vazio
             if (itensCarrinho == null || itensCarrinho.isEmpty()) {
+            	// Envia mensagem abaixo para View
                 redirectAttributes.addFlashAttribute("erro", "Carrinho vazio. Não é possível finalizar o pedido.");
-                return "redirect:/carrinho";
+                return "redirect:/carrinho";  // Redireciona para View que retorna a página do carrinho
             }
 
             // Finaliza o pedido com os itens do carrinho
-            PedidoEntity pedidoSalvo = pedidoService.finalizarPedido(pedido, itensCarrinho); // Certifique-se que esse método aceite o DTO
+            PedidoEntity pedidoSalvo = pedidoService.finalizarPedido(pedido, itensCarrinho);
+            // Envia a mensagem abaixo para View
             redirectAttributes.addFlashAttribute("sucesso", "Criado com sucesso!");
 
-         // Redireciona para a página de sucesso com o ID do pedido como parâmetro
+            // Redireciona para a View que retorna a página de finalização de pedido co sucesso
             return "redirect:/pedidos/clientes/pedido-sucesso?pedidoId=" + pedidoSalvo.getId();
 
-
+          // Se houver algum erro
         } catch (Exception e) {
+        	// Envia a mensagem abaixo para View
             redirectAttributes.addFlashAttribute("erro", "Erro ao processar pagamento: " + e.getMessage());
+            // Redireciona para a View que retorna a página de formas de pagamento
             return "redirect:/clientes/auth/pagamento/formaspagamento?enderecoId=" + enderecoId;
         }
     }

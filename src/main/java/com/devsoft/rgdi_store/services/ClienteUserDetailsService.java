@@ -1,4 +1,4 @@
-package com.devsoft.rgdi_store.authentication;
+package com.devsoft.rgdi_store.services;
 
 import java.util.List;
 
@@ -9,12 +9,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.devsoft.rgdi_store.authentication.CustomClienteDetails;
 import com.devsoft.rgdi_store.entities.ClienteEntity;
 import com.devsoft.rgdi_store.repositories.ClienteRepository;
 
 // Usado na autenticação juntamente com:
 // CustomClienteDetails e SecurityConfigClient
-@Service("clienteUserDetailsService")
+@Service("clienteUserDetailsService") // Registra essa classe como um bean de serviço no contexto da aplicação
 public class ClienteUserDetailsService implements UserDetailsService {
 
     private final ClienteRepository clienteRepository;
@@ -23,19 +24,22 @@ public class ClienteUserDetailsService implements UserDetailsService {
         this.clienteRepository = clienteRepository;
     }
 
-    @Override
+    // Implementação do método obrigatório da interface UserDetailsService
+    @Override    
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        ClienteEntity cliente = clienteRepository.findByEmail(username)
-            .orElseThrow(() -> new UsernameNotFoundException("Cliente não encontrado"));
+        ClienteEntity cliente = clienteRepository.findByEmail(username) // Busca cliente por email
+            .orElseThrow(() -> new UsernameNotFoundException("Cliente não encontrado")); // se não encontrar lança exceção
 
-        List<GrantedAuthority> authorities = List.of(
+        // Cria uma lista de permissões (autoridades) para o cliente, baseada no grupo que ele pertence
+        List<GrantedAuthority> authorities = List.of( 
             new SimpleGrantedAuthority(cliente.getGrupo().name())
         );
 
+        // Cria e retorna um objeto CustomClienteDetails, que é uma implementação personalizada de UserDetails
         return new CustomClienteDetails(
         	    cliente.getEmail(),
         	    cliente.getSenha(),
-        	    cliente.getNome(), // aqui vai o nome do cliente
+        	    cliente.getNome(), // Específico para o Cliente
         	    authorities
         	);
     }

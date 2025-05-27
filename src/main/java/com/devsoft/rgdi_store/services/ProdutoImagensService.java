@@ -139,8 +139,7 @@ public class ProdutoImagensService {
         try {
             if (file != null && !file.isEmpty()) {
                 String nomeImagem = produtoImagens.getId() + "_" + file.getOriginalFilename();
-
-                // Reutiliza método privado para salvar imagem
+                
                 salvarImagemNoDisco(file, nomeImagem);
 
                 produtoImagens.setNome(nomeImagem);

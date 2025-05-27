@@ -28,6 +28,7 @@ import com.devsoft.rgdi_store.dto.ProdutoDto;
 import com.devsoft.rgdi_store.dto.ProdutoImagensDto;
 import com.devsoft.rgdi_store.entities.ProdutoEntity;
 import com.devsoft.rgdi_store.entities.ProdutoImagens;
+import com.devsoft.rgdi_store.exceptions.all.ProdutoNaoEncontradoException;
 import com.devsoft.rgdi_store.repositories.ProdutoImagensRepository;
 import com.devsoft.rgdi_store.repositories.ProdutoRepository;
 import com.devsoft.rgdi_store.services.ProdutoImagensService;
@@ -52,7 +53,7 @@ public class ProdutoController {
 		this.produtoImagensService = produtoImagensService;
 	}
  
-    //Lista geral - Menu  
+    //Lista os produtos no Menu Admin 
   	@GetMapping("/listar")
   	public String list(
   	    Model model,
@@ -60,37 +61,41 @@ public class ProdutoController {
   	) {
   	    Page<ProdutoDto> dtoPage = produtoService.findAll(pageable);
 
-  	    // Adiciona os resultados da página ao modelo do Thymeleaf
+  	    // Adiciona os dados ao Model para ser mostrado na View
   	    model.addAttribute("produtos", dtoPage.getContent());
   	    model.addAttribute("page", dtoPage); // Metadados da página (como total de páginas e número atual)
 
-  	    return "produto/listproduct"; // Template Thymeleaf
+  	    return "produto/listproduct"; // View que retorna a página lista de produto
   	}
   	
+  	// Mostra os produtos na Página Inicial
   	@GetMapping("/loja/{id}")
     public String exibirProduto(@PathVariable("id") Long idProduto, Model model) {
-        // Busca o produto no banco de dados
+        // Busca o produto por id
         ProdutoEntity produto = produtoRepository.findById(idProduto)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+        		// Se não encontrar envia a mensagem abaixo
+                .orElseThrow(() -> new ProdutoNaoEncontradoException("Produto não encontrado"));
 
         // Busca a imagem principal do produto
         ProdutoImagens imagemPrincipal = produtoImagensRepository.findByProdutoAndPrincipal(produto, true);
 
-        // Adiciona os atributos ao modelo para serem usados na view
+        // Adiciona os dados ao Model para ser mostrado na View
         model.addAttribute("imagemPrincipal", imagemPrincipal); // Imagem principal
-        model.addAttribute("prodLoja", produto); // Produto específico (diferente de "produtos")
-
-        // Retorna a página HTML (o nome da página .html será a view Thymeleaf)
-        return "index";
+        model.addAttribute("prodLoja", produto); // Produto específico
+        
+        return "index"; // View que retorna a página inicial
     }
   	
   	//Busca por id - para framework de Front/ Postman
   	@GetMapping("/detalhes/{id}")
   	public ResponseEntity<ProdutoDto> findById(@PathVariable Long id) {
+  		// Busca o produto por id
   		ProdutoDto dto = produtoService.findById(id);
+  		// Retorna um HTTP 200 OK, sucesso
   		return ResponseEntity.ok(dto);
   	}  	
   	
+  	// Busca por nome ADMIN
   	@GetMapping("/buscar-nome")
 	public String buscarPorNomeOuTodos(
 	    @RequestParam(value = "nome", required = false, defaultValue = "") String nome,
@@ -101,16 +106,20 @@ public class ProdutoController {
 	                                ? produtoService.findAll(pageable) 
 	                                : produtoService.findByName(nome, pageable);
 
-	    // Adiciona os dados ao modelo
+	    // Adiciona os dados ao Model para ser mostrado na View
 	    model.addAttribute("produtos", produtos.getContent());
 	    model.addAttribute("page", produtos);
 	    model.addAttribute("nome", nome); // Preserva o termo de busca no formulário	   
-	    return "produto/listproduct";
+	    return "produto/listproduct"; // View que retorna a página de listagem de produto
 	}  
   	
+  	// Busca por nome na Página Inicial
   	@GetMapping("/loja/buscar")
   	public String buscarProdutos(@RequestParam("nomeProduto") String nomeProduto, Model model) {
-  	    List<ProdutoEntity> produtos = produtoService.findByNameList(nomeProduto);
+  	    
+  		// Lista o(s) produto(s) por nome
+  		List<ProdutoEntity> produtos = produtoService.findByNameList(nomeProduto);
+  	    // Adiciona os dados ao Model para ser mostrado na View
   	    model.addAttribute("produtos", produtos);
   	    model.addAttribute("nomeProduto", nomeProduto);  // Garanta que o nomeProduto seja passado ao modelo
 
@@ -130,15 +139,17 @@ public class ProdutoController {
   	        }
   	    }
 
+  	    // Adiciona os dados ao Model para ser mostrado na View
   	    model.addAttribute("imagensPrincipais", imagensPrincipais);
 
-  	    return "index";
+  	    return "index"; // View que retorna a página inicial
   	}
 
 
-    // Método para exibir o formulário de criação de produto
+    // Método para exibir o formulário de cadastro de produto
     @GetMapping("/cadastrar")
     public String showCreateForm(Model model) {
+    	// Adiciona os dados ao Model para ser mostrado na View
         model.addAttribute("product", new ProdutoEntity());
         return "produto/cadproduct"; // Nome da página Thymeleaf
     }  
@@ -149,10 +160,12 @@ public class ProdutoController {
         // Salvar produto no banco de dados
         produtoService.insert(produtoDto);
         
-        return "redirect:/produtos/listar";
+        // Redireciona para o endpoint produtos/listar que chama a View que retorna a página inicial
+        return "redirect:/produtos/listar";  
     }    
 	  
-	@PostMapping
+    // Para API
+	@PostMapping("/salvar/api")
 	 public ResponseEntity<ProdutoDto> insert(@RequestBody ProdutoDto dto) {	
 		dto =  produtoService.insert(dto);
 	      URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
@@ -180,13 +193,17 @@ public class ProdutoController {
 	    // Atualiza o produto com os novos dados
 	    dto = produtoService.update(id, dto);//retorna o update personalizado
 
+	    // Retorna um HTTP 200 OK, sucesso
 	    return ResponseEntity.ok(dto);
 	}
     
     //Alterna status
   	@PutMapping("/{id}/status")
   	public ResponseEntity<ProdutoDto> changeStatus(@PathVariable Long id) {
-  	    ProdutoDto dto = produtoService.changeStatus(id);
+  	    // Chama o service para alterar o Status
+  		ProdutoDto dto = produtoService.changeStatus(id);
+  	    
+  	    // Retorna um HTTP 200 OK, sucesso
   	    return ResponseEntity.ok(dto);
-  	}	
+  	}
 }

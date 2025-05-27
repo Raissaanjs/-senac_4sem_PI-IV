@@ -48,7 +48,7 @@ public class ClienteService {
         // Validação do cliente
         ClienteValidationSaveService.validateCliente(cliente, clienteRepository, confirmaSenha);
         
-        cliente.setSenha(passwordUtils.encrypt(cliente.getSenha())); // Criptografando a senha
+        cliente.setSenha(passwordUtils.encrypt(cliente.getSenha())); // Criptografa a senha
         return clienteRepository.save(cliente); // salva no DB
     }  
 

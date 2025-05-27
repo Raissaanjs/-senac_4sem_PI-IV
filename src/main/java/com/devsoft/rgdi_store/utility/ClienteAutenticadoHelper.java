@@ -1,9 +1,9 @@
 package com.devsoft.rgdi_store.utility;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import com.devsoft.rgdi_store.entities.ClienteEntity;
+import com.devsoft.rgdi_store.exceptions.all.ClienteNaoEncontradoException;
 import com.devsoft.rgdi_store.repositories.ClienteRepository;
 
 @Component
@@ -17,7 +17,8 @@ public class ClienteAutenticadoHelper {
 
     public ClienteEntity getClienteLogado(String email) {
         return repository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Cliente não encontrado"));
+        		.orElseThrow(() -> new ClienteNaoEncontradoException("Cliente com e-mail " + email + " não encontrado"));
+
     }
 }
 

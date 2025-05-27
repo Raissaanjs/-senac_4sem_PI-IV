@@ -29,18 +29,20 @@ public class GlobalModelControllerAdvice {
         this.carrinhoService = carrinhoService;
     }
 
+    // Adiciona atributos comuns ao objeto `Model`, que estarão disponíveis em todas as views.
     @ModelAttribute
     public void addAttributesToModel(Authentication authentication, Model model) {
-        String nomeExibicao = "Visitante";
+        String nomeExibicao = "Visitante"; // Valor padrão se ninguém estiver logado
 
+        // Se o usuário está autenticado
         if (authentication != null) {
-        	model.addAttribute("logado", "Sim"); // filtra usuário Logado
+        	model.addAttribute("logado", "Sim"); // Marca que há um usuário logado
         	
-            Object principal = authentication.getPrincipal(); // principal representa o usuário autenticado
+            Object principal = authentication.getPrincipal(); // Objeto que representa o usuário logado
             
-            // Se for usuário (Admin/Estoque)
+            // Se o usuário for um UserEntity (ex: admin, estoquista)
             if (principal instanceof CustomUserDetails userDetails) {
-            	String emailLogado = userDetails.getUsername();
+            	String emailLogado = userDetails.getUsername(); // Pega e-mail do user
             	
                 nomeExibicao = userRepository.findByEmail(userDetails.getUsername())
                         .map(UserEntity::getNome)
@@ -48,41 +50,41 @@ public class GlobalModelControllerAdvice {
                 
                 model.addAttribute("userEmailLogado", emailLogado); // ← aqui
 
-            // Se for cliente
+             // Se o usuário for um ClienteEntity
             } else if (principal instanceof CustomClienteDetails clienteDetails) {
-            	String emailLogado = clienteDetails.getUsername();
+            	String emailLogado = clienteDetails.getUsername(); // Pega e-mail do cliente
             	
             	nomeExibicao = clienteRepository.findByEmail(clienteDetails.getUsername())
                         .map(ClienteEntity::getNome)
                         .orElse("Cliente");
             	
-            	model.addAttribute("clienteEmailLogado", emailLogado); //Alterado. Anterior "clinteEmailLogado"
+            	model.addAttribute("clienteEmailLogado", emailLogado);
             }
 
-            // Nome do usuário/cliente
+            // Define o nome do usuário para exibição
             model.addAttribute("userName", nomeExibicao);
 
-            // Roles
+            // Define as permissões (roles) no modelo para controle de acesso nas views
             model.addAttribute("isAdmin", hasAuthority(authentication, "ROLE_ADMIN"));
             model.addAttribute("isEstoque", hasAuthority(authentication, "ROLE_ESTOQ"));
             model.addAttribute("isUser", hasAuthority(authentication, "ROLE_USER"));
             model.addAttribute("isClient", hasAuthority(authentication, "ROLE_CLIENT"));
 
-            // Grupo (admin) - descrição amigável
+            // Tenta obter uma descrição amigável do grupo do usuário
             String role = authentication.getAuthorities().stream()
                     .findFirst()
                     .map(GrantedAuthority::getAuthority)
                     .orElse("ROLE_USER");
 
             try {
-                UserGroup userGroup = UserGroup.fromGrupo(role);
+                UserGroup userGroup = UserGroup.fromGrupo(role); // Converte role para enum com descrição
                 model.addAttribute("userGroup", userGroup.getDescricao());
             } catch (IllegalArgumentException e) {
                 model.addAttribute("userGroup", "Desconhecido");
             }
 
         } else {
-            // Usuário não autenticado
+        	// Caso o usuário não esteja autenticado
         	model.addAttribute("logado", "Não"); // filtra usuário não Logado
             model.addAttribute("userName", "Guest");
             model.addAttribute("userGroup", "Visitante");
@@ -92,11 +94,12 @@ public class GlobalModelControllerAdvice {
             model.addAttribute("isClient", false);
         }
 
-        // Total de itens no carrinho
+        // Adiciona a quantidade total de itens no carrinho ao modelo
         int totalItens = carrinhoService.getQuantidadeTotalItens();
         model.addAttribute("totalItens", totalItens);
     }
 
+    // Método auxiliar que verifica se o usuário possui determinada autoridade (ROLE)
     private boolean hasAuthority(Authentication auth, String authority) {
         return auth.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals(authority));

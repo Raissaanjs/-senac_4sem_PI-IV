@@ -41,42 +41,52 @@ public class MainController {
             }
         }
 
-        // Passando os produtos e as imagens principais para a view
+        // Adiciona os dados ao Model para ser mostrado na View
         model.addAttribute("produtos", produtosLoja);
         model.addAttribute("imagensPrincipais", imagensPrincipais);
 
-        return "index"; // Nome do template Thymeleaf
+        return "index"; // View que retorna a página inicial
     }
 	
 	@GetMapping("/login")
     public String loginAdmin(@RequestParam(value = "error", required = false) String error,
                                Model model) {
-        if (error != null) {
-            model.addAttribute("erro", "Dados inválidos. Tente novamente!");
+        // Se encontrar erro no login manda a mensagem abaixo para View
+		if (error != null) {
+            model.addAttribute("erro", "Verifique Cadastro: Email, Senha ou se está Ativo!");
         }
-        return "login";
+        return "login"; // View que retorna a página de login - ADMIN
     }
     
     @GetMapping("/front-adm")
     public String frontAdm() {
-        return "frontadm"; // Exibe a página seleção (frontadm.html)
+        return "frontadm"; // View que retorna a página de seleção (frontadm.html)
     }
     
     @GetMapping("/logout")
     public String logoutAdmin() {
-        return "login"; // Exibe a página de login (login.html)
+        return "login"; // View que retorna a página de login - ADMIN
+    }    
+    
+    @GetMapping("/sessao-expirada")
+    public String sessaoExpirada() {
+        return "sessao-expirada-cliente"; // View que retorna a página sessao-expirada-cliente
     }
     
     @GetMapping("/admin")
     public String posLogin() {
-        return "home-admin"; // Renderiza o template home-admin.html
-    }    
+        return "home-admin"; // View que retorna a página inicial do Painel Administrativo
+    }
     
     // Endpoint de autenticação
     @GetMapping("/username")
     public String getUsername() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getName(); // Retorna o nome do usuário
+    	// Acessa o contexto de segurança do Spring
+        Authentication authentication =
+        		SecurityContextHolder.getContext() //Retorna o contexto de segurança atual
+        		// Retorna o objeto Authentication, que contém: Nome do usuário, Credenciais, Permissões, Se sucesso na autenticação
+        		.getAuthentication(); 
+        return authentication.getName(); // Retorna o usuário autenticado (email)
     }
     
 }

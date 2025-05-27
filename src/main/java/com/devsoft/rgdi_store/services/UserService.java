@@ -132,6 +132,7 @@ public class UserService {
             	entity.setSenha(passwordUtils.encrypt(dto.getSenha())); // Criptografa a senha
             }
             
+            // Salva
             entity = repository.save(entity);
             
             return UserMapper.toDto(entity); // Retorna DTO convertido
@@ -145,9 +146,9 @@ public class UserService {
 	public UserDto changeStatus(Long id) {
 	    try {
 	        UserEntity entity = repository.getReferenceById(id);
-	        entity.setStatus(!entity.isStatus()); // Alterna o status
-	        entity = repository.save(entity);
-	        return UserMapper.toDto(entity);
+	        entity.setStatus(!entity.isStatus()); // Inverte o status atual do produto.
+	        entity = repository.save(entity); // Salva
+	        return UserMapper.toDto(entity); // Converte a entidade persistida em um DTO para ser retornado
 	    } catch (EntityNotFoundException e) {
 	        throw new ResourceNotFoundException("Recurso não encontrado - service/changeStatus");
 	    }

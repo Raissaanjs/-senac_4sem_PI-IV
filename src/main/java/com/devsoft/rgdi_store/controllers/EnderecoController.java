@@ -45,10 +45,12 @@ public class EnderecoController {
     
     @GetMapping("/noauth/cadastrar-endereco/{clienteId}")
     public String mostrarFormularioEnderecos(@PathVariable Long clienteId, Model model) {
+    	// Adiciona os dados ao Model para ser mostrado na View
         model.addAttribute("clienteId", clienteId);
         model.addAttribute("enderecoFaturamento", new EnderecoEntity());
         model.addAttribute("enderecoEntrega", new EnderecoEntity());
-        return "endereco/cadendereco";
+        
+        return "endereco/cadendereco"; // View que retorna o cadastro de endereço
     }
 	    
     // Cadastro endereço Inicial - Faturamento
@@ -57,11 +59,16 @@ public class EnderecoController {
             @RequestParam("clienteId") Long clienteId,
             @ModelAttribute("enderecoFaturamento") EnderecoEntity enderecoFaturamento) {
 
+    	// Define explicitamente o tipo do endereço como FATURAMENTO
         enderecoFaturamento.setTipo(EnderecoTipo.FATURAMENTO);
 
+        // Recupera o cliente correspondente ao clienteId informado
         ClienteEntity cliente = buscarClienteComEnderecos(clienteId);
+        
+        // Salva o endereço no banco de dados
         enderecoService.saveEndereco(cliente, enderecoFaturamento);
 
+        // Retorna um HTTP 200 OK, sucesso
         return ResponseEntity.ok(Collections.singletonMap("clienteId", clienteId));
     }
 
@@ -70,22 +77,29 @@ public class EnderecoController {
     public String salvarEnderecoEntrega(@RequestParam("clienteId") Long clienteId,
                                         @ModelAttribute("enderecoEntrega") EnderecoEntity enderecoEntrega) {
 
+    	// Define explicitamente o tipo do endereço como ENTREGA
         enderecoEntrega.setTipo(EnderecoTipo.ENTREGA);
 
-        ClienteEntity cliente = buscarClienteComEnderecos(clienteId); // ou findById
+        // Recupera o cliente correspondente ao clienteId informado
+        ClienteEntity cliente = buscarClienteComEnderecos(clienteId);
+        
+        // Salva o endereço no banco de dados
         enderecoService.saveEndereco(cliente, enderecoEntrega);
 
+        // Redireciona para o endpoint que chama a View que retorna a página de login do cliente
         return "redirect:/clientes/login";
     }
     
     // Abre o form de cadastro para adicionar novo endereço - Em Meus Dados
     @GetMapping("/auth/meusdados/novo")
     public String novoEndereco(Model model, Principal principal) {
-        ClienteEntity cliente = clienteHelper.getClienteLogado(principal.getName());
+    	// Recupera o cliente autenticado
+    	ClienteEntity cliente = clienteHelper.getClienteLogado(principal.getName());
 
+    	// Adiciona os dados ao Model para ser mostrado na View
         model.addAttribute("clienteId", cliente.getId());
         model.addAttribute("endereco", new EnderecoEntity()); // novo objeto limpo
-        return "endereco/cadendereconovo";
+        return "endereco/cadendereconovo"; // View que retorna a página de cadastro de novo endereço
     }
     
     @PostMapping("/auth/meusdados/salvar")
@@ -94,7 +108,8 @@ public class EnderecoController {
             Principal principal,
             RedirectAttributes redirectAttributes
     ) {
-        ClienteEntity cliente = clienteHelper.getClienteLogado(principal.getName());
+    	// Recupera o cliente autenticado
+    	ClienteEntity cliente = clienteHelper.getClienteLogado(principal.getName());
 
         try {
             // Garante a associação com o cliente
@@ -102,48 +117,56 @@ public class EnderecoController {
 
             // Validação de tipo: você pode validar se foi enviado corretamente
             if (endereco.getTipo() == null) {
-                redirectAttributes.addFlashAttribute("erro", "Tipo de endereço é obrigatório.");
-                return "redirect:/enderecos/auth/meusdados/novo";
+                redirectAttributes.addFlashAttribute("erro", "Tipo de endereço é obrigatório."); // envia msg de erro para view abaixo
+                return "redirect:/enderecos/auth/meusdados/novo"; // Redireciona para view de cadastro de novo endereço
             }
 
             enderecoService.saveEndereco(cliente, endereco); // método que lida com ENTREGA/FATURAMENTO
 
+            // Envia msg de sucesso para view abaixo
             redirectAttributes.addFlashAttribute("sucesso", "Novo Endereço (Meus Dados) criado com sucesso!");
-            return "redirect:/clientes/auth/detalhes-cliente?sucesso";
+            // View que retorna a página de detalhes do cliente, com a mensagem acima
+            return "redirect:/clientes/auth/detalhes-cliente?sucesso"; 
 
         } catch (EnderecoDuplicadoException e) {
+        	// Envia msg de erro para view abaixo
             redirectAttributes.addFlashAttribute("erro", e.getMessage());
+            // Redireciona para view de cadastro de novo endereço 
             return "redirect:/enderecos/auth/meusdados/novo";
         }
     }
     
     @GetMapping("/auth/endereco-entrega/listar")
     public String listarEnderecosEntrega(Model model, Principal principal) {
+    	// Recupera o cliente autenticado
         ClienteEntity cliente = clienteHelper.getClienteLogado(principal.getName());
-
+        
+        // Traz uma lista de endereços de Entrega
         List<EnderecoEntity> enderecosEntrega = cliente.getEnderecos().stream()
             .filter(e -> e.getTipo() == EnderecoTipo.ENTREGA)
             .toList();
 
+        // Adiciona os dados ao Model para ser mostrado na View 
         model.addAttribute("enderecosEntrega", enderecosEntrega);
 
-        return "pedido/pedido-endereco-entrega"; // Nome da view Thymeleaf
+        return "pedido/pedido-endereco-entrega"; // View que retorna a página para selecionar endereço de entrega
     }
     
     //Abre form para cadastrar novo endereço de entrega - Fase de fechamento de pedido
     @GetMapping("/auth/endereco-entrega/pedido/novo")
     public String novoEnderecoEntrega(Model model, Principal principal) {
+    	// Recupera o cliente autenticado
         ClienteEntity cliente = clienteHelper.getClienteLogado(principal.getName());
 
         // Cria um novo objeto EnderecoEntity já com tipo ENTREGA
         EnderecoEntity novoEndereco = new EnderecoEntity();
         novoEndereco.setTipo(EnderecoTipo.ENTREGA); // Define o tipo como ENTREGA
 
-        // Adiciona o ID do cliente e o objeto EnderecoEntity ao modelo
+        // Adiciona os dados ao Model para ser mostrado na View
         model.addAttribute("clienteId", cliente.getId());
-        model.addAttribute("endereco", novoEndereco); // O modelo receberá o objeto novoEndereco
+        model.addAttribute("endereco", novoEndereco);
 
-        return "endereco/cadendereconovoentrega"; // O template Thymeleaf que exibe o formulário
+        return "endereco/cadendereconovoentrega"; // View que retorna a página de cadastro de novo endereço de entrega
     }
     
     @PostMapping("/auth/endereco-entrega/pedido/salvar")
@@ -159,22 +182,30 @@ public class EnderecoController {
             // Garante o tipo do endereço como ENTREGA
             endereco.setTipo(EnderecoTipo.ENTREGA);
 
-            // Usa o método base do service
+            // Salva o endereço
             enderecoService.saveEndereco(cliente, endereco);
 
+            // Envia msg de sucesso para view abaixo
             redirectAttributes.addFlashAttribute("sucesso", "Novo Endereço de Entrega criado com sucesso!");
+            // Redireciona para View que retorna a página para selecionar endereço de entrega
             return "redirect:/enderecos/auth/endereco-entrega/listar";
 
         } catch (ClienteNaoEncontradoException e) {
+        	// Envia msg de erro para view abaixo
             redirectAttributes.addFlashAttribute("erro", "Cliente não encontrado: " + e.getMessage());
+            // Redireciona para o "endpoint" que chama a View de cadastro de novo endereço de entrega
             return "redirect:/enderecos/auth/endereco-entrega/pedido/novo";
 
         } catch (EnderecoDuplicadoException e) {
+        	// Envia msg de erro para view abaixo
             redirectAttributes.addFlashAttribute("erro", e.getMessage());
+            // Redireciona para o "endpoint" que chama a View de cadastro de novo endereço de entrega
             return "redirect:/enderecos/auth/endereco-entrega/pedido/novo";
 
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("erro", "Erro ao salvar endereço de entrega: " + e.getMessage());
+        	// Envia msg de erro para view abaixo
+        	redirectAttributes.addFlashAttribute("erro", "Erro ao salvar endereço de entrega: " + e.getMessage());
+            // Redireciona para o "endpoint" que chama a View de cadastro de novo endereço de entrega
             return "redirect:/enderecos/auth/endereco-entrega/pedido/novo";
         }
     }
@@ -184,21 +215,28 @@ public class EnderecoController {
                                          @PathVariable Long novoPrincipalId,
                                          RedirectAttributes redirectAttributes) {
         try {
+        	// Acessa o service para mudar endereço de ENTREGA para FATURAMENTO
             enderecoService.tornarPrincipal(clienteId, novoPrincipalId);
+            // 	Envia msg de sucesso para view abaixo
             redirectAttributes.addFlashAttribute("sucesso", "Endereço principal atualizado com sucesso!");
         } catch (ClienteNaoEncontradoException e) {
+        	// Envia msg de erro para view abaixo
             redirectAttributes.addFlashAttribute("erro", "Cliente não encontrado: " + e.getMessage());
         } catch (EntityNotFoundException e) {
-            redirectAttributes.addFlashAttribute("erro", "Endereço inválido: " + e.getMessage());
+        	// Envia msg de erro para view abaixo
+        	redirectAttributes.addFlashAttribute("erro", "Endereço inválido: " + e.getMessage());
         } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("erro", "Erro inesperado: " + e.getMessage());
+            // Envia msg de erro para a View abaixo
+        	redirectAttributes.addFlashAttribute("erro", "Erro inesperado: " + e.getMessage());
         }
 
-        return "redirect:/clientes/auth/detalhes/" + clienteId;
+        // Redireciona para o "endpoint" que chama a View de detalhes do cliente
+        return "redirect:/clientes/auth/detalhes/" + clienteId; 
     }
  
     
     // ========== MÉTODO(S) AUXILIAR(ES) ==========
+    // Busca Cliente com endereço vinculado ao seu ID 
     public ClienteEntity buscarClienteComEnderecos(Long clienteId) {
         return clienteService.findByIdComEnderecos(clienteId);
     } 

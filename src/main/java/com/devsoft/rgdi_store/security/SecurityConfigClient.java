@@ -14,8 +14,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.devsoft.rgdi_store.authentication.ClienteUserDetailsService;
 import com.devsoft.rgdi_store.handlers.CustomAccessDeniedHandlerCliente;
+import com.devsoft.rgdi_store.services.ClienteUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
@@ -41,7 +41,7 @@ public class SecurityConfigClient {
     @Order(1)
     public SecurityFilterChain clientSecurityFilterChain(HttpSecurity http) throws Exception {
     	
-    	// Associa o provider ao SecurityBuilder apenas para este chain
+    	// AUTENTICAÇÃO - Associa o provider ao SecurityBuilder apenas para este chain
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(clienteUserDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder);
@@ -53,7 +53,7 @@ public class SecurityConfigClient {
         AuthenticationManager authenticationManager = authBuilder.build();
         http.authenticationManager(authenticationManager);
         
-    	
+        //AUTORIZAÇÃO
         http.securityMatcher("/clientes/**", "/pedidos/clientes/**", "/pagamentos/**", "/enderecos/**")  // Aplica segurança apenas para rotas de cliente
         	.addFilterBefore(sessionExpiredFilter, UsernamePasswordAuthenticationFilter.class) // Filtro para controle de Sessão
             .authorizeHttpRequests(auth -> auth        		
@@ -93,6 +93,7 @@ public class SecurityConfigClient {
         return http.build();
     }
     
+    // Caso falhe o sistema de redirecionamento do Spring usa o tratamento abaixo 
     @Bean
     public SavedRequestAwareAuthenticationSuccessHandler clienteAuthSuccessHandler() {
         SavedRequestAwareAuthenticationSuccessHandler handler = new SavedRequestAwareAuthenticationSuccessHandler();

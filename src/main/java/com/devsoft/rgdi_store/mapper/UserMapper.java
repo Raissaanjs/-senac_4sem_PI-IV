@@ -13,6 +13,8 @@ public class UserMapper {
         if (entity == null) {
             return null;
         }
+        
+        // Retorna uma nova instância de UserDto
         return new UserDto(
             entity.getId(),
             entity.getNome(),
@@ -30,6 +32,8 @@ public class UserMapper {
         if (entity == null) {
             return null;
         }
+        
+        // Retorna uma nova instância de UserDto
         return new UserDto(
             entity.getId(),
             entity.getNome(),
@@ -44,6 +48,8 @@ public class UserMapper {
         if (entity == null) {
             return null;
         }
+        
+        // Retorna uma nova instância de UserDto
         return new UserDto(
             entity.getId(),
             entity.getNome(),
@@ -60,6 +66,7 @@ public class UserMapper {
             return null;
         }
 
+        // Cria uma nova instância de UserEntity
         UserEntity entity = new UserEntity();
         entity.setId(dto.getId());
         entity.setNome(dto.getNome());
@@ -75,14 +82,15 @@ public class UserMapper {
             entity.setGrupo(UserGroup.ROLE_USER); // Define grupo padrão
         }
 
+        // Retorna a entidade
         return entity;
     }
 
     //FAZER VALIDAÇÃO
-    // Atualiza UserEntity com os dados de UserDto
+    // Atualiza o Usuário
     public static void updateEntityFromDto(UserDto dto, UserEntity entity) {
         if (dto == null || entity == null) {
-            return; // Caso o dto ou entidade sejam null, simplesmente retorna
+            return; // Caso o dto ou entidade sejam null, simplesmente retorna (Não faz nada)
         }
 
         // Atualiza o nome se fornecido no DTO
@@ -112,10 +120,10 @@ public class UserMapper {
         }
     }
     
-    // Atualiza UserEntity com os dados de UserDto - Exclusivo MODAL
+    // Atualiza o Usuário - Exclusivo MODAL
     public static void updateEntityFromDtoModal(UserDto dto, UserEntity entity, UserRepository repository) {
         if (dto == null || entity == null) {
-            return; // Caso o dto ou entidade sejam null, simplesmente retorna
+            return; // Caso o dto ou entidade sejam null, simplesmente retorna (Não faz nada)
         }
 
         // Valida e atualiza o nome
