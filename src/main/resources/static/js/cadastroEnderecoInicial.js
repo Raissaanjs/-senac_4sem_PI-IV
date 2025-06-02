@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	                .then(response => response.json())
 	                .then(data => {
 	                    enderecoEntregaSection.style.display = 'block';
-	                    btnAdicionarEntrega.disabled = true;
+	                    btnAdicionarEntrega.disabled = true; // Quando clicar no botão Endereço de entrega, desabilita ele
 	                })
 	                .catch(error => {
 	                    console.error('Erro ao salvar endereço de faturamento:', error);

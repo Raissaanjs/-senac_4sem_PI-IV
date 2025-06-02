@@ -34,32 +34,32 @@
 	    <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
 		    <span th:text="${erro}"></span>
 		    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
-		</div>
+		</div>			
 	        <form th:action="@{/clientes/noauth/salvar-cliente}" th:object="${cliente}" method="POST">
             <div class="row">
                 <div class="mb-3 col-md-6">
                     <label for="nome">Nome</label>
-                    <input type="text" class="form-control" id="nome" name="nome"
-                           th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid'" th:value="*{nome}" required />
+                    <input type="text" class="form-control" id="nome" name="nome"                           
+                           th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid'" th:field="*{nome}" required />
                 </div>
             </div>
             <div class="row">
                 <div class="mb-3 col-md-2">
                     <label for="cpf">CPF</label>
                     <input type="text" class="form-control" id="cpf" name="cpf" required aria-required="true"
-                           th:classappend="${#fields.hasErrors('cpf')} ? 'is-invalid'" th:value="*{cpf}" 
+                           th:classappend="${#fields.hasErrors('cpf')} ? 'is-invalid'" th:field="*{cpf}" 
                            data-mask="00000000000" data-mask-reverse="true"/>
                 </div>
 
                 <div class="mb-3 col-md-2">
                     <label for="dataNascimento">Dt Nascimento</label>
                     <input type="date" class="form-control" id="dataNascimento" name="dataNascimento"
-                           th:classappend="${#fields.hasErrors('dataNascimento')} ? 'is-invalid'" th:value="*{dataNascimento}" />
+                           th:classappend="${#fields.hasErrors('dataNascimento')} ? 'is-invalid'" th:field="*{dataNascimento}" />
                 </div>
 
                 <div class="mb-3 col-md-2">
                     <label for="genero">Genero</label>
-                    <select class="form-control" id="genero" name="genero" required aria-required="true">
+                    <select class="form-control" id="genero" th:field="*{genero}" required aria-required="true">
                         <option value="">Selecione...</option>
                         <option value="HOMEM">Homem</option>
                         <option value="MULHER">Mulher</option>
@@ -72,7 +72,7 @@
                 <div class="mb-3 col-md-6">
                     <label for="email">Email</label>
                     <input type="email" class="form-control" id="email" name="email" required aria-required="true"
-                           th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" th:value="*{email}" />
+                           th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" th:field="*{email}" />
                 </div>
             </div>
 
@@ -80,7 +80,7 @@
                 <div class="mb-3 col-md-3">
                     <label for="senha">Senha</label>
                     <input type="password" class="form-control" id="senha" name="senha" required aria-required="true"
-                           th:classappend="${#fields.hasErrors('senha')} ? 'is-invalid'" th:value="*{senha}" />
+                           th:classappend="${#fields.hasErrors('senha')} ? 'is-invalid'" th:field="*{senha}" />
                 </div>
 
                 <div class="mb-3 col-md-3">

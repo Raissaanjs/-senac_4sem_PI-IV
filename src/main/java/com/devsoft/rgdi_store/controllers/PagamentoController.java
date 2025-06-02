@@ -197,8 +197,7 @@ public class PagamentoController {
 
             //  Retorna uma instância de EnderecoEntity
             EnderecoEntity endereco = enderecoOptional.get();
-
-            // STRATEGY
+           
             // Convert a String para o Enum correspondente
             PagamentoTipo tipoPagamento = PagamentoTipo.valueOf(formaPagamento);
 
