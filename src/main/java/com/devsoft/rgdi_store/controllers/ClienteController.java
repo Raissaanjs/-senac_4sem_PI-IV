@@ -127,7 +127,7 @@ public class ClienteController {
  	
  	@GetMapping("/auth/admin")
     public String posLoginCliente() {
-        return "home-cliente"; // Renderiza o template home-admin.html
+        return "home-cliente"; // View que retorna a página Home do Cliente
     }
  	
  	@GetMapping("/auth/detalhes/{id}")
@@ -219,7 +219,7 @@ public class ClienteController {
         model.addAttribute("cliente", cliente); // Adiciona o cliente ao Model
         // Adiciona um DTO vazio ao Model; Vincula o DTO ao form
         model.addAttribute("alterarSenhaDTO", new AlterPassDTO());
-        return "cliente/alterpasscliente"; 
+        return "cliente/alterpasscliente"; // View que retorna a página de alteração de senha do cliente
     }
 
     @PostMapping("/auth/updatepass")

@@ -88,7 +88,7 @@ public class PedidoService {
             // Pega a quantidade do produto no carrinho
             int quantidade = itemCarrinho.getQuantidade();
 
-            // Atualização segura diretamente no banco
+            // Atualização segura diretamente no banco. Evitar delay na atualização do estoque
             int atualizados = produtoRepository.descontarEstoqueSeDisponivel(produto.getId(), quantidade);
             if (atualizados == 0) {
                 throw new EstoqueInsuficienteException("Estoque insuficiente para o produto: " + produto.getNome());

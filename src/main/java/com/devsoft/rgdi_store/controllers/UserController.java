@@ -79,7 +79,7 @@ public class UserController {
 	@GetMapping("/buscar-nome")
 	public String buscarPorNomeOuTodos(
 	    @RequestParam(value = "nome", required = false, defaultValue = "") String nome,
-	    @PageableDefault(page = 0, size = 5, sort = "id") Pageable pageable,
+	    @PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable,
 	    Model model,
 	    Authentication authentication
 	) {
@@ -105,7 +105,7 @@ public class UserController {
 	@GetMapping("/listar")
 	public String list(
 	    Model model,
-	    @PageableDefault(page = 0, size = 5, sort = "id") Pageable pageable
+	    @PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable
 	) {
 	    Page<UserDto> dtoPage = userService.findAll(pageable);
 
