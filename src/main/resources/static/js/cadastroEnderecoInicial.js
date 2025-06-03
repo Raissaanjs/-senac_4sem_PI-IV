@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
-	    const btnAdicionarEntrega = document.getElementById('btnAdicionarEntrega');
+		const formFaturamento = document.getElementById('formFaturamento');
+		const clienteId = /*[[${clienteId}]]*/ null; // Recupera o clienteId do Thymeleaf
+		const btnAdicionarEntrega = document.getElementById('btnAdicionarEntrega');
 	    const enderecoEntregaSection = document.getElementById('enderecoEntregaSection');
-	    const formFaturamento = document.getElementById('formFaturamento');
-	    const clienteId = /*[[${clienteId}]]*/ null; // Recupera o clienteId do Thymeleaf
+	    
 	
 	    if (formFaturamento) {
 	        formFaturamento.addEventListener('submit', function (event) {
