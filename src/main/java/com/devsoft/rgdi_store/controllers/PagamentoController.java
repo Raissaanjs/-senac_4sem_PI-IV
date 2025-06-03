@@ -30,7 +30,7 @@ import com.devsoft.rgdi_store.utility.ClienteAutenticadoHelper;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/pagamentos")
+@RequestMapping("/pagamentos") // Define a URL base para todas as solicitações deste controlador
 public class PagamentoController {	
 	
     private final EnderecoService enderecoService;

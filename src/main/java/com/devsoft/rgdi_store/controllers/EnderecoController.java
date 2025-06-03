@@ -29,7 +29,7 @@ import com.devsoft.rgdi_store.utility.ClienteAutenticadoHelper;
 import jakarta.persistence.EntityNotFoundException;
 
 @Controller
-@RequestMapping("/enderecos")
+@RequestMapping("/enderecos") // Define a URL base para todas as solicitações deste controlador
 public class EnderecoController {
 	
 	private final ClienteService clienteService;

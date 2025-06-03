@@ -46,7 +46,7 @@ import com.devsoft.rgdi_store.validation.user.UserValidationSaveService;
 import jakarta.validation.groups.Default;
 
 @Controller
-@RequestMapping("/usuarios")
+@RequestMapping("/usuarios") // Define a URL base para todas as solicitações deste controlador
 public class UserController {
 	
 	private final PagedResourcesAssembler<UserDto> pagedResourcesAssembler;

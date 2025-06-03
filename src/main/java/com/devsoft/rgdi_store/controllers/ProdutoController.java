@@ -35,7 +35,7 @@ import com.devsoft.rgdi_store.services.ProdutoImagensService;
 import com.devsoft.rgdi_store.services.ProdutoService;
 
 @Controller
-@RequestMapping("/produtos")
+@RequestMapping("/produtos") // Define a URL base para todas as solicitações deste controlador
 public class ProdutoController {	
 	
 	private final ProdutoService produtoService;

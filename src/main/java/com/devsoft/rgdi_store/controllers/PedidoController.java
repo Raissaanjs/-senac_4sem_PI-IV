@@ -31,7 +31,7 @@ import com.devsoft.rgdi_store.services.PedidoService;
 import com.devsoft.rgdi_store.utility.ClienteAutenticadoHelper;
 
 @Controller
-@RequestMapping("/pedidos")
+@RequestMapping("/pedidos") // Define a URL base para todas as solicitações deste controlador
 public class PedidoController {	
    
     private final ClienteAutenticadoHelper clienteHelper;

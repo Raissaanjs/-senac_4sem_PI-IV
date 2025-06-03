@@ -44,7 +44,7 @@ public class PedidoService {
         return pedidoRepository.findAll();
     }
     
-    // Lista todos os pedidos co paginação
+    // Lista todos os pedidos com paginação
     @Transactional(readOnly = true)
     public Page<PedidoEntity> listarPedidosPaginados(Pageable pageable) {
         return pedidoRepository.findAll(pageable);

@@ -34,7 +34,7 @@ import com.devsoft.rgdi_store.utility.ClienteAutenticadoHelper;
 import com.devsoft.rgdi_store.validation.cliente.ClienteValidationSaveService;
 
 @Controller
-@RequestMapping("/clientes")
+@RequestMapping("/clientes") // Define a URL base para todas as solicitações deste controlador
 public class ClienteController {
 	
     private final ClienteService clienteService;

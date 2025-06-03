@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/clientes/error")
+@RequestMapping("/clientes/error") // Define a URL base para todas as solicitações deste controlador
 public class ErrorClientController {
     
 	// Erro de login de cliente
