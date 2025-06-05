@@ -1,5 +1,5 @@
 package com.devsoft.rgdi_store.entities;
-
+// entidade JPA que representa os clientes do sistema. Ela é mapeada para uma tabela no DB
 import java.sql.Date;
 import java.util.List;
 import java.util.Objects;

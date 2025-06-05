@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
-		// Seleciona o formulário HTML com id="formFaturamento" e o armazena na constante formFaturamento
+		// Seleciona o formulário HTML com id="formFaturamento" e armazena na constante formFaturamento
 		const formFaturamento = document.getElementById('formFaturamento');	
-		// pega elemento HTML com o ID 'btnAdicionarEntrega'
+		// pega elemento HTML com o ID 'btnAdicionarEntrega' e armazena na constante btnAdicionarEntrega
 		const btnAdicionarEntrega = document.getElementById('btnAdicionarEntrega');
-		// pega elemento HTML com o ID 'enderecoEntregaSection'
+		// pega elemento HTML com o ID 'enderecoEntregaSection' e armazena na constante enderecoEntregaSection
 	    const enderecoEntregaSection = document.getElementById('enderecoEntregaSection');
 	    
 	
