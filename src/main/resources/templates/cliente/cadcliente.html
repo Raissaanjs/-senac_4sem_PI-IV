@@ -29,7 +29,9 @@
 	            </ul>
 	        </div>
 	    </nav>	
-	    <!-- Formulário de Cadastro de Cliente -->	    
+	    <!-- Formulário de Cadastro de Cliente -->    
+	    <!-- th:object="${cliente}" Associa os campos do form as propriedades/ atributos do objeto 'cliente'-->
+	    <!-- th:field="*{nome}" Vincula um campo do form a uma propriedade/ atributo de um objeto-->
 	    <div class="container formcadastro" id="cadastro">
 	    <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
 		    <span th:text="${erro}"></span>

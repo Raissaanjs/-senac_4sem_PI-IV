@@ -33,10 +33,13 @@
 	    <div class="container formcadastro" id="cadastro-endereco">
 	
 	        <form id="formFaturamento">
+	        	<!-- Campo oculto. Envia valor para o Back. Envia para o próximo controller o ID do cliente -->	        	
 	            <input type="hidden" name="clienteId" th:value="${clienteId}" />
+	            <!-- O responsável pela próxima chamada é o JS cadastroEnderecoInicial.js -->
 	            <h4>Endereço de Faturamento</h4>
-	            <div th:object="${enderecoFaturamento}">
-	                <input type="hidden" th:field="*{tipo}" th:value="'FATURAMENTO'"/>
+	            <!-- th:object="${enderecoFaturamento}" Associa os campos do form as propriedades/ atributos do objeto 'enderecoFaturamento'-->
+	    		<!-- th:field="*{cep}" Vincula um campo do form a uma propriedade/ atributo de um objeto-->
+	            <div th:object="${enderecoFaturamento}">	            	
 	                <div class="row">
 	                    <div class="mb-3 col-md-2">
 	                        <label>CEP</label>
@@ -76,6 +79,8 @@
 	                    </div>
 	                </div>
 	            </div>
+	            <!-- O submit através do id="btnAdicionarEntrega" chamará o JS cadastroEnderecoInicial.js -->
+	            <!-- O JS cadastroEnderecoInicial.js será responsável pelo próximo action-->
 	            <button type="submit" class="btn btn-primary" id="btnAdicionarEntrega"><i class="fa-solid fa-address-card me-2"></i>Endereço de entrega</button>
 	        </form>
 	
@@ -84,6 +89,7 @@
 	        <div id="enderecoEntregaSection">
 	            <h4>Endereço de Entrega</h4>
 	            <form th:action="@{/enderecos/noauth/endereco-inicial/entrega}" method="POST">
+	                <!-- Campo oculto. Envia valor para o Back. Envia para o endpoint acima o ID do cliente -->
 	                <input type="hidden" name="clienteId" th:value="${clienteId}" />
 	                <div class="form-check mb-3">
 	                    <input type="checkbox" class="form-check-input" id="copiarEndereco" onclick="copiarEnderecoFaturamento()">
@@ -91,8 +97,9 @@
 	                        Usar o mesmo endereço de faturamento
 	                    </label>
 	                </div>
+	                <!-- th:object="${enderecoEntrega}" Associa os campos do form as propriedades/ atributos do objeto 'enderecoEntrega'-->
+	                <!-- th:field="*{cep}" Vincula um campo do form a uma propriedade/ atributo de um objeto -->
 	                <div th:object="${enderecoEntrega}">
-	                    <input type="hidden" th:field="*{tipo}" th:value="'ENTREGA'"/>
 	                    <div class="row">
 	                        <div class="mb-3 col-md-2">
 	                            <label>CEP</label>

@@ -62,13 +62,13 @@ public class EnderecoController {
     	// Define explicitamente o tipo do endereço como FATURAMENTO
         enderecoFaturamento.setTipo(EnderecoTipo.FATURAMENTO);
 
-        // Recupera o cliente correspondente ao clienteId informado
+        // Busca cliente com ID igual ao vinculado ao endereçoo
         ClienteEntity cliente = buscarClienteComEnderecos(clienteId);
         
-        // Salva o endereço no banco de dados
+        // Chama o service para salvar no banco de dados
         enderecoService.saveEndereco(cliente, enderecoFaturamento);
 
-        // Retorna um HTTP 200 OK, sucesso
+        // Retorna um HTTP 200 OK, sucesso, com o ID do cliente
         return ResponseEntity.ok(Collections.singletonMap("clienteId", clienteId));
     }
 
@@ -80,10 +80,10 @@ public class EnderecoController {
     	// Define explicitamente o tipo do endereço como ENTREGA
         enderecoEntrega.setTipo(EnderecoTipo.ENTREGA);
 
-        // Recupera o cliente correspondente ao clienteId informado
+        // Busca cliente com ID igual ao vinculado ao endereço
         ClienteEntity cliente = buscarClienteComEnderecos(clienteId);
         
-        // Salva o endereço no banco de dados
+        // Chama o service para salvar no banco de dados
         enderecoService.saveEndereco(cliente, enderecoEntrega);
 
         // Redireciona para o endpoint que chama a View que retorna a página de login do cliente

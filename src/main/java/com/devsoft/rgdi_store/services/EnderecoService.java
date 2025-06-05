@@ -50,7 +50,7 @@ public class EnderecoService {
     // Método principal para salvar o endereço
     @Transactional
     public void saveEndereco(ClienteEntity cliente, EnderecoEntity endereco) {
-        // Associa o endereço ao cliente
+        // Vincula o endereço ao cliente
     	endereco.setCliente(cliente);
 
     	// Se o endereço for do tipo FATURAMENTO
@@ -67,6 +67,7 @@ public class EnderecoService {
     	// Verifica se já existe um endereço do tipo FATURAMENTO
         Optional<EnderecoEntity> enderecoExistente = enderecoRepository.findByClienteAndTipo(cliente, EnderecoTipo.FATURAMENTO);
 
+        // Expressão lambda 'endAntigo ->{...}'. O bloco {...} só será executado se 'enderecoExistente' tiver um valor
         enderecoExistente.ifPresent(endAntigo -> {
         	// Verifica se já existe um endereço tipo FATURAMENTO idêntico
         	if (isEnderecoDuplicadoFaturamento(cliente, novoEndereco)) {
@@ -186,9 +187,10 @@ public class EnderecoService {
     
     // Verifica se já existe um endereço duplicado para o tipo FATURAMENTO
     private boolean isEnderecoDuplicadoFaturamento(ClienteEntity cliente, EnderecoEntity endereco) {
-        return cliente.getEnderecos().stream()
-            .filter(e -> e.getTipo() == EnderecoTipo.FATURAMENTO)
-            .anyMatch(e ->
+        
+    	return cliente.getEnderecos().stream() // Converte em .stream para aplicar filtro
+            .filter(e -> e.getTipo() == EnderecoTipo.FATURAMENTO) // Filtra apenas endereço tipo FATURAMENTO
+            .anyMatch(e -> // Verifica se algum dos endereços filtrados coincide com o endereço passado 'endereco' 
                 Objects.equals(e.getCep(), endereco.getCep()) &&
                 Objects.equals(e.getLogradouro(), endereco.getLogradouro()) &&
                 Objects.equals(e.getNumero(), endereco.getNumero()) &&
@@ -201,9 +203,10 @@ public class EnderecoService {
     
     // Verifica se já existe um endereço duplicado para o tipo ENTREGA
     private boolean isEnderecoDuplicadoEntrega(ClienteEntity cliente, EnderecoEntity endereco) {
-        return cliente.getEnderecos().stream()
-            .filter(e -> e.getTipo() == EnderecoTipo.ENTREGA)
-            .anyMatch(e ->
+       
+    	return cliente.getEnderecos().stream()  // Converte em .stream para aplicar filtro
+            .filter(e -> e.getTipo() == EnderecoTipo.ENTREGA) // Filtra apenas endereço tipo ENTREGA
+            .anyMatch(e -> // Verifica se algum dos endereços filtrados coincide com o endereço passado 'endereco'
                 e.getCep().equals(endereco.getCep()) &&
                 e.getLogradouro().equals(endereco.getLogradouro()) &&
                 e.getNumero().equals(endereco.getNumero()) &&

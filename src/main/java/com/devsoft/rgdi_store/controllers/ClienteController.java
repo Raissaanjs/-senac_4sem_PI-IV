@@ -74,21 +74,22 @@ public class ClienteController {
     } 	
  	
  	@PostMapping("/noauth/salvar-cliente")
-    public String salvarCliente(@ModelAttribute("cliente") ClienteEntity cliente,
-                                @RequestParam("confirmaSenha") String confirmaSenha,
-                                BindingResult result,
-                                Model model,
-                                RedirectAttributes redirectAttributes) {
+    public String salvarCliente(@ModelAttribute("cliente") ClienteEntity cliente, //cria automaticamente um objeto ClienteEntity a partir do ModelAtt..
+                                @RequestParam("confirmaSenha") String confirmaSenha, // pega o valor do parâmetro confirmaSenha do form
+                                BindingResult result, // Usado na validação de erros
+                                Model model, // Objeto para passar dados do controller para View
+                                RedirectAttributes redirectAttributes) { // usado para redirecionamento para próxima etapa
         try {
-            // Valida os campos do cliente, incluindo a confirmação da senha
+            // Usado para validar exceção
             ClienteValidationSaveService.validateCliente(cliente, clienteRepository, confirmaSenha);
         } catch (NameValidationException e) {
+        	// rejectValue - método da interface Errors
             result.rejectValue("nome", "error.nome", e.getMessage());
         } catch (InvalidCpfException | CpfExistsException e) {
             result.rejectValue("cpf", "error.cpf", e.getMessage());
         } catch (EmailDivergException | EmailExistsException e) {
             result.rejectValue("email", "error.email", e.getMessage());
-        } catch (InvalidPassException | ConfirmPassNullException e) {
+        } catch (InvalidPassException | ConfirmPassNullException e) {        	
             result.rejectValue("senha", "error.senha", e.getMessage());
             model.addAttribute("confirmaSenhaError", e.getMessage());
         }
@@ -96,7 +97,7 @@ public class ClienteController {
         if (result.hasErrors()) { // Se encontrar erros
             model.addAttribute("cliente", cliente); // Mantém os dados preenchidos
 
-            // Constrói uma mensagem geral com os erros dos campos
+            // Gera a formatação para a mensagem de erro
             StringBuilder mensagemErro = new StringBuilder("");
             for (FieldError erroCampo : result.getFieldErrors()) {
                 mensagemErro.append(" ").append(erroCampo.getDefaultMessage()).append(";");
@@ -116,7 +117,7 @@ public class ClienteController {
         	// Salva o cliente no DB
             ClienteEntity savedCliente = clienteService.saveClienteOnly(cliente, confirmaSenha);
             // Envia o clienteId para próxima etapa
-            redirectAttributes.addAttribute("clienteId", savedCliente.getId());
+            redirectAttributes.addAttribute("clienteId", savedCliente.getId()); // atribui ao "clienteId" o ID do cliente salvo
             // redireciona para próxima etapa: Cadastro do endereço
             return "redirect:/enderecos/noauth/cadastrar-endereco/{clienteId}";
         } catch (Exception e) { // Se houver Exception
