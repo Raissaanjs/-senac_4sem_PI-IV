@@ -181,18 +181,22 @@ public class PedidoController {
         return "pedido/listar-pedidos-admin"; // View que retorna a página listar pedidos - ADMIN
     }    
 
-    // Mostra o formulário para alterar status
     @GetMapping("/admin/{id}")
-    public String mostrarFormularioEdicao(@PathVariable Long id, Model model) {
-        
-    	// Busca o pedido pelo ID
-    	PedidoEntity pedido = pedidoService.findById(id)
-			// Se não houver envia a mensagem abaixo
-            .orElseThrow(() -> new PedidoNaoEncontradoException("Ops! Não encontramos o pedido que você procurava."));
-    	
-    	// Adiciona os dados ao Model para ser mostrado na View
-        model.addAttribute("pedido", pedido);
-        return "pedido/pedido-edit-status"; // View que retorna a página editar status do pedido - ADMIN
+    public String mostrarFormularioEdicao(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            // Busca o pedido pelo ID
+            PedidoEntity pedido = pedidoService.findById(id)
+                .orElseThrow(() -> new PedidoNaoEncontradoException("Ops! Não encontramos o pedido que você procurava."));
+
+            // Adiciona os dados ao Model para ser mostrado na View
+            model.addAttribute("pedido", pedido);
+            return "pedido/pedido-edit-status"; // View que retorna a página de edição
+
+        } catch (PedidoNaoEncontradoException ex) {
+            // Adiciona mensagem de erro e redireciona
+            redirectAttributes.addFlashAttribute("erro", ex.getMessage());
+            return "redirect:/pedidos/admin"; // Página de listagem ou onde faz sentido voltar
+        }
     }
     
     // Salva a atualização do status
