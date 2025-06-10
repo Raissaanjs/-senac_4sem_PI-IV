@@ -24,8 +24,7 @@
 	        </div>
 			
 			<!-- form-group: removida no bootstrap 5xxx. No lugar posso usar: "mb-3". Usar criar meu "css próprio" -->
-	        <div class="container container-admin" id="cadastro">
-			    <!--  <form id="userForm" onsubmit="formUser(event)"> -->
+	        <div class="container container-admin" id="cadastro">			   
 			    <form th:action="@{/usuarios/salvar}" th:object="${dto}" method="POST">			    	
 			        <div class="row">
 					    <div class="mb-3 col-md-5">
